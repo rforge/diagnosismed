@@ -1,0 +1,94 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><title>R: Nomogram from 2x2 table diagnostic test</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link rel="stylesheet" type="text/css" href="../../R.css">
+</head><body>
+
+<table width="100%" summary="page for plot.diag {unknown}"><tr><td>plot.diag {unknown}</td><td align="right">R Documentation</td></tr></table>
+<h2>Nomogram from 2x2 table diagnostic test</h2>
+
+
+<h3>Description</h3>
+
+<p>
+This function draw a simple nomogram from an object created by diagtest or 
+diagtestI
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+plot.diag(x, print = F, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+An object from diagtest or diagtestI</td></tr>
+<tr valign="top"><td><code>print</code></td>
+<td>
+If TRUE, plot.diag will print in the output window the table 
+with all pre-test and its correspondig post-test probabilities. Default is
+FALSE</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+Futher generic options for plot function</td></tr>
+</table>
+
+<h3>Details</h3>
+
+<p>
+plot.diag will draw a very simple nomogram as many examples from wikipedia 
+<a href="http://en.wikipedia.org/wiki/Nomogram">http://en.wikipedia.org/wiki/Nomogram</a>. This is not a generic nomogram 
+as shown in many evidenced based medicine texts, because this one shows only 
+pre-test and post-test variabilities with a fixed likelihood ratio. This 
+likelihood is a statistic from an object created by diagtest or diagtestI.
+To use it, draw, with a rule, a vertical line from a desired pre-test 
+probability, and to find the corresponding post-test probability, draw a 
+horizontal line from the intersection of the curve and the vertical line.
+</p>
+
+
+<h3>Author(s)</h3>
+
+<p>
+Pedro Brasil; <a href="mailto:pedro.brasil@ipec.fiocruz.br">pedro.brasil@ipec.fiocruz.br</a>
+</p>
+
+
+<h3>References</h3>
+
+<p>
+JA Knotterus, The Evidence Based Clinical Diagnosis; BMJBooks, 2002
+</p>
+
+
+<h3>See Also</h3>
+
+<p>
+<code><a href="../../../doc/html/search/SearchObject.html?diagtest">diagtest</a></code>,<a href="../../Design/html/nomogram.html">nomogram</a>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+#this will draw a ROC curve
+mytest&lt;-diagtestI(364,22,17,211, print=T, plot=T)
+#this is different and will draw a nomogram
+mytest&lt;-diagtestI(364,22,17,211)
+plot(mytest)
+#draw a nomogram and print it's table
+mytest&lt;-diagtestI(364,22,17,211)
+plot(mytest,print=T)
+</pre>
+
+
+
+<hr><div align="center">[Package <a href="00Index.html">Index]</a></div>
+
+</body></html>
