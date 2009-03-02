@@ -31,19 +31,12 @@ ROC<-function(gold,
   colnames(test.summary)<-c("Min.","1st Qu.","Median","Mean","3rd Qu.","Max.","SD")
   rownames(test.summary)<-c("Overall summary","Without disease", "With disease")
   # Estimating the AUC and confidence limits, inspired in auc{PresenceAbsence}
-  AUC <- ((as.double(length(test[gold == 0]))) * (as.double(length(test[gold ==
-       1]))) + ((as.double(length(test[gold == 0]))) * ((as.double(length(
-       test[gold == 0]))) + 1))/2 - sum(rank(test,ties.method = "average")[
-       gold == 0]))/((as.double(length(test[gold == 0]))) * (as.double(
-       length(test[gold == 1]))))
+  # m length(test[gold == 0])
+  # n length(test[gold == 1])
+  AUC <- ((as.double(length(test[gold == 0]))) * (as.double(length(test[gold ==1]))) + ((as.double(length(test[gold == 0]))) * ((as.double(length(test[gold == 0]))) + 1))/2 - sum(rank(test,ties.method = "average")[gold == 0]))/((as.double(length(test[gold == 0]))) * (as.double(length(test[gold == 1]))))
   AUC[AUC < 0.5] <- 1 - AUC
-  SD.AUC <- (((var(((rank(test, ties.method = "average")[gold == 0]) -
-              rank(test[gold == 0], ties.method = "average"))/
-              (as.double(length(test[gold == 1])))))/(as.double(length(test[gold == 0]))))
-              + ((var(((rank(test, ties.method = "average")[gold == 1]) -
-              rank(test[gold == 1], ties.method = "average"))/
-              (as.double(length(test[gold == 0])))))/
-              (as.double(length(test[gold == 1])))))^0.5
+  X<-test[gold==0] # pag 209
+  Y<-test[gold==1] # pag 209
   }
   if (is.factor(gold)==TRUE){
   # The same tests summary but with different reference standard codes
@@ -52,22 +45,22 @@ ROC<-function(gold,
   test.summary<-rbind(test.summary,round(c(summary(test[gold=="positive"]),sd(test[gold=="positive"])),digits=5))
   colnames(test.summary)<-c("Min.","1st Qu.","Median","Mean","3rd Qu.","Max.","SD")
   rownames(test.summary)<-c("Overall summary","Without disease", "With disease")
-  AUC <- ((as.double(length(test[gold =="negative"]))) * (as.double(length(test[gold ==
-       "positive"]))) + ((as.double(length(test[gold =="negative"]))) * ((as.double(length(
-       test[gold =="negative"]))) + 1))/2 - sum(rank(test,ties.method = "average")[
-       gold =="negative"]))/((as.double(length(test[gold =="negative"]))) * (as.double(
-       length(test[gold == "positive"]))))
+  AUC <- ((as.double(length(test[gold =="negative"]))) * (as.double(length(test[gold =="positive"]))) + ((as.double(length(test[gold =="negative"]))) * ((as.double(length(test[gold =="negative"]))) + 1))/2 - sum(rank(test,ties.method = "average")[gold =="negative"]))/((as.double(length(test[gold =="negative"]))) * (as.double(length(test[gold == "positive"]))))
   AUC[AUC < 0.5] <- 1 - AUC
-  SD.AUC <- (((var(((rank(test, ties.method = "average")[gold == "negative"]) -
-              rank(test[gold == "negative"], ties.method = "average"))/
-              (as.double(length(test[gold =="positive"])))))/(as.double(length(test[gold =="negative"]))))
-              + ((var(((rank(test, ties.method = "average")[gold =="positive"]) -
-              rank(test[gold =="positive"], ties.method = "average"))/
-              (as.double(length(test[gold =="negative"])))))/
-              (as.double(length(test[gold =="positive"])))))^0.5
+  X<-test[gold=="negative"] # pag 209
+  Y<-test[gold=="positive"] # pag 209
   }
-  AUC.summary<-c(AUC-SD.AUC,AUC,AUC+SD.AUC)
+  m<-length(X) # pag 209
+  n<-length(Y) # pag 209
+  D10X<-function(Xi){(1/n)*sum(Y>=Xi)} # pag 211
+  D01Y<-function(Yi){(1/m)*sum(Yi>=X)} # pag 211
+  VAR.AUC<-sum((tapply(X,X,"D10X")-AUC)^2)/(m*(m-1))+sum((tapply(Y,Y,"D01Y")-AUC)^2)/(m*(m-1))
+  VAR.AUC<-(1/(m*(m-1)))*(sum((tapply(X,X,"D10X")-AUC)^2)+(1/(n*(n-1)))*sum((tapply(Y,Y,"D01Y")-AUC)^2)) # pag 211
+  SD.AUC<-sqrt(VAR.AUC)
+  alpha<-1-CL
+  AUC.summary<-c(AUC- qnorm(1-alpha/2)*SD.AUC,AUC,AUC+ qnorm(1-alpha/2)*SD.AUC)
   names(AUC.summary)<-c("AUC inf conf limit", "AUC","AUC sup conf limit")
+
 
   #TP sum(test.table[i:nrow(test.table),2])
   #FP sum(test.table[i:nrow(test.table),1])
@@ -213,7 +206,7 @@ ROC<-function(gold,
       {points(1-test.diag.table$Specificity[which.max(test.cutoff.table$Accuracy)],
          test.diag.table$Sensitivity[which.max(test.cutoff.table$Accuracy)],
          col=1,pch=19)
-      title(sub="Cut-off estimated by maximazing accuracy")   
+      title(sub="Cut-off estimated by maximazing accuracy",cex.sub=0.85)   
       legend("bottomright",legend=(c(
          paste("cut off:",formatC(test.cutoff.table$test.values[which.max
             (test.cutoff.table$Accuracy)],digits=4)),
@@ -222,12 +215,12 @@ ROC<-function(gold,
          paste("Specificity:",formatC(test.diag.table$Specificity[which.max
             (test.cutoff.table$Accuracy)],digits=4)),
          paste("AUC:",formatC(AUC,digits=4))
-       )))}
+       )),bty="n")}
     if(Plot.point=="Max.DOR")
       {points(1-test.diag.table$Specificity[which.max(test.cutoff.table$DOR)],
          test.diag.table$Sensitivity[which.max(test.cutoff.table$DOR)],
          col=1,pch=19)
-       title(sub="Cut-off estimated by maximazing diagnostic odds ratio")  
+       title(sub="Cut-off estimated by maximazing diagnostic odds ratio",cex.sub=0.85)  
        legend("bottomright",legend=(c(
          paste("cut off:",formatC(test.cutoff.table$test.values[which.max
             (test.cutoff.table$DOR)],digits=4)),
@@ -236,12 +229,12 @@ ROC<-function(gold,
          paste("Specificity:",formatC(test.diag.table$Specificity[which.max
             (test.cutoff.table$DOR)],digits=4)),
          paste("AUC:",formatC(AUC,digits=4))
-       )))}
+       )),bty="n")}
     if(Plot.point=="Error.rate")
       {points(1-test.diag.table$Specificity[which.min(test.cutoff.table$Error.rate)],
          test.diag.table$Sensitivity[which.min(test.cutoff.table$Error.rate)],
          col=1,pch=19)
-       title(sub="Cut-off estimated by minimizing error rate")  
+       title(sub="Cut-off estimated by minimizing error rate",cex.sub=0.85)  
        legend("bottomright",legend=(c(
          paste("cut off:",formatC(test.cutoff.table$test.values[which.min
             (test.cutoff.table$Error.rate)],digits=4)),
@@ -250,12 +243,12 @@ ROC<-function(gold,
          paste("Specificity:",formatC(test.diag.table$Specificity[which.min
             (test.cutoff.table$Error.rate)],digits=4)),
          paste("AUC:",formatC(AUC,digits=4))
-       )))}
+       )),bty="n")}
     if(Plot.point=="Max.Accuracy.area")
       {points(1-test.diag.table$Specificity[which.max(test.cutoff.table$Accuracy.area)],
          test.diag.table$Sensitivity[which.max(test.cutoff.table$Accuracy.area)],
          col=1,pch=19)
-       title(sub="Cut-off estimated by maximazing the area related to accuracy")  
+       title(sub="Cut-off estimated by maximazing the area related to accuracy",cex.sub=0.85)  
        legend("bottomright",legend=(c(
          paste("cut off:",formatC(test.cutoff.table$test.values[which.max
             (test.cutoff.table$Accuracy.area)],digits=4)),
@@ -264,12 +257,12 @@ ROC<-function(gold,
          paste("Specificity:",formatC(test.diag.table$Specificity[which.max
             (test.cutoff.table$Accuracy.area)],digits=4)),
          paste("AUC:",formatC(AUC,digits=4))
-       )))}
+       )),bty="n")}
     if(Plot.point=="Max.Sens+Spec")
       {points(1-test.diag.table$Specificity[which.max(test.cutoff.table$Max.Se.Sp)],
          test.diag.table$Sensitivity[which.max(test.cutoff.table$Max.Se.Sp)],
          col=1,pch=19)
-      title(sub="Cut-off value where the sum Se + Sp is maximized")         
+      title(sub="Cut-off value where the sum Se + Sp is maximized",cex.sub=0.85)         
       legend("bottomright",legend=(c(
          paste("cut off:",formatC(test.cutoff.table$test.values[which.max
             (test.cutoff.table$Max.Se.Sp)],digits=4)),
@@ -278,12 +271,12 @@ ROC<-function(gold,
          paste("Specificity:",formatC(test.diag.table$Specificity[which.max
             (test.cutoff.table$Max.Se.Sp)],digits=4)),
          paste("AUC:",formatC(AUC,digits=4))
-       )))}
+       )),bty="n")}
     if(Plot.point=="Max.Youden")
       {points(1-test.diag.table$Specificity[which.max(test.cutoff.table$Youden)],
          test.diag.table$Sensitivity[which.max(test.cutoff.table$Youden)],
          col=1,pch=19)
-       title(sub="Cut-off estimated by maximazing Youden Index")         
+       title(sub="Cut-off estimated by maximazing Youden Index",cex.sub=0.85)         
        legend("bottomright",legend=(c(
          paste("cut off:",formatC(test.cutoff.table$test.values[which.max
             (test.cutoff.table$Youden)],digits=4)),
@@ -292,12 +285,12 @@ ROC<-function(gold,
          paste("Specificity:",formatC(test.diag.table$Specificity[which.max
             (test.cutoff.table$Youden)],digits=4)),
          paste("AUC:",formatC(AUC,digits=4))
-       )))}
+       )),bty="n")}
     if(Plot.point=="Se=Sp")
       {points(1-test.diag.table$Specificity[which.min(test.cutoff.table$Se.equals.Sp)],
          test.diag.table$Sensitivity[which.min(test.cutoff.table$Se.equals.Sp)],
          col=1,pch=19)
-       title(sub="Cut-off value where Se is the closest to Sp")
+       title(sub="Cut-off value where Se is the closest to Sp",cex.sub=0.85)
        legend("bottomright",legend=(c(
          paste("cut off:",formatC(test.cutoff.table$test.values[which.min
             (test.cutoff.table$Se.equals.SP)],digits=4)),
@@ -306,12 +299,12 @@ ROC<-function(gold,
          paste("Specificity:",formatC(test.diag.table$Specificity[which.min
             (test.cutoff.table$Se.equals.SP)],digits=4)),
          paste("AUC:",formatC(AUC,digits=4))
-       )))}
+       )),bty="n")}
     if(Plot.point=="Min.ROC.Dist")
       {points(1-test.diag.table$Specificity[which.min(test.cutoff.table$MinRocDist)],
          test.diag.table$Sensitivity[which.min(test.cutoff.table$MinRocDist)],
          col=1,pch=19)
-       title(sub="Cut-off that minimizes the distance between the curve and upper left corner")         
+       title(sub="Cut-off that minimizes the distance between the curve and upper left corner",cex.sub=0.85)         
        legend("bottomright",legend=(c(
          paste("cut off:",formatC(test.cutoff.table$test.values[which.min
             (test.cutoff.table$MinRocDist)],digits=4)),
@@ -320,13 +313,13 @@ ROC<-function(gold,
          paste("Specificity:",formatC(test.diag.table$Specificity[which.min
             (test.cutoff.table$MinRocDist)],digits=4)),
          paste("AUC:",formatC(AUC,digits=4))
-       )))}
+       )),bty="n")}
     if(Plot.point=="Max.Efficiency")
       {points(1-test.diag.table$Specificity[which.max(test.cutoff.table$Efficiency)],
          test.diag.table$Sensitivity[which.max(test.cutoff.table$Efficiency)],
          col=1,pch=19)
        title(sub=paste("Cut-off maximizing efficiency: population prevalence =",
-             formatC(pop.prevalence,digits=2)))         
+             formatC(pop.prevalence,digits=2)),cex.sub=0.85)         
        legend("bottomright",legend=(c(
          paste("cut off:",formatC(test.cutoff.table$test.values[which.max
             (test.cutoff.table$Efficiency)],digits=4)),
@@ -335,14 +328,14 @@ ROC<-function(gold,
          paste("Specificity:",formatC(test.diag.table$Specificity[which.max
             (test.cutoff.table$Efficiency)],digits=4)),
          paste("AUC:",formatC(AUC,digits=4))
-       )))}
+       )),bty="n")}
     if(Plot.point=="Min.MCT")
       {points(1-test.diag.table$Specificity[which.min(test.cutoff.table$MCT)],
          test.diag.table$Sensitivity[which.min(test.cutoff.table$MCT)],
          col=1,pch=19)
        title(sub=paste("Cut-off minimazing MCT: population prevalence =",
              formatC(pop.prevalence,digits=2),"; cost(FN)/cost(FP)=",
-             formatC(Cost,digits=2)))                  
+             formatC(Cost,digits=2)),cex.sub=0.85)                  
        legend("bottomright",legend=(c(
          paste("cut off:",formatC(test.cutoff.table$test.values[which.min
             (test.cutoff.table$MCT)],digits=4)),
@@ -351,7 +344,7 @@ ROC<-function(gold,
          paste("Specificity:",formatC(test.diag.table$Specificity[which.min
             (test.cutoff.table$MCT)],digits=4)),
          paste("AUC:",formatC(AUC,digits=4))
-       )))}
+       )),bty="n")}
   }
   names(pop.prevalence)<-c("Informed disease prevalence - same as sample prevalence if not informed")
   names(sample.prevalence)<-c("Observed prevalence by gold standard")

@@ -33,10 +33,10 @@ plot.diag will draw a very simple nomogram as many examples from wikipedia
 JA Knotterus, The Evidence Based Clinical Diagnosis; BMJBooks, 2002
 
 }
-\author{Pedro Brasil; \email{pedro.brasil@ipec.fiocruz.br}}
-\note{Bug reports, malfunctioning, or suggestions for further improvements or contributions can be sent, preferentially, through the DiagnosisMed R-Forge website \url{https://r-forge.r-project.org/projects/diagnosismed/}.
+\author{Pedro Brasil - \email{diagnosismed-list@lists.r-forge.r-project.org}}
+\note{Bug reports, malfunctioning, or suggestions for further improvements or contributions can be sent, preferentially, through the DiagnosisMed email list, or R-Forge website \url{https://r-forge.r-project.org/projects/diagnosismed/}.
 }
-\seealso{\code{\link{diagnosis}},\link[Design]{nomogram},\link[epiR]{epi.nomogram}}
+\seealso{\code{\link{diagnosis}},\link[Design]{nomogram},\link[epiR]{epi.nomogram},\code{\link{ROC}}}
 \examples{
 #This will draw a ROC curve
 mytest<-diagnosisI(364,22,17,211, print=TRUE, plot=TRUE)

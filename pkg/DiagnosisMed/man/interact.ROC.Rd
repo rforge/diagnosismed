@@ -31,18 +31,30 @@ interact.ROC is a call from roc.demo{TeachingDemo}. The difference is that
  multiplying it by -1 before running interact.ROC.
 }
 \value{
-A ROC graph with a sliding button to interact and see the Sensitivity and
-Specificity changes while changing the cut-off.
+interact.ROC generates two graphs in the same window: the upper graph is a ROC graph 
+ (Sensitivity on the vertical axis and 1-Specificity on the horizontal axis); the lower
+ graph is a density plot (the density on the vertical axis and the test cut-off (or threshold) 
+ on the horizontal axis). With a sliding button is possible to interact and see how 
+ the Sensitivity and Specificity changes while changing the cut-off. In the upper graph 
+ the cut-off is represented by the different dots and the purple line represents the distance 
+ to the "optimal" threshold. At the lower graph, the red line and dashes represent the density 
+ and the test result from those without the target condition respectively. While the blue ones 
+ represent those with the target condition. If the dashes are at the bottom of the lower graph 
+ then they are classified as without the target condition, if at the top, with the target condition.
+ The green vertical line represents the cut-off and changes with the sliding button. The 
+ cut-off itself can be seen right above the sliding button and the respective 
+ sensitivity and specificity at the bottom of the graph window. 
+
 }
 \references{
 
 JA Knotterus, The Evidence Based Clinical Diagnosis; BMJBooks, 2002
 
 }
-\author{Pedro Brasil - \email{pedro.brasil@ipec.fiocruz.br}}
-\note{Bug reports, malfunctioning, or suggestions for further improvements or contributions can be sent, preferentially, through the DiagnosisMed R-Forge website \url{https://r-forge.r-project.org/projects/diagnosismed/}.
+\author{Pedro Brasil - \email{diagnosismed-list@lists.r-forge.r-project.org}}
+\note{Bug reports, malfunctioning, or suggestions for further improvements or contributions can be sent, preferentially, through the DiagnosisMed email list, or R-Forge website \url{https://r-forge.r-project.org/projects/diagnosismed/}.
 }
-\seealso{\code{\link{diagnosis}},\code{\link{ROC}},\link[epicalc]{ROC},\link[TeachingDemos]{roc.demo}}
+\seealso{\code{\link{diagnosis}},\code{\link{ROC}},\link[ROCR]{performance},\link[TeachingDemos]{roc.demo}}
 \examples{
 data(rocdata)
 attach(rocdata)

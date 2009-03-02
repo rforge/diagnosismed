@@ -81,10 +81,10 @@ Xiou-Hua Zhou, Nancy A Obuchowsky, Donna McClish. Statistical Mehods in diagnost
 
 Simel D, Samsa G, Matchar D (1991). Likelihood ratios with confidence: Sample size estimation for diagnostic test studies. Journal of Clinical Epidemiology 44: 763 - 770
 }
-\author{Pedro Brasil - \email{pedro.brasil@ipec.fiocruz.br}}
-\note{Bug reports, malfunctioning, or suggestions for further improvements or contributions can be sent, preferentially, through the DiagnosisMed R-Forge website \url{https://r-forge.r-project.org/projects/diagnosismed/}.
+\author{Pedro Brasil - \email{diagnosismed-list@lists.r-forge.r-project.org}}
+\note{Bug reports, malfunctioning, or suggestions for further improvements or contributions can be sent, preferentially, through the DiagnosisMed email list, or R-Forge website \url{https://r-forge.r-project.org/projects/diagnosismed/}.
 }
-\seealso{\code{\link{plot.diag}}, \link[epicalc]{ROC}, \link[epitools]{binom.conf.int},
+\seealso{\code{\link{plot.diag}}, \code{\link{ROC}}, \link[epitools]{binom.conf.int},
  \link[epibasix]{sensSpec},\link[epiR]{epi.tests}}
 \examples{
 # Simulating a dataset

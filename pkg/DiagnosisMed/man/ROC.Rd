@@ -25,7 +25,7 @@ ROC(gold,
         coded either as 0 - without target disease - or 1 - with the target disease;
         or could be coded \link[base]{as.factor} with the words "negative" - without target disease - and
         "positive"  - with the target disease.}
-  \item{test}{The index test or test under evaluation. A column in a dataframe or
+  \item{test}{The index test or test under evaluation. A column in a dataframe or vector
         indicating the test results in a continuous scale. May also work with discrete
         ordinal scale.}
   \item{CL}{Confidence limit. The limits of the confidence interval. Must be coded
@@ -82,11 +82,15 @@ ROC(gold,
    that behave like glucose (middle values are supposed to be normal and
    extreme values are supposed to be abnormal) and immunefluorescence (lower
    values - higher dilutions - are suppose to be abnormal) will not be correctly
-   analyzed. In the latter example, multiplying the test results by -1 or other
+   analyzed. In the latter, multiplying the test results by -1 or other
    transformation before analysis could make it work. The result table with the
-   Print.full option, has more columns than can be shown in the screen. R
+   Print.full option, may have more columns than can be shown in the screen. R
    automatically  shows these columns below, therefore one has to be careful when
-   relating the corresponding lines.
+   relating the corresponding lines. The AUC (area under the ROC curve) is estimated 
+   by the trapezoidal method (also known as Mann-Whitney statistic), its confidence
+   interval is estimated by DeLong method. The validity measures such as 
+   Sensitivity, Specificity and Likelihood ratios are estimated as 
+   in \code{\link{diagnosis}} function.
    
    Diagnostic odds ratio: \eqn{DOR = (TP*TN)/(FN*FP); the same as: DOR = PLR/NLR}
 
@@ -125,27 +129,28 @@ S.B. Cantor, C.C. Sun, G. Tortolero-Luna, R. Richards-Kortum, and M. Follen. (19
 
 Greiner, M. (1996) Two-graph receiver operating characteristic (TG-ROC): update version supports optimisation of cut-off values that minimize overall misclassification costs. J.Immunol.Methods 191:93-94.
 
+Gengsheng Qin, Lejla Hotilovac. Comparison of non-parametric confidence intervals for the area under the ROC curve of a continuous-scale disagnostic test. Statistical Methods in Medical Research 2008; 17:207-221.
+
 }
 
-\author{Pedro Brasil - \email{pedro.brasil@ipec.fiocruz.br}}
-\note{Bug reports, malfunctioning, or suggestions for further improvements or contributions can be sent, preferentially, through the DiagnosisMed R-Forge website \url{https://r-forge.r-project.org/projects/diagnosismed/}.
+\author{Pedro Brasil - \email{diagnosismed-list@lists.r-forge.r-project.org}}
+\note{Bug reports, malfunctioning, or suggestions for further improvements or contributions can be sent, preferentially, through the DiagnosisMed email list, or R-Forge website \url{https://r-forge.r-project.org/projects/diagnosismed/}.
 }
-\seealso{\code{\link{diagnosis}},\code{\link{interact.ROC}},\link[PresenceAbsence]{optimal.thresholds},
-         \link[epicalc]{roc.from.table},\link[ROCR]{prediction}}
+\seealso{\link[epitools]{binom.conf.int},\code{\link{diagnosis}},\code{\link{interact.ROC}},\link[ROCR]{performance}}
 \examples{
 # loading a dataset
 data(tutorial)
-# attaching a dataset
-attach(tutorial)
-# The reference standard is not in the correct format
-# Recoding the reference standard to "positive" & "negative"
-tutorial$Gold2<-as.factor(ifelse(Gold=="pos","positive","negative"))
-# attaching the data set with the modifications
+# The reference standard is not in the correct format.
+# Recoding the reference standard to "positive" & "negative" in a new variable.
+tutorial$Gold2<-as.factor(ifelse(tutorial$Gold=="pos","positive","negative"))
+# Attaching the data set with the modifications.
 attach(tutorial)
 # A little description of the data set to check if it is ok!
 str(tutorial)
-# Running ROC analysis with the standard options
-ROC(Gold2,Test_B)
+# Running ROC analysis with the full table option.
+ROC(Gold2,Test_B,Print.full=TRUE)
+# Adding a title to the graph.
+title(main="ROC graph")
 }
 \keyword{iplot}
 \keyword{univar}

@@ -53,7 +53,7 @@ or could be coded <a onclick="findlink('base', 'as.factor.html')" style="text-de
 "positive"  - with the target disease.</td></tr>
 <tr valign="top"><td><code>test</code></td>
 <td>
-The index test or test under evaluation. A column in a dataframe or
+The index test or test under evaluation. A column in a dataframe or vector
 indicating the test results in a continuous scale. May also work with discrete
 ordinal scale.</td></tr>
 <tr valign="top"><td><code>CL</code></td>
@@ -127,11 +127,15 @@ condition and those with lower values are without the target condition. Tests
 that behave like glucose (middle values are supposed to be normal and
 extreme values are supposed to be abnormal) and immunefluorescence (lower
 values - higher dilutions - are suppose to be abnormal) will not be correctly
-analyzed. In the latter example, multiplying the test results by -1 or other
+analyzed. In the latter, multiplying the test results by -1 or other
 transformation before analysis could make it work. The result table with the
-Print.full option, has more columns than can be shown in the screen. R
+Print.full option, may have more columns than can be shown in the screen. R
 automatically  shows these columns below, therefore one has to be careful when
-relating the corresponding lines.
+relating the corresponding lines. The AUC (area under the ROC curve) is estimated 
+by the trapezoidal method (also known as Mann-Whitney statistic), its confidence
+interval is estimated by DeLong method. The validity measures such as 
+Sensitivity, Specificity and Likelihood ratios are estimated as 
+in <code><a href="diagnosis.html">diagnosis</a></code> function.
 </p>
 <p>
 Diagnostic odds ratio: <i>DOR = (TP*TN)/(FN*FP); the same as: DOR = PLR/NLR</i>
@@ -185,14 +189,14 @@ likelihood ratio (and their confidence limits)</td></tr>
 <h3>Note</h3>
 
 <p>
-Bug reports, malfunctioning, or suggestions for further improvements or contributions can be sent, preferentially, through the DiagnosisMed R-Forge website <a href="https://r-forge.r-project.org/projects/diagnosismed/">https://r-forge.r-project.org/projects/diagnosismed/</a>.
+Bug reports, malfunctioning, or suggestions for further improvements or contributions can be sent, preferentially, through the DiagnosisMed email list, or R-Forge website <a href="https://r-forge.r-project.org/projects/diagnosismed/">https://r-forge.r-project.org/projects/diagnosismed/</a>.
 </p>
 
 
 <h3>Author(s)</h3>
 
 <p>
-Pedro Brasil - <a href="mailto:pedro.brasil@ipec.fiocruz.br">pedro.brasil@ipec.fiocruz.br</a>
+Pedro Brasil - <a href="mailto:diagnosismed-list@lists.r-forge.r-project.org">diagnosismed-list@lists.r-forge.r-project.org</a>
 </p>
 
 
@@ -213,13 +217,15 @@ S.B. Cantor, C.C. Sun, G. Tortolero-Luna, R. Richards-Kortum, and M. Follen. (19
 <p>
 Greiner, M. (1996) Two-graph receiver operating characteristic (TG-ROC): update version supports optimisation of cut-off values that minimize overall misclassification costs. J.Immunol.Methods 191:93-94.
 </p>
+<p>
+Gengsheng Qin, Lejla Hotilovac. Comparison of non-parametric confidence intervals for the area under the ROC curve of a continuous-scale disagnostic test. Statistical Methods in Medical Research 2008; 17:207-221.
+</p>
 
 
 <h3>See Also</h3>
 
 <p>
-<code><a href="diagnosis.html">diagnosis</a></code>,<code><a href="interact.ROC.html">interact.ROC</a></code>,<a onclick="findlink('PresenceAbsence', 'optimal.thresholds.html')" style="text-decoration: underline; color: blue; cursor: hand">optimal.thresholds</a>,
-<a onclick="findlink('epicalc', 'roc.from.table.html')" style="text-decoration: underline; color: blue; cursor: hand">roc.from.table</a>,<a onclick="findlink('ROCR', 'prediction.html')" style="text-decoration: underline; color: blue; cursor: hand">prediction</a>
+<a onclick="findlink('epitools', 'binom.conf.int.html')" style="text-decoration: underline; color: blue; cursor: hand">binom.conf.int</a>,<code><a href="diagnosis.html">diagnosis</a></code>,<code><a href="interact.ROC.html">interact.ROC</a></code>,<a onclick="findlink('ROCR', 'performance.html')" style="text-decoration: underline; color: blue; cursor: hand">performance</a>
 </p>
 
 
@@ -228,17 +234,17 @@ Greiner, M. (1996) Two-graph receiver operating characteristic (TG-ROC): update 
 <pre>
 # loading a dataset
 data(tutorial)
-# attaching a dataset
-attach(tutorial)
-# The reference standard is not in the correct format
-# Recoding the reference standard to "positive" &amp; "negative"
-tutorial$Gold2&lt;-as.factor(ifelse(Gold=="pos","positive","negative"))
-# attaching the data set with the modifications
+# The reference standard is not in the correct format.
+# Recoding the reference standard to "positive" &amp; "negative" in a new variable.
+tutorial$Gold2&lt;-as.factor(ifelse(tutorial$Gold=="pos","positive","negative"))
+# Attaching the data set with the modifications.
 attach(tutorial)
 # A little description of the data set to check if it is ok!
 str(tutorial)
-# Running ROC analysis with the standard options
-ROC(Gold2,Test_B)
+# Running ROC analysis with the full table option.
+ROC(Gold2,Test_B,Print.full=TRUE)
+# Adding a title to the graph.
+title(main="ROC graph")
 </pre>
 
 <script Language="JScript">
@@ -252,6 +258,6 @@ location.href = link;
 </script>
 
 
-<hr><div align="center">[Package <em>DiagnosisMed</em> version 0.1.0 <a href="00Index.html">Index]</a></div>
+<hr><div align="center">[Package <em>DiagnosisMed</em> version 0.1.2.1 <a href="00Index.html">Index]</a></div>
 
 </body></html>
