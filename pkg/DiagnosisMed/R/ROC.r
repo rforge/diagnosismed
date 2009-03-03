@@ -61,7 +61,6 @@ ROC<-function(gold,
   AUC.summary<-c(AUC- qnorm(1-alpha/2)*SD.AUC,AUC,AUC+ qnorm(1-alpha/2)*SD.AUC)
   names(AUC.summary)<-c("AUC inf conf limit", "AUC","AUC sup conf limit")
 
-
   #TP sum(test.table[i:nrow(test.table),2])
   #FP sum(test.table[i:nrow(test.table),1])
   #TN sum(test.table[1:i-1,1])
