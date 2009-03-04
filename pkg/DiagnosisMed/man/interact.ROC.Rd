@@ -17,7 +17,7 @@ interact.ROC(gold, test)
    study (index test) results. Must be numeric.}
 }
 \details{
-interact.ROC is a call from roc.demo{TeachingDemo}. The difference is that
+interact.ROC is a call from roc.demo function in TeachingDemo package. The difference is that
  interact.ROC allow the input data be displayed as usually is in diagnostic
  studies, a column with the test result and the other with the reference standard
  results. Inside this function the "ask" option - which
