@@ -88,8 +88,10 @@ ROC(gold,
    automatically  shows these columns below, therefore one has to be careful when
    relating the corresponding lines. The AUC (area under the ROC curve) is estimated 
    by the trapezoidal method (also known as Mann-Whitney statistic), its confidence
-   interval is estimated by DeLong method. The validity measures such as 
-   Sensitivity, Specificity and Likelihood ratios are estimated as 
+   interval is estimated by DeLong method. The AUC confidence limits should be used only
+   to compare the AUC with the null value for AUC which is 0.5 and not to compare 
+   the AUC from different tests. The validity measures such as Sensitivity, 
+   Specificity and Likelihood ratios and its confidence limits are estimated as 
    in \code{\link{diagnosis}} function.
    
    Diagnostic odds ratio: \eqn{DOR = (TP*TN)/(FN*FP); the same as: DOR = PLR/NLR}

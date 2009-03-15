@@ -50,17 +50,16 @@ ROC<-function(gold,
   X<-test[gold=="negative"] # pag 209
   Y<-test[gold=="positive"] # pag 209
   }
-  m<-length(X) # pag 209
-  n<-length(Y) # pag 209
+  m<-length(X) # pag 209  
+  n<-length(Y) # pag 209  
   D10X<-function(Xi){(1/n)*sum(Y>=Xi)} # pag 211
   D01Y<-function(Yi){(1/m)*sum(Yi>=X)} # pag 211
-  VAR.AUC<-sum((tapply(X,X,"D10X")-AUC)^2)/(m*(m-1))+sum((tapply(Y,Y,"D01Y")-AUC)^2)/(m*(m-1))
-  VAR.AUC<-(1/(m*(m-1)))*(sum((tapply(X,X,"D10X")-AUC)^2)+(1/(n*(n-1)))*sum((tapply(Y,Y,"D01Y")-AUC)^2)) # pag 211
+  VAR.AUC<-sum((tapply(X,X,"D10X")-AUC)^2)/(m*(m-1))+sum((tapply(Y,Y,"D01Y")-AUC)^2)/(n*(n-1)) # pag 211
   SD.AUC<-sqrt(VAR.AUC)
   alpha<-1-CL
   AUC.summary<-c(AUC- qnorm(1-alpha/2)*SD.AUC,AUC,AUC+ qnorm(1-alpha/2)*SD.AUC)
   names(AUC.summary)<-c("AUC inf conf limit", "AUC","AUC sup conf limit")
-
+  
   #TP sum(test.table[i:nrow(test.table),2])
   #FP sum(test.table[i:nrow(test.table),1])
   #TN sum(test.table[1:i-1,1])
