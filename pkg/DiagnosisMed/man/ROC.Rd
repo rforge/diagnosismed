@@ -1,5 +1,6 @@
 \name{ROC}
 \alias{ROC}
+\alias{print.ROC}
 \title{Draw a ROC curve, estimate good cut-offs and compute validity measures
        for each cut-off}
 \description{
@@ -42,9 +43,9 @@ ROC(gold,
         Also, it can be inserted as any ratio such as 1/2.5 or 1/4.
         }
   \item{Prevalence}{Prevalence of the disease in the population who the test will
-        be performed. If left 0 (the default value), this will be replaced by the
+        be performed. It must be a value from 0 to 1. If left 0 (the default value), this will be replaced by the
         disease prevalence in the sample. This values will be used in the MCT and
-        Efficiency formulas to estime good cut-offs.}
+        Efficiency formulas to estimate good cut-offs.}
   \item{Plot}{If FALSE, the ROC curve plot will not be displayed. Default is TRUE.}
   \item{Plot.point}{The method of best cut-off estimation which will be displayed
         at ROC curve as a dot. Default is "Min.ROC.Dist". Possible options are:
@@ -135,10 +136,10 @@ Gengsheng Qin, Lejla Hotilovac. Comparison of non-parametric confidence interval
 
 }
 
-\author{Pedro Brasil - \email{diagnosismed-list@lists.r-forge.r-project.org}}
+\author{Pedro Brasil; Beranrdo Rangel Tura - \email{diagnosismed-list@lists.r-forge.r-project.org}}
 \note{Bug reports, malfunctioning, or suggestions for further improvements or contributions can be sent, preferentially, through the DiagnosisMed email list, or R-Forge website \url{https://r-forge.r-project.org/projects/diagnosismed/}.
 }
-\seealso{\link[epitools]{binom.conf.int},\code{\link{diagnosis}},\code{\link{interact.ROC}},\link[ROCR]{performance}}
+\seealso{\link[epitools]{binom.conf.int},\code{\link{diagnosis}},\code{\link{interact.ROC}},\code{\link{TGROC}},\link[ROCR]{performance}}
 \examples{
 # loading a dataset
 data(tutorial)

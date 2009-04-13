@@ -13,6 +13,7 @@ ROC<-function(gold,
   if (dim(test.table)[2] != 2){
       stop("It seems that your gold standard has more than 2 categories")
   }
+  CL<-CL
   # Sample size
   sample.size<-sum(test.table)
   # Sample prevalence, replace by pop prevalence if adequate
@@ -58,7 +59,7 @@ ROC<-function(gold,
   SD.AUC<-sqrt(VAR.AUC)
   alpha<-1-CL
   AUC.summary<-c(AUC- qnorm(1-alpha/2)*SD.AUC,AUC,AUC+ qnorm(1-alpha/2)*SD.AUC)
-  names(AUC.summary)<-c("AUC inf conf limit", "AUC","AUC sup conf limit")
+  #names(AUC.summary)<-c("AUC inf conf limit", "AUC","AUC sup conf limit")
   
   #TP sum(test.table[i:nrow(test.table),2])
   #FP sum(test.table[i:nrow(test.table),1])
@@ -344,13 +345,13 @@ ROC<-function(gold,
          paste("AUC:",formatC(AUC,digits=4))
        )),bty="n")}
   }
-  names(pop.prevalence)<-c("Informed disease prevalence - same as sample prevalence if not informed")
-  names(sample.prevalence)<-c("Observed prevalence by gold standard")
-  if(Print.full==TRUE){
-    page(test.diag.table,method="print")}
-  reteval<-list(pop.prevalence=pop.prevalence,sample.size=sample.size,
-                sample.prevalence=sample.prevalence,test.summary=test.summary,
-                AUC.summary=AUC.summary,test.best.cutoff=test.best.cutoff)
+  #names(pop.prevalence)<-c("Informed disease prevalence - same as sample prevalence if not informed")
+  #names(sample.prevalence)<-c("Observed prevalence by gold standard")
+   reteval<-list(pop.prevalence=pop.prevalence,sample.size=sample.size,sample.prevalence=sample.prevalence,test.summary=test.summary,AUC.summary=AUC.summary,test.best.cutoff=test.best.cutoff,test.diag.table=test.diag.table,CL=CL,test.cutoff.table=test.cutoff.table)
   invisible(reteval)
-  if(Print==TRUE)  {print(reteval)}
+  class(reteval)<-"ROC"
+  if(Print==TRUE){
+     if(Print.full==TRUE){ print(reteval,Full=TRUE) }
+     else{ print(reteval) }
+  }
 }

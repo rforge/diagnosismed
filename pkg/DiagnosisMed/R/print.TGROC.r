@@ -1,0 +1,16 @@
+print.TGROC<-function(x,...){
+  cat("                Sample size:",paste(x$sample.size),"\n")
+  cat("          Sample prevalence:",paste(round(x$sample.prevalence,digits = 4)),"\n")
+  cat("      Population prevalence:",paste(round(x$pop.prevalence,digits = 4))," - same as sample prevalence if not informed\n")
+  cat("      Informed cost - FP/FN:",paste(round(x$cost,digits = 4)),"\n")
+  cat("Informed inconclusive level:",paste(round(x$inc,digits = 4)),"\n")
+  cat("\n\n")
+  cat("Test summary.---------------------------------------------------------------\n")  
+  print(x$test.summary)
+  cat("\n\n")
+  cat("Non-paramentric inconclusive cut-off limits with",x$inc,"inconclusive tolerance. \n")  
+  print(x$non.parametric.inconclusive)
+  cat("\n\n")
+  cat("Best cut-off estimations with",x$conf.limit,"confidence limits. ----------------------\n")  
+  print(x$best.cutoff)
+}  

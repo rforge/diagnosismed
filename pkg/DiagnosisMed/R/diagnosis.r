@@ -24,32 +24,32 @@ diagnosis <- function(gold,test,CL=0.95,print=TRUE,plot=FALSE){
   p<-(TP+FN)/n
   # sensitivity and confidence limits
   Se<-TP/(TP+FN)
-  Se.cl<-as.numeric(binom.wilson(TP, TP+FN, conf.level = 0.95)[4:5])
+  Se.cl<-as.numeric(binom.wilson(TP, TP+FN, conf.level = CL)[4:5])
   # especificity and confidence limits
   Sp<-TN/(FP+TN)
-  Sp.cl<-as.numeric(binom.wilson(TN, FP+TN, conf.level = 0.95)[4:5])
+  Sp.cl<-as.numeric(binom.wilson(TN, FP+TN, conf.level = CL)[4:5])
   # positive and negative likelyhood ratios and confidence limits
   PLR<-Se/(1-Sp)
   # LR confidence limists inspired in epi.tests{epiR}
-  PLR.inf.cl<-exp(log(PLR)-(qnorm(1-((1-0.95)/2),mean=0,sd=1))*sqrt((1-Se)/(
+  PLR.inf.cl<-exp(log(PLR)-(qnorm(1-((1-CL)/2),mean=0,sd=1))*sqrt((1-Se)/(
     (TP+FN)*Sp)+(Sp)/((FP+TN)*(1-Sp))))
-  PLR.sup.cl<-exp(log(PLR)+(qnorm(1-((1-0.95)/2),mean=0,sd=1))*sqrt((1-Se)/(
+  PLR.sup.cl<-exp(log(PLR)+(qnorm(1-((1-CL)/2),mean=0,sd=1))*sqrt((1-Se)/(
     (TP+FN)*Sp)+(Sp)/((FP+TN)*(1-Sp))))
   NLR<-(1-Se)/Sp
-  NLR.inf.cl<-exp(log(NLR)-(qnorm(1-((1-0.95)/2),mean=0,sd=1))*sqrt((Se)/((TP+
+  NLR.inf.cl<-exp(log(NLR)-(qnorm(1-((1-CL)/2),mean=0,sd=1))*sqrt((Se)/((TP+
     FN)*(1-Se))+(1-Sp)/((FP+TN)*(Sp))))
-  NLR.sup.cl<-exp(log(NLR)+(qnorm(1-((1-0.95)/2),mean=0,sd=1))*sqrt((Se)/((TP+
+  NLR.sup.cl<-exp(log(NLR)+(qnorm(1-((1-CL)/2),mean=0,sd=1))*sqrt((Se)/((TP+
     FN)*(1-Se))+(1-Sp)/((FP+TN)*(Sp))))
   #accuracy and confidence limits
   accu<-(TP+TN)/n
-  accu.cl<-as.numeric(binom.wilson(TP+TN, n, conf.level = 0.95)[4:5])
+  accu.cl<-as.numeric(binom.wilson(TP+TN, n, conf.level = CL)[4:5])
   # positive and negative predictive values and confidence limits
   PPV<-TP/(TP+FP)
-  PPV.cl<-as.numeric(binom.wilson(TP, TP+FP, conf.level = 0.95)[4:5])
+  PPV.cl<-as.numeric(binom.wilson(TP, TP+FP, conf.level = CL)[4:5])
   NPV<-TN/(TN+FN)
-  NPV.cl<-as.numeric(binom.wilson(TN, TN+FN, conf.level = 0.95)[4:5])
+  NPV.cl<-as.numeric(binom.wilson(TN, TN+FN, conf.level = CL)[4:5])
   # diagnostic odds ratio and confidence limits
-  OR<-oddsratio(tab)
+  OR<-oddsratio(tab,conf.level = CL)
   DOR<-OR$measure[2,1]
   #DOR<-(TP*TN)/(FP*FN)
   DOR.inf.cl<-OR$measure[2,2]
@@ -58,7 +58,7 @@ diagnosis <- function(gold,test,CL=0.95,print=TRUE,plot=FALSE){
   # error rate and error trade
   #ER<-((FN/(FN+TN))*p)+(((FP/(FP+TP))*(TN+FP))
   ER<-(FN+FP)/n
-  ER.cl<-as.numeric(binom.wilson(FN+FP, n, conf.level = 0.95)[4:5])
+  ER.cl<-as.numeric(binom.wilson(FN+FP, n, conf.level = CL)[4:5])
   ET<-(FN/FP)
   # pre-test and pos-test odds (to do)
   # area under ROC curve

@@ -40,7 +40,7 @@ diagnosisI <- function(TP,FN,FP,TN,CL=0.95,print=TRUE,plot=FALSE){
   NPV<-TN/(TN+FN)
   NPV.cl<-as.numeric(binom.wilson(TN, TN+FN, conf.level = CL)[4:5])
   # diagnostic odds ratio and confidence limits
-  OR<-oddsratio(tab)
+  OR<-oddsratio(tab,conf.level = CL)
   DOR<-OR$measure[2,1]
   #DOR<-(TP*TN)/(FP*FN)
   DOR.inf.cl<-OR$measure[2,2]
@@ -58,6 +58,7 @@ diagnosisI <- function(TP,FN,FP,TN,CL=0.95,print=TRUE,plot=FALSE){
   if(plot==FALSE)
     {ROC<-roc.from.table(tab, graph = FALSE)}
   AUC<-ROC$auc
+  # gives same results as AUC<-(Se+Sp)/2
   Youden<-Se+Sp-1
   Youden.inf.cl<-Youden-qnorm(CL/2)*sqrt(((Se * (1 - Se))/(TP+FN) +
            ((Sp * (1 - Sp))/(TN+FP))))
