@@ -1,4 +1,4 @@
-print.ROC<-function(x,...,Full=FALSE){
+print.ROC<-function(x,Full=FALSE,...){
   if (Full==TRUE){ page(x$test.diag.table,method="print")}
   cat("          Sample size:",paste(x$sample.size),"\n")
   cat("    Sample prevalence:",paste(round(x$sample.prevalence,digits = 4)),"\n")

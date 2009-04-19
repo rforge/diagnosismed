@@ -3,7 +3,7 @@
 \alias{print.TGROC}
 \title{TG-ROC - Two Graphic Receiver Operating Characteristic}
 \description{
-TGROC draws a graph of sensitivity and specificity with the variations of a diagnostic test scale. Also, it demonstrates which cut-offs (or decision thresholds) may trichotomize the test results into a range where the test is good to identify those with the target condition, a inconclusive range and a range where the test is good to identify those without the target disease according with the researcher tolerance. Also, it estimates and graphically demonstrates good cut-offs by different methods. 
+TGROC draws a graph of sensitivity and specificity with the variations of a diagnostic test scale. Also, it demonstrates which cut-offs (or decision thresholds) may trichotomize the test results into a range where the test is good to identify those with the target condition, a inconclusive range and a range where the test is good to identify those without the target condition according with the researcher tolerance. Also, it estimates and graphically demonstrates good cut-offs by different methods. 
 }
 \usage{
 TGROC(gold,
@@ -20,11 +20,11 @@ TGROC(gold,
       Print = TRUE)
 }
 \arguments{
-  \item{gold}{The reference standard. A column in a data frame or a vector indicating the classification by the reference test. The reference standard must have two levels: must be coded either as 0 - without target disease - or 1 - with the target disease;  or could be coded \link[base]{as.factor} with the words "negative" - without target disease - and "positive"  - with the target disease.}
+  \item{gold}{The reference standard. A column in a data frame or a vector indicating the classification by the reference test. The reference standard must have two levels: must be coded either as 0 - without target condition - or 1 - with the target condition;  or could be coded \link[base]{as.factor} with the words "negative" - without target condition - and "positive"  - with the target condition.}
   \item{test}{ The index test or test under evaluation. A column in a dataframe or vector indicating the test results in a continuous scale. May also work with discrete ordinal scale.}
   \item{Cost}{Cost = cost(FN)/cost(FP). MCT (misclassification cost term) will be used to estimate a good cut-off. It is a value in a range from 0 to infinite. Could be financial cost or a health outcome with the perception that FN are more undesirable than FP (or the other way around). This item will run into MCT - (1-prevalence)*(1-Sp)+Cost*prevalence(1-Se). Cost=1 means FN and FP have even cost. Cost = 0.9 means FP are 10 percent more costly. Cost = 0.769 means that FP are 30 percent more costly. Cost =  0.555 means that FP are 80 percent more costly. Cost = 0.3 means that FP are 3 times more costly. Cost = 0.2 means that FP are 5 times more costly. Also, it can be inserted as any ratio such as 1/2.5 or 1/4.}
   \item{CL}{ Confidence limit. The limits of the confidence interval. Must be coded as number in range from 0 to 1. Default value is 0.95}
-  \item{Inconclusive}{Inconclusive is a value that ranges from 0 to 1 that identify the test range where the performance of the test is not acceptable and thus considered inconclusive. It represents the researcher tolerance of how good the test should be. If it is set to 0.95 (which is the default value), test results that have less than 0.95 sensitivity and specificity will be in the inconclusive range.}
+  \item{Inconclusive}{Inconclusive is a value that ranges from 0 to 1 that will identify the test range where the performance of the test is not acceptable and thus considered inconclusive. It represents the researcher tolerance of how good the test should be. If it is set to 0.95 (which is the default value), test results that have less than 0.95 sensitivity and specificity will be in the inconclusive range.}
   \item{Prevalence}{Prevalence of the disease in the population who the test will be performed. It must be a value from 0 to 1. If left 0 (the default value), this will be replaced by the disease prevalence in the sample. This values will be used in the MCT and Efficiency formulas to estimate good cut-offs.}
   \item{Plot}{If FALSE, the TG-ROC curve plot will not be displayed. Default is TRUE.}
   \item{Plot.inc.range}{Plot inconclusive range. If FALSE, the lines representing the limits of the inconclusive range will not be displayed. Default is TRUE. If Plot is FALSE than Plot.inc.range is not considered.}
@@ -57,7 +57,7 @@ M. Greiner, D. Sohr, P. Gobel (1995) A modified ROC analysis for the selection o
 \author{Pedro Brasil; - \email{diagnosismed-list@lists.r-forge.r-project.org}}
 \note{Bug reports, malfunctioning, or suggestions for further improvements or contributions can be sent, preferentially, through the DiagnosisMed email list, or R-Forge website \url{https://r-forge.r-project.org/projects/diagnosismed/}.
 }
-\seealso{\code{\link{interact.ROC}},\code{\link{ROC}},\code{\link{diagnosis}},\link[ROCR]{performance},\link[epitools]{binom.conf.int},}
+\seealso{\code{\link{interact.ROC}},\code{\link{ROC}},\code{\link{diagnosis}},\link[ROCR]{performance},\link[epitools]{binom.conf.int},link[nonbinROC]{contROC}}
 \examples{
 # Loading a dataset.
 data(tutorial)

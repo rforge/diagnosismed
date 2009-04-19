@@ -18,9 +18,7 @@
 <h3>Description</h3>
 
 <p>
-diagnosis estimate sensitivity, specificity, predictive values, likelihood
-ratios, area under ROC curve and other validity measures for binary diagnostic
-test evaluation.
+diagnosis estimate sensitivity, specificity, predictive values, likelihood ratios, area under ROC curve and other validity measures for binary diagnostic test evaluation.
 </p>
 
 
@@ -55,37 +53,19 @@ A number representing False Positives from a 2x2 table</td></tr>
 A number representing True Negatives from a 2x2 table</td></tr>
 <tr valign="top"><td><code>print</code></td>
 <td>
-If TRUE, diagnosis will print in the output window the
-statistics resulted from the 2x2 table. Default is TRUE.</td></tr>
+If TRUE, diagnosis will print in the output window the statistics resulted from the 2x2 table. Default is TRUE.</td></tr>
 <tr valign="top"><td><code>plot</code></td>
 <td>
-If TRUE, diagnosis will plot a ROC curve of the test under
-evaluation. This plot may later be edited, as any other plot, with title,
-legends etc. Default is FALSE.</td></tr>
+If TRUE, diagnosis will plot a ROC curve of the test under evaluation. This plot may later be edited, as any other plot, with title, legends etc. Default is FALSE.</td></tr>
 <tr valign="top"><td><code>CL</code></td>
 <td>
-Confidence limits for confidence intervals. Must be a numeric value
-between 0 and 1. Default is 0.95.</td></tr>
+Confidence limits for confidence intervals. Must be a numeric value between 0 and 1. Default is 0.95.</td></tr>
 </table>
 
 <h3>Details</h3>
 
 <p>
-In diagnosis, the values entered must be two variables in a data frame. The
-first one should be the gold standard and the second should be the index test.
-These two variables must be coded either as numeric - 0 for negative and 1 for a
-positive test - or with the words "positive" and "negative" or "presence" and
-"absence". Never code the variables as TRUE or FALSE; diagnosis will level this
-categories incorrectly. diagnosisI executes the very same statistics, but here,
-the values of a 2x2 table are inputted. TP is true positive; TN is true negative;
-FP is false positive and FN is false negative. Sensitivity, Specificity,
-Predictive values and Accuracy confidence limits rely on binomial distribution,
-which does not give result outside [0:1] such as normal distribution or
-asymptotic theory. DOR, Likelihood  ratios and Youden J index confidence limits
-rely on normal approximation (Wald method for likelihoods). The AUC (area under
-the ROC curve) is estimated by DeLong method (trapezoidal or Mann-Witney method)
-and so is its confidence limits. It is known that AUC by this method, for ordinal
-data, underestimate the true AUC.
+In diagnosis, the values entered must be two variables in a data frame. The first one should be the gold standard and the second should be the index test. These two variables must be coded either as numeric - 0 for negative and 1 for a positive test - or with the words "positive" and "negative" or "presence" and "absence". Never code the variables as TRUE or FALSE; diagnosis will level this categories incorrectly. diagnosisI executes the very same statistics, but here, the values of a 2x2 table are inputted. TP is true positive; TN is true negative; FP is false positive and FN is false negative. Sensitivity, Specificity, Predictive values and Accuracy confidence limits rely on binomial distribution, which does not give result outside [0:1] such as normal distribution or asymptotic theory. DOR, Likelihood  ratios and Youden J index confidence limits rely on normal approximation (Wald method for likelihoods). The AUC (area under the ROC curve) is estimated by trapezoidal (or Mann-Witney method). See formula below.
 </p>
 
 
@@ -131,18 +111,13 @@ for each decision threshold; here expressed as an odd - for binary results
 there is only one threshold</td></tr>
 <tr valign="top"><td><code>Error rate</code></td>
 <td>
-expresses how many errors we make when we diagnose patients
-with an abnormal test result as diseased, and those with a normal test result
-as non-diseased ((FP+FN)/sample size).</td></tr>
+Expresses how many errors we make when we diagnose patients with an abnormal test result as diseased, and those with a normal test result as non-diseased ((FP+FN)/sample size).</td></tr>
 <tr valign="top"><td><code>Accuracy</code></td>
 <td>
-overall measure that express the capacity of the test to correctly
-classify subjects with and without the target condition ((TP+TN)/(sample size))</td></tr>
+overall measure that express the capacity of the test to correctly classify subjects with and without the target condition ((TP+TN)/(sample size))</td></tr>
 <tr valign="top"><td><code>Area under ROC curve</code></td>
 <td>
-overall measure of accuracy - here the method is the
-trapezoidal (same as Mann-Whitney rank sum test or DeLong method). It gives
-identical results as (Se+SP)/2.</td></tr>
+overall measure of accuracy - here the method is the trapezoidal (same as Mann-Whitney rank sum test or DeLong method). It gives identical results as (Se+SP)/2.</td></tr>
 </table>
 
 <h3>Note</h3>
@@ -175,7 +150,7 @@ Simel D, Samsa G, Matchar D (1991). Likelihood ratios with confidence: Sample si
 <h3>See Also</h3>
 
 <p>
-<code><a href="plot.diag.html">plot.diag</a></code>, <code><a href="ROC.html">ROC</a></code>, <a onclick="findlink('epitools', 'binom.conf.int.html')" style="text-decoration: underline; color: blue; cursor: hand">binom.conf.int</a>,
+<code><a href="plot.diag.html">plot.diag</a></code>, <code><a href="ROC.html">ROC</a></code>,<code><a href="LRgrgaph.html">LRgraph</a></code>,<a onclick="findlink('epitools', 'binom.conf.int.html')" style="text-decoration: underline; color: blue; cursor: hand">binom.conf.int</a>,
 <a onclick="findlink('epibasix', 'sensSpec.html')" style="text-decoration: underline; color: blue; cursor: hand">sensSpec</a>,<a onclick="findlink('epiR', 'epi.tests.html')" style="text-decoration: underline; color: blue; cursor: hand">epi.tests</a>
 </p>
 
@@ -225,6 +200,6 @@ location.href = link;
 </script>
 
 
-<hr><div align="center">[Package <em>DiagnosisMed</em> version 0.1.2.1 <a href="00Index.html">Index]</a></div>
+<hr><div align="center">[Package <em>DiagnosisMed</em> version 0.2 <a href="00Index.html">Index]</a></div>
 
 </body></html>

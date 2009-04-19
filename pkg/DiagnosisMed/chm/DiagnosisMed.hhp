@@ -12,7 +12,9 @@ Title=R Help for package DiagnosisMed
 
 [FILES]
 00Index.html
+LRgrgaph.html
 ROC.html
+TGROC.html
 diagnosis.html
 interact.ROC.html
 plot.diag.html

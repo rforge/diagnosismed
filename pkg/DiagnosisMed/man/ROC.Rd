@@ -1,14 +1,9 @@
 \name{ROC}
 \alias{ROC}
 \alias{print.ROC}
-\title{Draw a ROC curve, estimate good cut-offs and compute validity measures
-       for each cut-off}
+\title{Draw a ROC curve, estimate good cut-offs and compute validity measures for each cut-off}
 \description{
-  Draw a non-parametric (empirical) ROC curve and compute test sensitivity,
-  specificity, predictive values and likelihood ratios (and respective confidence
-  limits) for each decision threshold. Estimate good decision threshold by a
-  variety of methods.
-}
+  Draw a non-parametric (empirical) ROC curve and compute test sensitivity, specificity, predictive values and likelihood ratios (and respective confidence limits) for each decision threshold. Estimate good decision threshold by a variety of methods.}
 \usage{
 ROC(gold,
     test,
@@ -21,34 +16,13 @@ ROC(gold,
     Print = TRUE)
 }
 \arguments{
-  \item{gold}{The reference standard. A column in a data frame indicating the classification
-        by the reference test. The reference standard must have two levels: must be
-        coded either as 0 - without target disease - or 1 - with the target disease;
-        or could be coded \link[base]{as.factor} with the words "negative" - without target disease - and
-        "positive"  - with the target disease.}
-  \item{test}{The index test or test under evaluation. A column in a dataframe or vector
-        indicating the test results in a continuous scale. May also work with discrete
-        ordinal scale.}
-  \item{CL}{Confidence limit. The limits of the confidence interval. Must be coded
-        as number in a range from 0 to 1. Default value is 0.95}
-  \item{Cost}{Cost = cost(FN)/cost(FP). MCT will be used to estimate a
-        good cut-off. It is a value in a range from 0 to infinite.
-        Could be financial cost or a health outcome with the perception that FN are
-        more undesirable than FP (or the other way around). This item will run
-        into MCT (misclassification cost term) - (1-prevalence)*(1-Sp)+Cost*prevalence(1-Se).
-        Cost=1 means FN and FP have even cost. Cost = 0.9 means FP are 10 percent
-        more costly. Cost = 0.769 means that FP are 30 percent more costly. Cost =
-        0.555 means that FP are 80 percent more costly. Cost = 0.3 means that FP
-        are 3 times more costly. Cost = 0.2 means that FP are 5 times more costly.
-        Also, it can be inserted as any ratio such as 1/2.5 or 1/4.
-        }
-  \item{Prevalence}{Prevalence of the disease in the population who the test will
-        be performed. It must be a value from 0 to 1. If left 0 (the default value), this will be replaced by the
-        disease prevalence in the sample. This values will be used in the MCT and
-        Efficiency formulas to estimate good cut-offs.}
+  \item{gold}{The reference standard. A column in a data frame indicating the classification by the reference test. The reference standard must have two levels: must be coded either as 0 - without target condition - or 1 - with the target condition; or could be coded \link[base]{as.factor} with the words "negative" - without target condition - and "positive"  - with the target condition.}
+  \item{test}{The index test or test under evaluation. A column in a dataframe or vector indicating the test results in a continuous scale. May also work with discrete ordinal scale.}
+  \item{CL}{Confidence limit. The limits of the confidence interval. Must be coded as number in a range from 0 to 1. Default value is 0.95}
+  \item{Cost}{Cost = cost(FN)/cost(FP). MCT will be used to estimate a good cut-off. It is a value in a range from 0 to infinite. Could be financial cost or a health outcome with the perception that FN are more undesirable than FP (or the other way around). This item will run into MCT (misclassification cost term) - (1-prevalence)*(1-Sp)+Cost*prevalence(1-Se). Cost=1 means FN and FP have even cost. Cost = 0.9 means FP are 10 percent more costly. Cost = 0.769 means that FP are 30 percent more costly. Cost = 0.555 means that FP are 80 percent more costly. Cost = 0.3 means that FP are 3 times more costly. Cost = 0.2 means that FP are 5 times more costly. Also, it can be inserted as any ratio such as 1/2.5 or 1/4.}
+  \item{Prevalence}{Prevalence of the disease in the population who the test will be performed. It must be a value from 0 to 1. If left 0 (the default value), this will be replaced by the disease prevalence in the sample. This values will be used in the MCT and Efficiency formulas to estimate good  cut-offs.}
   \item{Plot}{If FALSE, the ROC curve plot will not be displayed. Default is TRUE.}
-  \item{Plot.point}{The method of best cut-off estimation which will be displayed
-        at ROC curve as a dot. Default is "Min.ROC.Dist". Possible options are:
+  \item{Plot.point}{The method of best cut-off estimation which will be displayed at ROC curve as a dot. Default is "Min.ROC.Dist". Possible options are: 
         
         "Max.Accuracy" - the cut-off which maximize the accuracy;
         
@@ -70,30 +44,11 @@ ROC(gold,
 
         "Min.MCT" - the cut-off which minimize the misclassification cost term.
 }
-  \item{Print.full}{If TRUE, a table with sensitivity, specificity, predictive values
-        and likelihood ratios (and respective confidence limits) for each decision
-        threshold will be displayed.}
-  \item{Print}{If FALSE, no results (detailed below in vlaues section) will be displayed on the
-        output window. Default is TRUE}
+  \item{Print.full}{If TRUE, a table with sensitivity, specificity, predictive values and likelihood ratios (and respective confidence limits) for each decision threshold will be displayed.}
+  \item{Print}{If FALSE, no results (detailed below in vlaues section) will be displayed on the output window. Default is TRUE}
 }
 \details{
-   Tests results matching the cut-off values will be considered a positive test.
-   ROC assumes that subjects with higher values of the test are with the target
-   condition and those with lower values are without the target condition. Tests
-   that behave like glucose (middle values are supposed to be normal and
-   extreme values are supposed to be abnormal) and immunefluorescence (lower
-   values - higher dilutions - are suppose to be abnormal) will not be correctly
-   analyzed. In the latter, multiplying the test results by -1 or other
-   transformation before analysis could make it work. The result table with the
-   Print.full option, may have more columns than can be shown in the screen. R
-   automatically  shows these columns below, therefore one has to be careful when
-   relating the corresponding lines. The AUC (area under the ROC curve) is estimated 
-   by the trapezoidal method (also known as Mann-Whitney statistic), its confidence
-   interval is estimated by DeLong method. The AUC confidence limits should be used only
-   to compare the AUC with the null value for AUC which is 0.5 and not to compare 
-   the AUC from different tests. The validity measures such as Sensitivity, 
-   Specificity and Likelihood ratios and its confidence limits are estimated as 
-   in \code{\link{diagnosis}} function.
+   Tests results matching the cut-off values will be considered a positive test. ROC assumes that subjects with higher values of the test are with the target condition and those with lower values are without the target condition. Tests that behave like glucose (middle values are supposed to be normal and extreme values are supposed to be abnormal) and immunefluorescence (lower values - higher dilutions - are suppose to be abnormal) will not be correctly analyzed. In the latter, multiplying the test results by -1 or other transformation before analysis could make it work. The result table with the Print.full option, may have more columns than can be shown in the screen. R automatically  shows these columns below, therefore one has to be careful when relating the corresponding lines. The AUC (area under the ROC curve) is estimated by the trapezoidal method (also known as Mann-Whitney statistic), its confidence interval is estimated by DeLong method. The AUC confidence limits should be used only to compare the AUC with the null value for AUC which is 0.5 and not to compare the AUC from different tests. The validity measures such as Sensitivity, Specificity and Likelihood ratios and its confidence limits are estimated as in \code{\link{diagnosis}} function.
    
    Diagnostic odds ratio: \eqn{DOR = (TP*TN)/(FN*FP); the same as: DOR = PLR/NLR}
 
@@ -108,18 +63,13 @@ ROC(gold,
    Misclassification Cost Term: \eqn{MCT = (1-prevalence)*(1-Sp)+(cost(FN)/cost(FP))*prevalence*(1-Se)}
 }
 \value{
-  \item{pop.prevalence}{The disease prevalence informed by the user. If not
-        informed, it will be the same as the sample prevalence.}
+  \item{pop.prevalence}{The disease prevalence informed by the user. If not informed, it will be the same as the sample prevalence.}
   \item{sample.prevalence}{The disease prevalence in the sample}
   \item{sample.size}{The number of subjects analyzed}
-  \item{test.summary}{A table showing the quintiles, mean and standard deviation
-        of overall test results, test results from those with the target condition
-        and without the target condition}
+  \item{test.summary}{A table showing the quintiles, mean and standard deviation of overall test results, test results from those with the target condition and without the target condition}
   \item{AUC.summary}{A table showing the AUC estimated by DeLong method (trapezoidal)
         and its confidence limits.}
-  \item{test.best.cutoff}{A table showing the best cut-offs estimated by methods
-        described above, its corresponding sensitivity, specificity and positive
-        likelihood ratio (and their confidence limits)}
+  \item{test.best.cutoff}{A table showing the best cut-offs estimated by methods described above, its corresponding sensitivity, specificity and positive likelihood ratio (and their confidence limits)}
 }
 \references{
 Knotterus. The Evidence Based Clinical Diagnosis; BMJBooks, 2002.
@@ -139,7 +89,7 @@ Gengsheng Qin, Lejla Hotilovac. Comparison of non-parametric confidence interval
 \author{Pedro Brasil; Beranrdo Rangel Tura - \email{diagnosismed-list@lists.r-forge.r-project.org}}
 \note{Bug reports, malfunctioning, or suggestions for further improvements or contributions can be sent, preferentially, through the DiagnosisMed email list, or R-Forge website \url{https://r-forge.r-project.org/projects/diagnosismed/}.
 }
-\seealso{\link[epitools]{binom.conf.int},\code{\link{diagnosis}},\code{\link{interact.ROC}},\code{\link{TGROC}},\link[ROCR]{performance}}
+\seealso{\link[epitools]{binom.conf.int},\code{\link{diagnosis}},\code{\link{interact.ROC}},\code{\link{TGROC}},\link[ROCR]{performance},link[nonbinROC]{contROC}}
 \examples{
 # loading a dataset
 data(tutorial)

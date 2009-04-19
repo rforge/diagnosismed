@@ -36,7 +36,7 @@ JA Knotterus, The Evidence Based Clinical Diagnosis; BMJBooks, 2002
 \author{Pedro Brasil - \email{diagnosismed-list@lists.r-forge.r-project.org}}
 \note{Bug reports, malfunctioning, or suggestions for further improvements or contributions can be sent, preferentially, through the DiagnosisMed email list, or R-Forge website \url{https://r-forge.r-project.org/projects/diagnosismed/}.
 }
-\seealso{\code{\link{diagnosis}},\link[Design]{nomogram},\link[epiR]{epi.nomogram},\code{\link{ROC}}}
+\seealso{\code{\link{diagnosis}},\link[Design]{nomogram},\link[epiR]{epi.nomogram},\code{\link{ROC}},\code{\link{LRgraph}}}
 \examples{
 #This will draw a ROC curve
 mytest<-diagnosisI(364,22,17,211, print=TRUE, plot=TRUE)
