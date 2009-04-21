@@ -57,7 +57,7 @@ M. Greiner, D. Sohr, P. Gobel (1995) A modified ROC analysis for the selection o
 \author{Pedro Brasil; - \email{diagnosismed-list@lists.r-forge.r-project.org}}
 \note{Bug reports, malfunctioning, or suggestions for further improvements or contributions can be sent, preferentially, through the DiagnosisMed email list, or R-Forge website \url{https://r-forge.r-project.org/projects/diagnosismed/}.
 }
-\seealso{\code{\link{interact.ROC}},\code{\link{ROC}},\code{\link{diagnosis}},\link[ROCR]{performance},\link[epitools]{binom.conf.int},link[nonbinROC]{contROC}}
+\seealso{\code{\link{interact.ROC}},\code{\link{ROC}},\code{\link{diagnosis}},\link[ROCR]{performance},\link[epitools]{binom.conf.int},\link[nonbinROC]{contROC}}
 \examples{
 # Loading a dataset.
 data(tutorial)

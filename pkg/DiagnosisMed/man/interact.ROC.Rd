@@ -27,7 +27,7 @@ JA Knotterus, The Evidence Based Clinical Diagnosis; BMJBooks, 2002
 \author{Pedro Brasil - \email{diagnosismed-list@lists.r-forge.r-project.org}}
 \note{Bug reports, malfunctioning, or suggestions for further improvements or contributions can be sent, preferentially, through the DiagnosisMed email list, or R-Forge website \url{https://r-forge.r-project.org/projects/diagnosismed/}.
 }
-\seealso{\code{\link{diagnosis}},\code{\link{ROC}},\code{\link{TGROC}},\link[ROCR]{performance},\link[TeachingDemos]{roc.demo},link[nonbinROC]{contROC}}
+\seealso{\code{\link{diagnosis}},\code{\link{ROC}},\code{\link{TGROC}},\link[ROCR]{performance},\link[TeachingDemos]{roc.demo},\link[nonbinROC]{contROC}}
 \examples{
 data(rocdata)
 attach(rocdata)

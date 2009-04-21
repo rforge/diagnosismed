@@ -89,7 +89,7 @@ Gengsheng Qin, Lejla Hotilovac. Comparison of non-parametric confidence interval
 \author{Pedro Brasil; Beranrdo Rangel Tura - \email{diagnosismed-list@lists.r-forge.r-project.org}}
 \note{Bug reports, malfunctioning, or suggestions for further improvements or contributions can be sent, preferentially, through the DiagnosisMed email list, or R-Forge website \url{https://r-forge.r-project.org/projects/diagnosismed/}.
 }
-\seealso{\link[epitools]{binom.conf.int},\code{\link{diagnosis}},\code{\link{interact.ROC}},\code{\link{TGROC}},\link[ROCR]{performance},link[nonbinROC]{contROC}}
+\seealso{\link[epitools]{binom.conf.int},\code{\link{diagnosis}},\code{\link{interact.ROC}},\code{\link{TGROC}},\link[ROCR]{performance},\link[nonbinROC]{contROC}}
 \examples{
 # loading a dataset
 data(tutorial)
