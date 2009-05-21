@@ -100,10 +100,34 @@ tutorial$Gold2<-as.factor(ifelse(tutorial$Gold=="pos","positive","negative"))
 attach(tutorial)
 # A little description of the data set to check if it is ok!
 str(tutorial)
-# Running ROC analysis with the full table option.
-ROC(Gold2,Test_B,Print.full=TRUE)
+# Setting the plot window to get nine graphs
+# Some graphs showing some validity measures and some indexes variations used to choose good cut-offs
+par(mfrow=c(3,3))
+# Running ROC analysis with the full table option 
+# and storing ROC objects into 'x' from which there are tables to draw the graphs below.
+x<-ROC(Gold2,Test_B,Print.full=FALSE)
 # Adding a title to the graph.
 title(main="ROC graph")
+plot(x$test.cutoff.table$test.values,x$test.cutoff.table$DOR,type="l",ylab="DOR",xlab="Test values",ylim=c(0,60),xlim=c(0,2.5))
+title(main="Test values x DOR")
+plot(x$test.cutoff.table$test.values,x$test.cutoff.table$MCT,type="l",ylab="MCT",xlab="Test values",ylim=c(0,0.65),xlim=c(0,2.5))
+title(main="Test values x MCT")
+plot(x$test.cutoff.table$test.values,x$test.cutoff.table$Efficiency,type="l",ylab="Efficiency",xlab="Test values",ylim=c(0,.9),xlim=c(0,2.5))
+title(main="Test values x Efficiency")
+plot(x$test.cutoff.table$test.values,x$test.cutoff.table$Youden,type="l",ylab="Youden index",xlab="Test values",ylim=c(0,.8),xlim=c(0,2.5))
+title(main="Test values x Youden index")
+plot(x$test.diag.table$test.values,x$test.diag.table$PLR,type="l",ylim=c(0,12),ylab="Likelihood ratios",xlab="Test values",xlim=c(0,2.5))
+lines(x$test.diag.table$test.values,x$test.diag.table$NLR,type="l",lty=2)
+legend("right",lty=c(1,2),legend=c("PLR","NLR"))
+title(main="Test values x Likelihood ratios")
+plot(x$test.diag.table$test.values,x$test.diag.table$PPV,type="l",ylab="Predictive values",xlab="Test values",ylim=c(0,1),xlim=c(0,2.5))
+lines(x$test.diag.table$test.values,x$test.diag.table$NPV,type="l",lty=2,xlim=c(0,2.5))
+legend("bottomright",lty=c(1,2),legend=c("PPV","NPV"))
+title(main="Test values x Predictive values")
+plot(x$test.cutoff.table$test.values,x$test.cutoff.table$Accuracy.area,type="l",,ylab="Accuracy area",xlab="Test values",ylim=c(0,80),xlim=c(0,2.5))
+title(main="Test values x Accuracy area")
+plot(x$test.cutoff.table$test.values,x$test.cutoff.table$MinRocDist,type="l",,ylab="ROC distance",xlab="Test values",ylim=c(0,1),xlim=c(0,2.5))
+title(main="Test values x ROC distance")
 }
 \keyword{iplot}
 \keyword{univar}
