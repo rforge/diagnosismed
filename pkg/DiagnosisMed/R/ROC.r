@@ -5,6 +5,10 @@ ROC<-function(gold,
               Prevalence=0,
               Plot=TRUE,
               Plot.point="Min.ROC.Dist",
+              cex.sub=.85,
+              cex=1,
+              lwd=1,
+              p.cex=1,
               Print.full=FALSE,
               Print=TRUE
               ){
@@ -14,6 +18,7 @@ ROC<-function(gold,
       stop("It seems that your gold standard has more than 2 categories")
   }
   CL<-CL
+  cost<-Cost
   # Sample size
   sample.size<-sum(test.table)
   # Sample prevalence, replace by pop prevalence if adequate
@@ -104,7 +109,7 @@ ROC<-function(gold,
   test.cutoff.table<-as.data.frame(test.values)
   for(i in 1:nrow(test.cutoff.table)) {
     #Accuracy is (TP+TN)/sample.size
-    test.cutoff.table$Accuracy[i]<-sum(test.table[i:nrow(test.table),2])+sum(test.table[1:i-1,1])/sample.size
+    test.cutoff.table$Accuracy[i]<-(sum(test.table[i:nrow(test.table),2])+sum(test.table[1:i-1,1]))/sample.size
     test.cutoff.table$DOR[i]<-(((sum(test.table[i:nrow(test.table),2])*(sum(test.table[1:i-1,1])))/
     ((sum(test.table[i:nrow(test.table),1]))*(sum(test.table[1:i-1,2])))))
     test.cutoff.table$Error.rate[i]<-((sum(test.table[1:i-1,2]))+(sum(test.table[i:nrow(test.table),1])))/sample.size
@@ -150,156 +155,6 @@ ROC<-function(gold,
    "Max. Efficiency", "Min. MCT")
   rm(best.cutoff)
 
-  # the plot commands
-  if(Plot==TRUE){
-    plot(1-test.diag.table$Specificity,test.diag.table$Sensitivity,type="l",
-      col=1,xlab="1-Specificity",ylab="Sensitivity",xlim=c(0,1),ylim=c(0,1))
-    grid()
-    segments(0,0,1,1,col="lightgray")
-    if(Plot.point=="Max.Accuracy")
-      {points(1-test.diag.table$Specificity[which.max(test.cutoff.table$Accuracy)],
-         test.diag.table$Sensitivity[which.max(test.cutoff.table$Accuracy)],
-         col=1,pch=19)
-      title(sub="Cut-off estimated by maximazing accuracy",cex.sub=0.85)   
-      legend("bottomright",legend=(c(
-         paste("cut off:",formatC(test.cutoff.table$test.values[which.max
-            (test.cutoff.table$Accuracy)],digits=4)),
-         paste("Sensitivity:",formatC(test.diag.table$Sensitivity[which.max
-            (test.cutoff.table$Accuracy)],digits=4)),
-         paste("Specificity:",formatC(test.diag.table$Specificity[which.max
-            (test.cutoff.table$Accuracy)],digits=4)),
-         paste("AUC:",formatC(AUC,digits=4))
-       )),bty="n")}
-    if(Plot.point=="Max.DOR")
-      {points(1-test.diag.table$Specificity[which.max(test.cutoff.table$DOR)],
-         test.diag.table$Sensitivity[which.max(test.cutoff.table$DOR)],
-         col=1,pch=19)
-       title(sub="Cut-off estimated by maximazing diagnostic odds ratio",cex.sub=0.85)  
-       legend("bottomright",legend=(c(
-         paste("cut off:",formatC(test.cutoff.table$test.values[which.max
-            (test.cutoff.table$DOR)],digits=4)),
-         paste("Sensitivity:",formatC(test.diag.table$Sensitivity[which.max
-            (test.cutoff.table$DOR)],digits=4)),
-         paste("Specificity:",formatC(test.diag.table$Specificity[which.max
-            (test.cutoff.table$DOR)],digits=4)),
-         paste("AUC:",formatC(AUC,digits=4))
-       )),bty="n")}
-    if(Plot.point=="Error.rate")
-      {points(1-test.diag.table$Specificity[which.min(test.cutoff.table$Error.rate)],
-         test.diag.table$Sensitivity[which.min(test.cutoff.table$Error.rate)],
-         col=1,pch=19)
-       title(sub="Cut-off estimated by minimizing error rate",cex.sub=0.85)  
-       legend("bottomright",legend=(c(
-         paste("cut off:",formatC(test.cutoff.table$test.values[which.min
-            (test.cutoff.table$Error.rate)],digits=4)),
-         paste("Sensitivity:",formatC(test.diag.table$Sensitivity[which.min
-            (test.cutoff.table$Error.rate)],digits=4)),
-         paste("Specificity:",formatC(test.diag.table$Specificity[which.min
-            (test.cutoff.table$Error.rate)],digits=4)),
-         paste("AUC:",formatC(AUC,digits=4))
-       )),bty="n")}
-    if(Plot.point=="Max.Accuracy.area")
-      {points(1-test.diag.table$Specificity[which.max(test.cutoff.table$Accuracy.area)],
-         test.diag.table$Sensitivity[which.max(test.cutoff.table$Accuracy.area)],
-         col=1,pch=19)
-       title(sub="Cut-off estimated by maximazing the area related to accuracy",cex.sub=0.85)  
-       legend("bottomright",legend=(c(
-         paste("cut off:",formatC(test.cutoff.table$test.values[which.max
-            (test.cutoff.table$Accuracy.area)],digits=4)),
-         paste("Sensitivity:",formatC(test.diag.table$Sensitivity[which.max
-            (test.cutoff.table$Accuracy.area)],digits=4)),
-         paste("Specificity:",formatC(test.diag.table$Specificity[which.max
-            (test.cutoff.table$Accuracy.area)],digits=4)),
-         paste("AUC:",formatC(AUC,digits=4))
-       )),bty="n")}
-    if(Plot.point=="Max.Sens+Spec")
-      {points(1-test.diag.table$Specificity[which.max(test.cutoff.table$Max.Se.Sp)],
-         test.diag.table$Sensitivity[which.max(test.cutoff.table$Max.Se.Sp)],
-         col=1,pch=19)
-      title(sub="Cut-off value where the sum Se + Sp is maximized",cex.sub=0.85)         
-      legend("bottomright",legend=(c(
-         paste("cut off:",formatC(test.cutoff.table$test.values[which.max
-            (test.cutoff.table$Max.Se.Sp)],digits=4)),
-         paste("Sensitivity:",formatC(test.diag.table$Sensitivity[which.max
-            (test.cutoff.table$Max.Se.Sp)],digits=4)),
-         paste("Specificity:",formatC(test.diag.table$Specificity[which.max
-            (test.cutoff.table$Max.Se.Sp)],digits=4)),
-         paste("AUC:",formatC(AUC,digits=4))
-       )),bty="n")}
-    if(Plot.point=="Max.Youden")
-      {points(1-test.diag.table$Specificity[which.max(test.cutoff.table$Youden)],
-         test.diag.table$Sensitivity[which.max(test.cutoff.table$Youden)],
-         col=1,pch=19)
-       title(sub="Cut-off estimated by maximazing Youden Index",cex.sub=0.85)         
-       legend("bottomright",legend=(c(
-         paste("cut off:",formatC(test.cutoff.table$test.values[which.max
-            (test.cutoff.table$Youden)],digits=4)),
-         paste("Sensitivity:",formatC(test.diag.table$Sensitivity[which.max
-            (test.cutoff.table$Youden)],digits=4)),
-         paste("Specificity:",formatC(test.diag.table$Specificity[which.max
-            (test.cutoff.table$Youden)],digits=4)),
-         paste("AUC:",formatC(AUC,digits=4))
-       )),bty="n")}
-    if(Plot.point=="Se=Sp")
-      {points(1-test.diag.table$Specificity[which.min(test.cutoff.table$Se.equals.Sp)],
-         test.diag.table$Sensitivity[which.min(test.cutoff.table$Se.equals.Sp)],
-         col=1,pch=19)
-       title(sub="Cut-off value where Se is the closest to Sp",cex.sub=0.85)
-       legend("bottomright",legend=(c(
-         paste("cut off:",formatC(test.cutoff.table$test.values[which.min
-            (test.cutoff.table$Se.equals.SP)],digits=4)),
-         paste("Sensitivity:",formatC(test.diag.table$Sensitivity[which.min
-            (test.cutoff.table$Se.equals.SP)],digits=4)),
-         paste("Specificity:",formatC(test.diag.table$Specificity[which.min
-            (test.cutoff.table$Se.equals.SP)],digits=4)),
-         paste("AUC:",formatC(AUC,digits=4))
-       )),bty="n")}
-    if(Plot.point=="Min.ROC.Dist")
-      {points(1-test.diag.table$Specificity[which.min(test.cutoff.table$MinRocDist)],
-         test.diag.table$Sensitivity[which.min(test.cutoff.table$MinRocDist)],
-         col=1,pch=19)
-       title(sub="Cut-off that minimizes the distance between the curve and upper left corner",cex.sub=0.85)         
-       legend("bottomright",legend=(c(
-         paste("cut off:",formatC(test.cutoff.table$test.values[which.min
-            (test.cutoff.table$MinRocDist)],digits=4)),
-         paste("Sensitivity:",formatC(test.diag.table$Sensitivity[which.min
-            (test.cutoff.table$MinRocDist)],digits=4)),
-         paste("Specificity:",formatC(test.diag.table$Specificity[which.min
-            (test.cutoff.table$MinRocDist)],digits=4)),
-         paste("AUC:",formatC(AUC,digits=4))
-       )),bty="n")}
-    if(Plot.point=="Max.Efficiency")
-      {points(1-test.diag.table$Specificity[which.max(test.cutoff.table$Efficiency)],
-         test.diag.table$Sensitivity[which.max(test.cutoff.table$Efficiency)],
-         col=1,pch=19)
-       title(sub=paste("Cut-off maximizing efficiency: population prevalence =",
-             formatC(pop.prevalence,digits=2)),cex.sub=0.85)         
-       legend("bottomright",legend=(c(
-         paste("cut off:",formatC(test.cutoff.table$test.values[which.max
-            (test.cutoff.table$Efficiency)],digits=4)),
-         paste("Sensitivity:",formatC(test.diag.table$Sensitivity[which.max
-            (test.cutoff.table$Efficiency)],digits=4)),
-         paste("Specificity:",formatC(test.diag.table$Specificity[which.max
-            (test.cutoff.table$Efficiency)],digits=4)),
-         paste("AUC:",formatC(AUC,digits=4))
-       )),bty="n")}
-    if(Plot.point=="Min.MCT")
-      {points(1-test.diag.table$Specificity[which.min(test.cutoff.table$MCT)],
-         test.diag.table$Sensitivity[which.min(test.cutoff.table$MCT)],
-         col=1,pch=19)
-       title(sub=paste("Cut-off minimazing MCT: population prevalence =",
-             formatC(pop.prevalence,digits=2),"; cost(FN)/cost(FP)=",
-             formatC(Cost,digits=2)),cex.sub=0.85)                  
-       legend("bottomright",legend=(c(
-         paste("cut off:",formatC(test.cutoff.table$test.values[which.min
-            (test.cutoff.table$MCT)],digits=4)),
-         paste("Sensitivity:",formatC(test.diag.table$Sensitivity[which.min
-            (test.cutoff.table$MCT)],digits=4)),
-         paste("Specificity:",formatC(test.diag.table$Specificity[which.min
-            (test.cutoff.table$MCT)],digits=4)),
-         paste("AUC:",formatC(AUC,digits=4))
-       )),bty="n")}
-  }
   #names(pop.prevalence)<-c("Informed disease prevalence - same as sample prevalence if not informed")
   #names(sample.prevalence)<-c("Observed prevalence by gold standard")
    reteval<-list(pop.prevalence=pop.prevalence,
@@ -311,12 +166,17 @@ ROC<-function(gold,
                  test.best.cutoff=test.best.cutoff,
                  test.diag.table=test.diag.table,
                  CL=CL,
+                 cost=cost,
                  test.cutoff.table=test.cutoff.table)
   
   class(reteval)<-"ROC"
   if(Print==TRUE){
      if(Print.full==TRUE){ print(reteval,Full=TRUE) }
      else{ print(reteval) }
+  }
+  # the plot commands
+  if(Plot==TRUE){
+  plot(reteval,Plot.point=Plot.point,cex.sub=cex.sub,cex=cex,lwd=lwd,p.cex=p.cex)
   }
   invisible(reteval)
 }

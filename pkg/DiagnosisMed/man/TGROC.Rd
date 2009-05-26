@@ -97,7 +97,7 @@ data(tutorial)
 attach(tutorial)
 # Running the analysis
 TGROC(gold=Gold,test=Test_B)
-detach(tutorial)
+rm(tutorial)
 }
 \keyword{iplot}
 \keyword{univar}
