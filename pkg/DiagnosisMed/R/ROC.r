@@ -55,15 +55,15 @@ ROC<-function(gold,
   rownames(test.summary)<-c("Overall summary","Without disease", "With disease")
   AUC <- ((as.double(length(test[gold =="negative"]))) * (as.double(length(test[gold =="positive"]))) + ((as.double(length(test[gold =="negative"]))) * ((as.double(length(test[gold =="negative"]))) + 1))/2 - sum(rank(test,ties.method = "average")[gold =="negative"]))/((as.double(length(test[gold =="negative"]))) * (as.double(length(test[gold == "positive"]))))
   AUC[AUC < 0.5] <- 1 - AUC
-  X<-test[gold=="negative"] # pag 209
-  Y<-test[gold=="positive"] # pag 209
+  X<-test[gold=="negative"] 
+  Y<-test[gold=="positive"] 
   }
 
-  m<-length(X) # pag 209  
-  n<-length(Y) # pag 209  
-  D10X<-function(Xi){(1/n)*sum(Y>=Xi)} # pag 211
-  D01Y<-function(Yi){(1/m)*sum(Yi>=X)} # pag 211
-  VAR.AUC<-sum((tapply(X,X,"D10X")-AUC)^2)/(m*(m-1))+sum((tapply(Y,Y,"D01Y")-AUC)^2)/(n*(n-1)) # pag 211
+  m<-length(X) 
+  n<-length(Y) 
+  D10X<-function(Xi){(1/n)*sum(Y>=Xi)} 
+  D01Y<-function(Yi){(1/m)*sum(Yi>=X)} 
+  VAR.AUC<-sum((tapply(X,X,"D10X")-AUC)^2)/(m*(m-1))+sum((tapply(Y,Y,"D01Y")-AUC)^2)/(n*(n-1))
   SD.AUC<-sqrt(VAR.AUC)
   alpha<-1-CL
   AUC.summary<-c(AUC- qnorm(1-alpha/2)*SD.AUC,AUC,AUC+ qnorm(1-alpha/2)*SD.AUC)
@@ -73,88 +73,68 @@ ROC<-function(gold,
   #FP sum(test.table[i:nrow(test.table),1])
   #TN sum(test.table[1:i-1,1])
   #FN sum(test.table[1:i-1,2])
+  D<-sum(test.table[,2])
+  ND<-sum(test.table[,1])
 
   # Taking the rownames of the test.table to be results first column
   test.values<-(as.numeric(rownames(unclass(test.table))))
   test.diag.table<-as.data.frame(test.values)
   # Making a table with Se Sp PLR NLR PPV NPV and its confidence limits for each cut-off
   for (i in 1:nrow(test.diag.table)) {
-    test.diag.table$Sensitivity[i] <- round(sum(test.table[(i:nrow(test.table)),2])/sum(test.table[,2]),digits=4)
-    test.diag.table$Se.inf.cl[i]<-round(as.numeric(binom.wilson(sum(test.table[i:nrow(test.table),2]),sum(test.table[,2]),conf.level=CL)[4]),digits=4)
-    test.diag.table$Se.sup.cl[i]<-round(as.numeric(binom.wilson(sum(test.table[i:nrow(test.table),2]),sum(test.table[,2]),conf.level=CL)[5]),digits=4)
-    test.diag.table$Specificity[i] <- round((sum(test.table[(1:i-1),1]))/(sum(test.table[,1])),digits=4)
-    test.diag.table$Sp.inf.cl[i]<-round(as.numeric(binom.wilson(sum(test.table[(1:i-1),1]),sum(test.table[,1]),conf.level=CL)[4]),digits=4)
-    test.diag.table$Sp.sup.cl[i]<-round(as.numeric(binom.wilson(sum(test.table[(1:i-1),1]),sum(test.table[,1]),conf.level=CL)[5]),digits=4)
-    test.diag.table$PPV[i]<-round((sum(test.table[i:nrow(test.table),2]))/((sum(test.table[i:nrow(test.table),2]))+(sum(test.table[i:nrow(test.table),1]))),digits=4)
-    test.diag.table$PPV.inf.cl[i]<-round(as.numeric(binom.wilson(sum(test.table[i:nrow(test.table),2]),((sum(test.table[i:nrow(test.table),2]))+(sum(
-      test.table[i:nrow(test.table),1]))),conf.level=CL)[4]),digits=4)
-    test.diag.table$PPV.sup.cl[i]<-round(as.numeric(binom.wilson(sum(test.table[i:nrow(test.table),2]),((sum(test.table[i:nrow(test.table),2]))+(sum(
-      test.table[i:nrow(test.table),1]))),conf.level=CL)[5]),digits=4)
-    test.diag.table$NPV[i]<-round((sum(test.table[1:i-1,1]))/((sum(test.table[1:i-1,1]))+sum(test.table[1:i-1,2])),digits=4)
-    test.diag.table$NPV.inf.cl[i]<-round(as.numeric(binom.wilson(sum(test.table[1:i-1,1]),((sum(test.table[1:i-1,1]))+(sum(test.table[1:i-1,])))
-      ,conf.level=CL)[4]),digits=4)
-    test.diag.table$NPV.sup.cl[i]<-round(as.numeric(binom.wilson(sum(test.table[1:i-1,1]),((sum(test.table[1:i-1,1]))+(sum(test.table[1:i-1,])))
-      ,conf.level=CL)[5]),digits=4)
-  }
+    test.diag.table$TP[i] <- sum(test.table[i:nrow(test.table),2])
+    test.diag.table$FN[i] <- sum(test.table[1:i-1,2])
+    test.diag.table$FP[i] <- sum(test.table[i:nrow(test.table),1])
+    test.diag.table$TN[i] <- sum(test.table[1:i-1,1])
+  }  
+  test.diag.table$Sensitivity <- round(test.diag.table$TP/D,digits=4)
+  test.diag.table$Se.inf.cl <- round(binom.wilson(test.diag.table$TP,D,conf.level=CL)[4]$lower,digits=4)
+  test.diag.table$Se.sup.cl <- round(binom.wilson(test.diag.table$TP,D,conf.level=CL)[5]$upper,digits=4)
+  test.diag.table$Specificity <- round(test.diag.table$TN/ND,digits=4)
+  test.diag.table$Sp.inf.cl <- round(binom.wilson(test.diag.table$TN,ND,conf.level=CL)[4]$lower,digits=4)
+  test.diag.table$Sp.sup.cl <- round(binom.wilson(test.diag.table$TN,ND,conf.level=CL)[5]$upper,digits=4)
+  test.diag.table$PPV <- round(test.diag.table$TP/(test.diag.table$TP + test.diag.table$FP),digits=4)
+  test.diag.table$PPV.inf.cl <- round(binom.wilson(test.diag.table$TP,(test.diag.table$TP + test.diag.table$TP),conf.level=CL)[4]$lower,digits=4)
+  test.diag.table$PPV.sup.cl <- round(binom.wilson(test.diag.table$TP,(test.diag.table$TP + test.diag.table$FN),conf.level=CL)[5]$upper,digits=4)
+  test.diag.table$NPV <- round(test.diag.table$TN/(test.diag.table$TN + test.diag.table$FN),digits=4)
+  test.diag.table$NPV.inf.cl <- round(binom.wilson(test.diag.table$TN,(test.diag.table$TN + test.diag.table$FN),conf.level=CL)[4]$lower,digits=4)
+  test.diag.table$NPV.sup.cl <- round(binom.wilson(test.diag.table$TN,(test.diag.table$TN + test.diag.table$FN),conf.level=CL)[5]$upper,digits=4)
   test.diag.table$PLR<-round(test.diag.table$Sensitivity/(1-test.diag.table$Specificity),digits=2)
-  test.diag.table$PLR.inf.cl<-round(exp(log(test.diag.table$PLR)-(qnorm(1-((1-CL)/2),mean=0,sd=1))*sqrt((1-test.diag.table$Sensitivity)/
-    ((sum(test.diag.table[,2]))*test.diag.table$Specificity)+(test.diag.table$Specificity)/((sum(test.diag.table[,1]))*(1-test.diag.table$Specificity)))),digits=2)
-  test.diag.table$PLR.sup.cl<-round(exp(log(test.diag.table$PLR)+(qnorm(1-((1-CL)/2),mean=0,sd=1))*sqrt((1-test.diag.table$Sensitivity)/((sum(
-    test.diag.table[,2]))*test.diag.table$Specificity)+(test.diag.table$Specificity)/((sum(test.diag.table[,1]))*(1-test.diag.table$Specificity)))),digits=2)
+  test.diag.table$PLR.inf.cl<-round(exp(log(test.diag.table$PLR)-(qnorm(1-((1-CL)/2),mean=0,sd=1))*sqrt((1-test.diag.table$Sensitivity)/(
+    (D)*test.diag.table$Specificity)+(test.diag.table$Specificity)/((ND)*(1-test.diag.table$Specificity)))),digits=2)
+  test.diag.table$PLR.sup.cl<-round(exp(log(test.diag.table$PLR)+(qnorm(1-((1-CL)/2),mean=0,sd=1))*sqrt((1-test.diag.table$Sensitivity)/(
+    (D)*test.diag.table$Specificity)+(test.diag.table$Specificity)/((ND)*(1-test.diag.table$Specificity)))),digits=2)
   test.diag.table$NLR<-round((1-test.diag.table$Sensitivity)/test.diag.table$Specificity,digits=2)
-  test.diag.table$NLR.inf.cl<-round(exp(log(test.diag.table$NLR)-(qnorm(1-((1-CL)/2),mean=0,sd=1))*sqrt((test.diag.table$Sensitivity)/((sum(test.diag.table[,2]))*(1-test.diag.table$Sensitivity))+(1-test.diag.table$Specificity)/((sum(test.diag.table[,1]))*(test.diag.table$Specificity)))),digits=2)
-  test.diag.table$NLR.sup.cl<-round(exp(log(test.diag.table$NLR)+(qnorm(1-((1-CL)/2),mean=0,sd=1))*sqrt((test.diag.table$Sensitivity)/((sum(test.diag.table[,2]))*(1-test.diag.table$Sensitivity))+(1-test.diag.table$Specificity)/((sum(test.diag.table[,1]))*(test.diag.table$Specificity)))),digits=2)
+  test.diag.table$NLR.inf.cl<-round(exp(log(test.diag.table$NLR)-(qnorm(1-((1-CL)/2),mean=0,sd=1))*sqrt((test.diag.table$Sensitivity)/((D)*(1-test.diag.table$Sensitivity))+(1-test.diag.table$Specificity)/((ND)*(test.diag.table$Specificity)))),digits=2)
+  test.diag.table$NLR.sup.cl<-round(exp(log(test.diag.table$NLR)+(qnorm(1-((1-CL)/2),mean=0,sd=1))*sqrt((test.diag.table$Sensitivity)/((D)*(1-test.diag.table$Sensitivity))+(1-test.diag.table$Specificity)/((ND)*(test.diag.table$Specificity)))),digits=2)
+  test.diag.table$Accuracy <- (test.diag.table$TN + test.diag.table$TP)/sample.size
+  test.diag.table$DOR <- ((test.diag.table$TN)*(test.diag.table$TP))/((test.diag.table$FP)*(test.diag.table$FN))
+  test.diag.table$DOR<-ifelse(test.diag.table$DOR==Inf,NA,test.diag.table$DOR)  
+  test.diag.table$Error.rate <- ((test.diag.table$FP)+(test.diag.table$FN))/sample.size
+  test.diag.table$Accuracy.area <- ((test.diag.table$TP)*(test.diag.table$TN))/(D*ND)
+  test.diag.table$Max.Se.Sp <- test.diag.table$Sensitivity + test.diag.table$Specificity
+  test.diag.table$Youden <- test.diag.table$Sensitivity + test.diag.table$Specificity - 1
+  test.diag.table$Se.equals.Sp <- abs(test.diag.table$Specificity-test.diag.table$Sensitivity)
+  test.diag.table$MinRocDist <- (test.diag.table$Specificity-1)^2+(1-test.diag.table$Sensitivity)^2
+  test.diag.table$Efficiency<-(test.diag.table$Sensitivity*(pop.prevalence))+((1-(pop.prevalence))*test.diag.table$Specificity)
+  test.diag.table$MCT<-(1-(pop.prevalence))*(1-test.diag.table$Specificity)+(cost*(pop.prevalence))*(1-test.diag.table$Sensitivity)
 
-  # The following is not result but will help to find the best cut-offs
-  test.cutoff.table<-as.data.frame(test.values)
-  for(i in 1:nrow(test.cutoff.table)) {
-    #Accuracy is (TP+TN)/sample.size
-    test.cutoff.table$Accuracy[i]<-(sum(test.table[i:nrow(test.table),2])+sum(test.table[1:i-1,1]))/sample.size
-    test.cutoff.table$DOR[i]<-(((sum(test.table[i:nrow(test.table),2])*(sum(test.table[1:i-1,1])))/
-    ((sum(test.table[i:nrow(test.table),1]))*(sum(test.table[1:i-1,2])))))
-    test.cutoff.table$Error.rate[i]<-((sum(test.table[1:i-1,2]))+(sum(test.table[i:nrow(test.table),1])))/sample.size
-    #Error.trade.off - error out of limits, only zeros can be used with negative subscripts
-    #Error.trade.off[i]<-(sum(test.table[1:i-1,2])-sum(test.table[1:i-2,2]))
-        #    (sum(test.table[i:nrow(test.table),1])-sum(test.table[i+
-        #    1:nrow(test.table),1]))
-    test.cutoff.table$Accuracy.area[i]<-round((sum(test.table[i:nrow(test.table),2])*sum(test.table[1:i-1,1]))/((sample.size-pop.prevalence)*pop.prevalence),digits=4)
-  }
-  test.cutoff.table$DOR<-ifelse(test.cutoff.table$DOR==Inf,NA,test.cutoff.table$DOR)
-  test.cutoff.table$Max.Se.Sp<-(test.diag.table$Sensitivity + test.diag.table$Specificity)
-  test.cutoff.table$Youden<-test.diag.table$Sensitivity+test.diag.table$Specificity - 1
-  test.cutoff.table$Se.equals.Sp<-abs(test.diag.table$Specificity-test.diag.table$Sensitivity)
-  test.cutoff.table$MinRocDist<-(test.diag.table$Specificity-1)^2+(1-test.diag.table$Sensitivity)^2
-  # Efficiency= Se*prevalence+(1-prevalence)*Sp
-  test.cutoff.table$Efficiency<-(test.diag.table$Sensitivity*(pop.prevalence))+((1-(pop.prevalence))*test.diag.table$Specificity)
-  # MissclassificatioCostTerm(MCT)=(1-prevalence)(1-Sp)+r*prevalence(1-Se) - r=cost(FN)/cost(FP)
-  test.cutoff.table$MCT<-(1-(pop.prevalence))*(1-test.diag.table$Specificity)+(Cost*(pop.prevalence))*(1-test.diag.table$Sensitivity)
   # Making a table with the test result for each best cut-off and attaching validity measures
-
-  best.cutoff<-test.cutoff.table$test.values[which.max(test.cutoff.table$Accuracy)]
-  test.best.cutoff<-test.diag.table[test.diag.table$test.values==best.cutoff,c(1:7,14:16)]
-  best.cutoff<-test.cutoff.table$test.values[which.max(test.cutoff.table$DOR)]
-  test.best.cutoff<-rbind(test.best.cutoff,test.diag.table[test.diag.table$test.values==best.cutoff,c(1:7,14:16)])
-  best.cutoff<-test.cutoff.table$test.values[which.min(test.cutoff.table$Error.rate)]
-  test.best.cutoff<-rbind(test.best.cutoff,test.diag.table[test.diag.table$test.values==best.cutoff,c(1:7,14:16)])
-  best.cutoff<-test.cutoff.table$test.values[which.max(test.cutoff.table$Accuracy.area)]
-  test.best.cutoff<-rbind(test.best.cutoff,test.diag.table[test.diag.table$test.values==best.cutoff,c(1:7,14:16)])
-  best.cutoff<-test.cutoff.table$test.values[which.max(test.cutoff.table$Max.Se.Sp)]
-  test.best.cutoff<-rbind(test.best.cutoff,test.diag.table[test.diag.table$test.values==best.cutoff,c(1:7,14:16)])
-  best.cutoff<-test.cutoff.table$test.values[which.max(test.cutoff.table$Youden)]
-  test.best.cutoff<-rbind(test.best.cutoff,test.diag.table[test.diag.table$test.values==best.cutoff,c(1:7,14:16)])
-  best.cutoff<-test.cutoff.table$test.values[which.min(test.cutoff.table$Se.equals.Sp)]
-  test.best.cutoff<-rbind(test.best.cutoff,test.diag.table[test.diag.table$test.values==best.cutoff,c(1:7,14:16)])
-  best.cutoff<-test.cutoff.table$test.values[which.min(test.cutoff.table$MinRocDist)]
-  test.best.cutoff<-rbind(test.best.cutoff,test.diag.table[test.diag.table$test.values==best.cutoff,c(1:7,14:16)])
-  best.cutoff<-test.cutoff.table$test.values[which.max(test.cutoff.table$Efficiency)]
-  test.best.cutoff<-rbind(test.best.cutoff,test.diag.table[test.diag.table$test.values==best.cutoff,c(1:7,14:16)])
-  best.cutoff<-test.cutoff.table$test.values[which.min(test.cutoff.table$MCT)]
-  test.best.cutoff<-rbind(test.best.cutoff,test.diag.table[test.diag.table$test.values==best.cutoff,c(1:7,14:16)])
+  test.best.cutoff <- as.data.frame(rbind(
+       test.diag.table[which.max(test.diag.table$Accuracy),c(1,6:11,18:20)],
+       test.diag.table[which.max(test.diag.table$DOR),c(1,6:11,18:20)],
+       test.diag.table[which.min(test.diag.table$Error.rate),c(1,6:11,18:20)],
+       test.diag.table[which.max(test.diag.table$Accuracy.area),c(1,6:11,18:20)],
+       test.diag.table[which.max(test.diag.table$Max.Se.Sp),c(1,6:11,18:20)],
+       test.diag.table[which.max(test.diag.table$Youden),c(1,6:11,18:20)],
+       test.diag.table[which.min(test.diag.table$Se.equals.Sp),c(1,6:11,18:20)],
+       test.diag.table[which.min(test.diag.table$MinRocDist),c(1,6:11,18:20)],
+       test.diag.table[which.max(test.diag.table$Efficiency),c(1,6:11,18:20)],
+       test.diag.table[which.min(test.diag.table$MCT),c(1,6:11,18:20)]
+       ))
   rownames(test.best.cutoff)<- c("Max. Accuracy", "Max. DOR","Min. Error rate",
    "Max. Accuracy area","Max. Sens+Spec","Max. Youden","Se=Sp","Min. ROC distance",
    "Max. Efficiency", "Min. MCT")
-  rm(best.cutoff)
-
+   
   #names(pop.prevalence)<-c("Informed disease prevalence - same as sample prevalence if not informed")
   #names(sample.prevalence)<-c("Observed prevalence by gold standard")
    reteval<-list(pop.prevalence=pop.prevalence,
@@ -166,8 +146,7 @@ ROC<-function(gold,
                  test.best.cutoff=test.best.cutoff,
                  test.diag.table=test.diag.table,
                  CL=CL,
-                 cost=cost,
-                 test.cutoff.table=test.cutoff.table)
+                 cost=cost)
   
   class(reteval)<-"ROC"
   if(Print==TRUE){

@@ -86,7 +86,7 @@ plot.ROC<-function(x,...,Plot.point="Min.ROC.Dist",cex.sub=.85,cex=1,lwd=1,p.cex
          paste("Specificity:",formatC(x$test.best.cutoff[7,5],digits=4,format="f")),
          paste("AUC:",formatC(x$AUC.summary[2],digits=4,format="f"))
         )),bty="n",cex=cex)}
-# REINICAIR REVISAO DAQUI..............
+
     if(Plot.point=="Min.ROC.Dist")
       {points(1-x$test.best.cutoff[8,5],x$test.best.cutoff[8,2],col=1,pch=19,cex=p.cex)
        title(sub="Cut-off that minimizes the distance between the curve and upper left corner.",cex.sub=cex.sub)         

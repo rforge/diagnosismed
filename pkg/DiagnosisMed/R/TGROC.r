@@ -39,12 +39,6 @@ TGROC<-function(gold,
   if(is.null(precision)||!is.numeric(precision)){
       stop("Precision must be set to a numeric value!")
   }
-  if(Plot!="Both" & Plot!="Non-parametric" & Plot!="Parametric" & Plot!="None"){
-      stop("Plot must be set either to 'None','Both','Non-parametric' or 'Parametric'!")
-  }
-  if(Plot.cutoff!="Min.MCT" & Plot.cutoff!="Se=Sp" & Plot.cutoff!="Max.Efficiency" & Plot.cutoff!="None"){
-      stop("Plot.cutoff must be set either to 'None','Max.Efficiency','Min.MCT' or 'Se=Sp'!")
-  }
   sample.prevalence<-(sum(test.table[,2]))/(sum(test.table))
   if (Prevalence==0){
     pop.prevalence<-sample.prevalence
@@ -64,28 +58,34 @@ TGROC<-function(gold,
   conf.limit<-CL
   inc<-Inconclusive
   names(inc)<-"Inconclusive tolerance level"
+
+  D<-sum(test.table[,2])
+  ND<-sum(test.table[,1])
+
+  # Taking the rownames of the test.table to be results first column
   test.values<-(as.numeric(rownames(unclass(test.table))))
   non.parametric<-as.data.frame(test.values)
-  
+  # Making a table with Se Sp PLR NLR PPV NPV and its confidence limits for each cut-off
   for (i in 1:nrow(non.parametric)) {
-    non.parametric$Sensitivity[i] <- round(sum(test.table[(i:nrow(test.table)),2])/sum(test.table[,2]),digits=4)
-    non.parametric$Se.inf.Cl[i]<-round(as.numeric(binom.wilson(sum(test.table[i:nrow(test.table),2]),sum(test.table[,2]),
-        conf.level=CL)[4]),digits=4)
-    non.parametric$Se.sup.Cl[i]<-round(as.numeric(binom.wilson(sum(test.table[i:nrow(test.table),2]),sum(test.table[,2]),
-        conf.level=CL)[5]),digits=4)
-    non.parametric$Specificity[i] <- round((sum(test.table[(1:i-1),1]))/(sum(test.table[,1])),digits=4)
-    non.parametric$Sp.inf.Cl[i]<-round(as.numeric(binom.wilson(sum(test.table[(1:i-1),1]),sum(test.table[,1]),
-        conf.level=CL)[4]),digits=4)
-    non.parametric$Sp.sup.Cl[i]<-round(as.numeric(binom.wilson(sum(test.table[(1:i-1),1]),sum(test.table[,1]),
-        conf.level=CL)[5]),digits=4)
-  }
+    non.parametric$TP[i] <- sum(test.table[i:nrow(test.table),2])
+    non.parametric$FN[i] <- sum(test.table[1:i-1,2])
+    non.parametric$FP[i] <- sum(test.table[i:nrow(test.table),1])
+    non.parametric$TN[i] <- sum(test.table[1:i-1,1])
+  }  
+
+  non.parametric$Sensitivity <- round(non.parametric$TP/D,digits=4)
+  non.parametric$Se.inf.cl <- round(binom.wilson(non.parametric$TP,D,conf.level=CL)[4]$lower,digits=4)
+  non.parametric$Se.sup.cl <- round(binom.wilson(non.parametric$TP,D,conf.level=CL)[5]$upper,digits=4)
+  non.parametric$Specificity <- round(non.parametric$TN/ND,digits=4)
+  non.parametric$Sp.inf.cl <- round(binom.wilson(non.parametric$TN,ND,conf.level=CL)[4]$lower,digits=4)
+  non.parametric$Sp.sup.cl <- round(binom.wilson(non.parametric$TN,ND,conf.level=CL)[5]$upper,digits=4)
+
   non.parametric$PLR<-round(non.parametric$Sensitivity/(1-non.parametric$Specificity),digits=2)
-  non.parametric$PLR.inf.cl<-round(exp(log(non.parametric$PLR)-(qnorm(1-((1-CL)/2),mean=0,sd=1))*sqrt((1-non.parametric$Sensitivity)/
-    ((sum(non.parametric[,2]))*non.parametric$Specificity)+(non.parametric$Specificity)/((sum(non.parametric[,1]))*
-    (1-non.parametric$Specificity)))),digits=2)
-  non.parametric$PLR.sup.cl<-round(exp(log(non.parametric$PLR)+(qnorm(1-((1-CL)/2),mean=0,sd=1))*sqrt(
-    (1-non.parametric$Sensitivity)/((sum(non.parametric[,2]))*non.parametric$Specificity)+(
-    non.parametric$Specificity)/((sum(non.parametric[,1]))*(1-non.parametric$Specificity)))),digits=2)
+  non.parametric$PLR.inf.cl<-round(exp(log(non.parametric$PLR)-(qnorm(1-((1-CL)/2),mean=0,sd=1))*sqrt((1-non.parametric$Sensitivity)/(
+    (D)*non.parametric$Specificity)+(non.parametric$Specificity)/((ND)*(1-non.parametric$Specificity)))),digits=2)
+  non.parametric$PLR.sup.cl<-round(exp(log(non.parametric$PLR)+(qnorm(1-((1-CL)/2),mean=0,sd=1))*sqrt((1-non.parametric$Sensitivity)/(
+    (D)*non.parametric$Specificity)+(non.parametric$Specificity)/((ND)*(1-non.parametric$Specificity)))),digits=2)
+    
   # Se=Sp cut-off
   non.parametric$Se.equals.Sp<-abs(non.parametric$Specificity-non.parametric$Sensitivity)
   # Efficiency= Se*prevalence+(1-prevalence)*Se
@@ -101,9 +101,9 @@ TGROC<-function(gold,
 #       )) Does Not work... somethig worng with the lines or columns selection
 
   np.test.best.cutoff<-as.data.frame(rbind(
-       non.parametric[which.min(non.parametric$Se.equals.Sp),1:10],
-       non.parametric[which.max(non.parametric$Efficiency),1:10],
-       non.parametric[which.min(non.parametric$MCT),1:10]))
+       non.parametric[which.min(non.parametric$Se.equals.Sp),c(1,6:14)],
+       non.parametric[which.max(non.parametric$Efficiency),c(1,6:14)],
+       non.parametric[which.min(non.parametric$MCT),c(1,6:14)]))
   
   #best.cutoff,non.parametric[which.min(non.parametric$Se.equals.Sp),1:10])
   #best.cutoff<-non.parametric$test.values[which.max(non.parametric$Efficiency)]
@@ -115,8 +115,8 @@ TGROC<-function(gold,
   rownames(np.test.best.cutoff)<- c("Se=Sp","Max. Efficiency","Min. MCT")
 
   non.parametric.inconclusive<-as.data.frame(rbind(
-      non.parametric[which.min(abs(Inconclusive-non.parametric$Sensitivity)),1:10],
-      non.parametric[which.min(abs(Inconclusive-non.parametric$Specificity)),1:10]))
+      non.parametric[which.min(abs(Inconclusive-non.parametric$Sensitivity)),c(1,6:14)],
+      non.parametric[which.min(abs(Inconclusive-non.parametric$Specificity)),c(1,6:14)]))
   rownames(non.parametric.inconclusive)<-c("Lower inconclusive","Upper inconclusive")
 
   if(is.null(t.max)){
@@ -135,27 +135,27 @@ TGROC<-function(gold,
   test.values<-seq(t.min,t.max,precision)
   parametric<-as.data.frame(test.values)
   parametric$Sensitivity <- as.numeric(sim(net.Se$net, test.values))
-  parametric$Se.inf.Cl<-parametric$Sensitivity - qnorm(1 - (1-conf.limit)/2) * sqrt(((parametric$Sensitivity * 
+  parametric$Se.inf.cl<-parametric$Sensitivity - qnorm(1 - (1-conf.limit)/2) * sqrt(((parametric$Sensitivity * 
         (1 - parametric$Sensitivity))/(sample.size * sample.prevalence)))
-  parametric$Se.sup.Cl<-parametric$Sensitivity + qnorm(1 - (1-conf.limit)/2) * sqrt(((parametric$Sensitivity * 
+  parametric$Se.sup.cl<-parametric$Sensitivity + qnorm(1 - (1-conf.limit)/2) * sqrt(((parametric$Sensitivity * 
         (1 - parametric$Sensitivity))/(sample.size * sample.prevalence)))
   parametric$Specificity <- as.numeric(sim(net.Sp$net, test.values))
-  parametric$Sp.inf.Cl <- parametric$Specificity - qnorm(1 - (1-conf.limit)/2) * sqrt(((parametric$Specificity * 
+  parametric$Sp.inf.cl <- parametric$Specificity - qnorm(1 - (1-conf.limit)/2) * sqrt(((parametric$Specificity * 
         (1 - parametric$Specificity))/(sample.size * (1-sample.prevalence))))
-  parametric$Sp.sup.Cl <- parametric$Specificity + qnorm(1 - (1-conf.limit)/2) * sqrt(((parametric$Specificity * 
+  parametric$Sp.sup.cl <- parametric$Specificity + qnorm(1 - (1-conf.limit)/2) * sqrt(((parametric$Specificity * 
         (1 - parametric$Specificity))/(sample.size * (1-sample.prevalence))))
   parametric$PLR <- parametric$Sensitivity/(1-parametric$Specificity) 
-  parametric$PLR.inf.Cl<-exp(log(parametric$PLR)-(qnorm(1-((1-conf.limit)/2),mean=0,sd=1))*sqrt((1-parametric$Sensitivity)/
+  parametric$PLR.inf.cl<-exp(log(parametric$PLR)-(qnorm(1-((1-conf.limit)/2),mean=0,sd=1))*sqrt((1-parametric$Sensitivity)/
         ((sample.size * sample.prevalence)*parametric$Specificity)+(parametric$Specificity)/((sample.size * 
         (1-sample.prevalence))*(1-parametric$Specificity))))
-  parametric$PLR.sup.Cl<-exp(log(parametric$PLR)+(qnorm(1-((1-conf.limit)/2),mean=0,sd=1))*sqrt((1-parametric$Sensitivity)/
+  parametric$PLR.sup.cl<-exp(log(parametric$PLR)+(qnorm(1-((1-conf.limit)/2),mean=0,sd=1))*sqrt((1-parametric$Sensitivity)/
         ((sample.size * sample.prevalence)*parametric$Specificity)+(parametric$Specificity)/((sample.size * 
         (1-sample.prevalence))*(1-parametric$Specificity))))            
   #parametric$NLR <- (1-parametric$Specificity)/parametric$Sensitivity
-  #parametric$NLR.inf.Cl <- exp(log(parametric$NLR)-(qnorm(1-((1-(1-conf.limit))/2),mean=0,sd=1))*
+  #parametric$NLR.inf.cl <- exp(log(parametric$NLR)-(qnorm(1-((1-(1-conf.limit))/2),mean=0,sd=1))*
   #     sqrt((parametric$Sensitivity)/((sample.size * sample.prevalence)*(1-parametric$Sensitivity))+(1-parametric$Specificity)/
   #     ((sample.size * (1-sample.prevalence))*(parametric$Specificity))))
-  #parametric$NLR.sup.Cl <- exp(log(parametric$NLR)+(qnorm(1-((1-conf.limit)/2),mean=0,sd=1))*sqrt((parametric$Sensitivity)/
+  #parametric$NLR.sup.cl <- exp(log(parametric$NLR)+(qnorm(1-((1-conf.limit)/2),mean=0,sd=1))*sqrt((parametric$Sensitivity)/
   #     ((sample.size * sample.prevalence)*(1-parametric$Sensitivity))+(1-parametric$Specificity)/((sample.size * 
   #     (1-sample.prevalence))*(parametric$Specificity))))
    parametric$Se.equals.Sp<-abs(parametric$Sensitivity-parametric$Specificity)
@@ -173,125 +173,9 @@ TGROC<-function(gold,
              parametric[which.max(parametric$Efficiency),1:10],
              parametric[which.min(parametric$MCT),1:10]
              ))
-   rownames(par.test.best.cutoff)<- c("Se=Sp","Max. Efficiency","Min. MCT")
-       
-# Plot Commands
-    if(Plot!="None"){
-    if(Plot=="Parametric"|Plot=="Both"){
-      plot(parametric$test.values,parametric$Sensitivity,ylim=c(0,1),type="l",col=2, xlab="Test scale",
-              ylab="Sensitivity & Specificity",cex=cex,lty=1)
-      lines(parametric$test.values,parametric$Specificity,col=4,type="l",lty=2,cex=cex)
-        if(Plot=="Both"){
-             lines(non.parametric$test.values,non.parametric$Sensitivity,col=2,type="o",lty=1,cex=cex)
-             lines(non.parametric$test.values,non.parametric$Specificity,col=4,type="o",lty=2,cex=cex)
-        }          
-      leg.txt<-c("Se", "Sp")      
-      fill.col<-c(2,4)
-      line.type<-c(1,2)
-      subtitle<-""
-    }
-    if(Plot=="Non-parametric"){
-       plot(non.parametric$test.values,non.parametric$Sensitivity,
-         ylim=c(0,1),type="o",col=2, xlab="test scale",ylab="Sensitivity & Specificity",
-         lty=1,cex=cex)
-       lines(non.parametric$test.values,non.parametric$Specificity,col=4,type="o",lty=2,cex=cex)
-      leg.txt<-c("Se", "Sp")      
-      fill.col<-c(2,4)
-      line.type<-c(1,2)
-      subtitle<-""
-    }  
-    if(Plot.inc.range==TRUE){
-      abline(h=Inconclusive,col="lightgray",lty=4)
-      if(Plot=="Parametric"|Plot=="Both"){
-            abline(v=(parametric.inconclusive[1,1]),col="lightgray",lty=4)
-            abline(v=(parametric.inconclusive[2,1]),col="lightgray",lty=4)
-            subtitle<-paste("Parametric inconclusive limits at",formatC(inc),"level:",formatC(parametric.inconclusive[1,1]),
-                      "-",formatC(parametric.inconclusive[2,1]),".")
-      }
-      if(Plot=="Non-parametric"){
-            abline(v=(non.parametric.inconclusive[1,1]),col="lightgray",lty=4)
-            abline(v=(non.parametric.inconclusive[2,1]),col="lightgray",lty=4)
-            subtitle<-paste("Non-parametric inconclusive limits at",formatC(inc),"level:",formatC(non.parametric.inconclusive[1,1]),
-                      "-",formatC(non.parametric.inconclusive[2,1]),".")
-      }
-      leg.txt<-c(leg.txt,c("Inc limits"))      
-      fill.col<-c(fill.col,c("lightgray"))
-      line.type<-c(line.type,4)
-    }
-    if(Plot.Cl==TRUE){
-      if(Plot=="Both"|Plot=="Parametric"){
-          lines(parametric$test.values,parametric$Se.inf.Cl,lty=5,col=2)
-          lines(parametric$test.values,parametric$Se.sup.Cl,lty=5,col=2)
-          lines(parametric$test.values,parametric$Sp.inf.Cl,lty=3,col=4)
-          lines(parametric$test.values,parametric$Sp.sup.Cl,lty=3,col=4)      
-      }
-      if(Plot=="Non-parametric"){
-          lines(non.parametric$test.values,non.parametric$Se.inf.Cl,lty=5,col=2)
-          lines(non.parametric$test.values,non.parametric$Se.sup.Cl,lty=5,col=2)
-          lines(non.parametric$test.values,non.parametric$Sp.inf.Cl,lty=3,col=4)
-          lines(non.parametric$test.values,non.parametric$Sp.sup.Cl,lty=3,col=4)            
-      }  
-    leg.txt<-c(leg.txt,c("Se conf. band","Sp conf. band"))      
-    fill.col<-c(fill.col,c(2,4))
-    line.type<-c(line.type,5,3)
-    }
-    if(Plot.cutoff=="Se=Sp"){
-      if(Plot=="Both"|Plot=="Parametric"){
-          abline(v=(par.test.best.cutoff[1,1]),col="lightgray",lty=6)
-          leg.txt<-c(leg.txt,c("Best cut-off"))      
-          fill.col<-c(fill.col,c("lightgray"))
-          line.type<-c(line.type,6)
-          subtitle<-paste(subtitle,paste("Cut-off estimated by parametric Se=Sp:",formatC(par.test.best.cutoff[1,1])))      
-      }
-      if(Plot=="Non-parametric"){
-          abline(v=(np.test.best.cutoff[1,1]),col="lightgray",lty=6)
-          leg.txt<-c(leg.txt,c("Best cut-off"))      
-          fill.col<-c(fill.col,c("lightgray"))
-          line.type<-c(line.type,6)
-          subtitle<-paste(subtitle,paste("Cut-off estimated by Se=Sp:",formatC(np.test.best.cutoff[1,1])))      
-      }
+   rownames(par.test.best.cutoff)<- c("Se=Sp","Max. Efficiency","Min. MCT")  
 
-    }
-    if(Plot.cutoff=="Max.Efficiency"){
-       if(Plot=="Both"|Plot=="Parametric"){
-          abline(v=(par.test.best.cutoff[2,1]),col="lightgray",lty=6)
-          leg.txt<-c(leg.txt,c("Best cut-off"))      
-          fill.col<-c(fill.col,c("lightgray"))
-          line.type<-c(line.type,6)
-          subtitle<-paste(subtitle,paste("Cut-off estimated by parametric Max. Efficiency:",formatC(par.test.best.cutoff[2,1]),"."))
-          #"Pop. prevalence:",formatC(pop.prevalence)))) Does not fit in the graph       
-       }
-       if(Plot=="Non-parametric"){
-          abline(v=(np.test.best.cutoff[2,1]),col="lightgray",lty=6)
-          leg.txt<-c(leg.txt,c("Best cut-off"))      
-          fill.col<-c(fill.col,c("lightgray"))
-          line.type<-c(line.type,6)
-          subtitle<-paste(subtitle,paste("Cut-off estimated by Max. Efficiency:",formatC(np.test.best.cutoff[2,1]),"."))
-          #"Pop. prevalence:",formatC(pop.prevalence)))) Does not fit in the graph       
-       }
-    }
-    if(Plot.cutoff=="Min.MCT"){
-       if(Plot=="Both"|Plot=="Parametric"){
-          abline(v=(par.test.best.cutoff[3,1]),col="lightgray",lty=6)
-          leg.txt<-c(leg.txt,c("Best cut-off"))      
-          fill.col<-c(fill.col,c("lightgray"))
-          line.type<-c(line.type,6)
-          subtitle<-paste(subtitle,paste("Cut-off estimated by minimizing paramaetric MCT:",formatC(np.test.best.cutoff[3,1],".")))
-          #,"Pop. prevalence:",formatC(pop.prevalence),"Cost FN/FP:",formatC(cost))) Does not fit in the graph
-       }
-       if(Plot=="Non-parametric"){
-          abline(v=(np.test.best.cutoff[3,1]),col="lightgray",lty=6)
-          leg.txt<-c(leg.txt,c("Best cut-off"))      
-          fill.col<-c(fill.col,c("lightgray"))
-          line.type<-c(line.type,6)
-          subtitle<-paste(subtitle,paste("Cut-off estimated by Minimizing MCT:",formatC(np.test.best.cutoff[3,1],".")))
-          #,"Pop. prevalence:",formatC(pop.prevalence),"Cost FN/FP:",formatC(cost))) Does not fit in the graph
-       }
-    }
-    legend("right",legend=leg.txt,col=fill.col,lty=line.type, bty="n")
-    title(sub=subtitle,cex.sub=cex.sub)         
-  }          
-  rm(test.values)
+#  rm(test.values)
   if(non.parametric.inconclusive[1,1]>non.parametric.inconclusive[2,1]){
      warning("Non-parametric lower inconclusive limit is higher than upper inconclusive limit.")
   }
@@ -301,22 +185,22 @@ TGROC<-function(gold,
   if(np.test.best.cutoff[1,1]>non.parametric.inconclusive[2,1]|
      np.test.best.cutoff[2,1]>non.parametric.inconclusive[2,1]|
      np.test.best.cutoff[3,1]>non.parametric.inconclusive[2,1]){
-     warning("At least one fo the non-parametric best cut-off is higher then upper inconclusive limit.")
+     warning("At least one of the non-parametric best cut-off is higher then upper inconclusive limit.")
   }        
   if(np.test.best.cutoff[1,1]<non.parametric.inconclusive[1,1]|
      np.test.best.cutoff[2,1]<non.parametric.inconclusive[1,1]|
      np.test.best.cutoff[3,1]<non.parametric.inconclusive[1,1]){
-     warning("At least one fo the non-parametric best cut-off is lower then lower inconclusive limit.")
+     warning("At least one of the non-parametric best cut-off is lower then lower inconclusive limit.")
   }
   if(par.test.best.cutoff[1,1]>parametric.inconclusive[2,1]|
      par.test.best.cutoff[2,1]>parametric.inconclusive[2,1]|
      par.test.best.cutoff[3,1]>parametric.inconclusive[2,1]){
-     warning("At least one fo the parametric best cut-off is higher then upper inconclusive limit.")
+     warning("At least one of the parametric best cut-off is higher then upper inconclusive limit.")
   }        
   if(par.test.best.cutoff[1,1]<parametric.inconclusive[1,1]|
      par.test.best.cutoff[2,1]<parametric.inconclusive[1,1]|
      par.test.best.cutoff[3,1]<parametric.inconclusive[1,1]){
-     warning("At least one fo the parametric best cut-off is lower then lower inconclusive limit.")
+     warning("At least one of the parametric best cut-off is lower then lower inconclusive limit.")
   }                  
   reteval<-list(sample.size = sample.size,
                 sample.prevalence = sample.prevalence,
@@ -335,5 +219,14 @@ TGROC<-function(gold,
   if(Print==TRUE){
      print(reteval)
   }
+  if(Plot!="None"){
+  plot(reteval,
+       Plot=Plot,
+       Plot.inc.range=Plot.inc.range,
+       Plot.Cl=Plot.Cl,
+       Plot.cutoff=Plot.cutoff,
+       cex=cex,
+       cex.sub=cex.sub)
+   }    
   invisible(reteval)
 }

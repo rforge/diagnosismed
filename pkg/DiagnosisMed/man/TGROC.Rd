@@ -1,6 +1,7 @@
 \name{TGROC}
 \alias{TGROC}
 \alias{print.TGROC}
+\alias{plot.TGROC}
 \title{TG-ROC - Two Graphic Receiver Operating Characteristic}
 \description{
 TGROC draws a graph of sensitivity and specificity with the variations of a diagnostic test scale. Also, it demonstrates which cut-offs (or decision thresholds) may trichotomize the test results into a range where the test is good to identify those with the target condition, a inconclusive range and a range where the test is good to identify those without the target condition according with the researcher tolerance. Also, it estimates and graphically demonstrates good cut-offs by different methods. TGROC estimates non-parametric statistics and uses the AMORE package to simulate the parametric curve and values with a neural network.
@@ -32,7 +33,14 @@ TGROC(gold,
       Plot.cutoff="None",
       cex=0.5,
       cex.sub=0.85,
-      Print=TRUE)      
+      Print=TRUE)
+\method{plot}{TGROC}(x,...,
+      Plot="Both",
+      Plot.inc.range=TRUE,
+      Plot.Cl=FALSE,
+      Plot.cutoff="None",
+      cex=0.5,
+      cex.sub=0.85)            
 }
 \arguments{
   \item{gold}{The reference standard. A column in a data frame or a vector indicating the classification by the reference test. The reference standard must have two levels: must be coded either as 0 - without target condition - or 1 - with the target condition;  or could be coded \link[base]{as.factor} with the words "negative" - without target condition - and "positive"  - with the target condition.}
@@ -66,7 +74,9 @@ TGROC(gold,
         "Min.MCT" - the cut-off which minimizes the misclassification cost term.}
   \item{cex}{See \link[base]{par}. A numerical value giving the amount by which plotting text and symbols should be magnified relative to the default.}
   \item{cex.sub}{See \link[base]{par}. Controls the font size in the subtitle. If Plot is FALSE than cex.sub is not considered.}
-  \item{Print}{If FALSE, statistics estimated by TG-ROC will not be displayed in the output window. Default is TRUE.}
+  \item{Print}{If FALSE, statistics estimated by TGROC will not be displayed in the output window. Default is TRUE.}
+  \item{x}{For the plot function, x is an object created TGROC function.}  
+  \item{...}{Other plot parameters form \link[graphics]{plot.default}}
 }
 \details{
 There are two main advantages of TG-ROC over ROC analysis: (1) for the uninitiated is much easier to understand how sensitivity and specificity changes with different cut-offs; (2) and because of the graphical display is much easier to understand and estimate reasonable inconclusive test ranges. Occasionally the MCT or Efficiency cut-offs may be set outside the inconclusive range. This may happens with extreme values of Cost and population prevalence. If this is the case, perhaps the inconclusive range may not be of interest or not applicable. Also, if the test is too good or inconclusive range tolerance is set too low, then there may be no inconclusive range at all, because sensitivity and specificity may not be below this tolerance at the same time. If this is the case, setting a higher inconclusive tolerance may work. Tests results matching the cut-off values will be considered a positive test.  TGROC assumes that subjects with higher values of the test are with the target condition and those with lower values are without the target condition. Tests that behave like glucose (middle values are supposed to be normal and extreme values are supposed to be abnormal) and immunefluorescence (lower values - higher dilutions - are suppose to be abnormal) will not be correctly analyzed. In the latter, multiplying the test results by -1 or other transformation before analysis could make it work. The validity measures such as Sensitivity, Specificity and Likelihood ratios and its confidence limits are estimated as  in \code{\link{diagnosis}} function. MCT and Efficiency are estimated as in \code{\link{ROC}} function. Non-parametric confidence bands are estimated by binomial confidence interval and parametric with normal confidence interval. The parametric curve and validity measures are estimated with a neural network strategy using the AMORE package. Usually neural networks, uses a subset of the data to estimate weights, a subset to calibrate/validate the weights and a third subset to simulate the function. TGROC uses only the estimate and simulate steps, therefore there is no stopping rule for the neural network parametric estimation. The only way to check the fit of the neural network is to visually compare with the non-parametric curve. If the curve looks weird or not good enough, than progressive slight changes in the momentum, learning rate, number of layers and / or other parameters should work fine.}

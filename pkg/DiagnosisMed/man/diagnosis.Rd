@@ -90,6 +90,8 @@ plot(test)
 diagnosis(Gold,mytest,plot=TRUE,print=FALSE)
 #Inserting values from a 2x2 table
 diagnosisI(364,22,17,211)
+rm(test)
+rm(mydata)
 }
 \keyword{univar}
 \keyword{htest}

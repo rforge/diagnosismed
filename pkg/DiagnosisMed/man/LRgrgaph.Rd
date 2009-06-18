@@ -61,5 +61,12 @@ text(x=.5, y =.5, labels ="Area 4: Overall inferior", col="lightgray",cex=.8)
 text(x=.5, y =1, labels ="Area 2: Absence", col="lightgray",cex=.8)
 text(x=.07, y =.73, labels ="Area 3: Presence", col="lightgray",cex=.8)
 text(x=.1, y =1, labels ="Area 1: Overall superior", col="lightgray",cex=.8)
+
+rm(mytest1)
+rm(mytest2)
+rm(mytest3)
+rm(mytest41)
+rm(mytest42)
+rm(mytest5)
 }
 \keyword{iplot}

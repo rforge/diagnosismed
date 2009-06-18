@@ -32,6 +32,7 @@ JA Knotterus, The Evidence Based Clinical Diagnosis; BMJBooks, 2002
 data(rocdata)
 attach(rocdata)
 interact.ROC(Gold,test2)
+rm(rocdata)
 }
 \keyword{dynamic}
 \keyword{iplot}

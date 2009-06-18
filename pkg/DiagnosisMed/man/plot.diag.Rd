@@ -48,6 +48,7 @@ mytest<-diagnosisI(364,22,17,211)
 plot(mytest,print=TRUE)
 # The same as
 plot(diagnosisI(364,22,17,211),print=TRUE)
+rm(mytest)
 
 }
 \keyword{univar}

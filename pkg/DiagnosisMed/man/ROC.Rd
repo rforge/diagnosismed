@@ -19,6 +19,12 @@ ROC(gold,
     p.cex=1,
     Print.full = FALSE,
     Print = TRUE)
+\method{plot}{ROC}(x,...,
+    Plot.point = "Min.ROC.Dist",
+    cex.sub=.85,
+    cex=1,
+    lwd=1,
+    p.cex=1)
 }
 \arguments{
   \item{gold}{The reference standard. A column in a data frame indicating the classification by the reference test. The reference standard must have two levels: must be coded either as 0 - without target condition - or 1 - with the target condition; or could be coded \link[base]{as.factor} with the words "negative" - without target condition - and "positive"  - with the target condition.}
@@ -57,6 +63,8 @@ ROC(gold,
   \item{p.cex}{Symbol expansion - a numerical vector - passed to points. See \link[graphics]{points}}
   \item{Print.full}{If TRUE, a table with sensitivity, specificity, predictive values and likelihood ratios (and respective confidence limits) for each decision threshold will be displayed.}
   \item{Print}{If FALSE, no results (detailed below in vlaues section) will be displayed on the output window. Default is TRUE}
+  \item{x}{For the plot function, x is an object created ROC function.}    
+  \item{...}{Other plot parameters form \link[graphics]{plot.default}}  
 }
 \details{
    Tests results matching the cut-off values will be considered a positive test. ROC assumes that subjects with higher values of the test are with the target condition and those with lower values are without the target condition. Tests that behave like glucose (middle values are supposed to be normal and extreme values are supposed to be abnormal) and immunefluorescence (lower values - higher dilutions - are suppose to be abnormal) will not be correctly analyzed. In the latter, multiplying the test results by -1 or other transformation before analysis could make it work. The result table with the Print.full option, may have more columns than can be shown in the screen. R automatically  shows these columns below, therefore one has to be careful when relating the corresponding lines. The AUC (area under the ROC curve) is estimated by the trapezoidal method (also known as Mann-Whitney statistic), its confidence interval is estimated by DeLong method. The AUC confidence limits should be used only to compare the AUC with the null value for AUC which is 0.5 and not to compare the AUC from different tests. The validity measures such as Sensitivity, Specificity and Likelihood ratios and its confidence limits are estimated as in \code{\link{diagnosis}} function.

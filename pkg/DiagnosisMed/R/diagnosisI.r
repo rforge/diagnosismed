@@ -53,18 +53,22 @@ diagnosisI <- function(TP,FN,FP,TN,CL=0.95,print=TRUE,plot=FALSE){
   ET<-(FN/FP)
   # pre-test and pos-test odds (to do)
   # area under ROC curve
-  if(plot==TRUE)
-    {ROC<-roc.from.table(tab, graph = TRUE)}
-  if(plot==FALSE)
-    {ROC<-roc.from.table(tab, graph = FALSE)}
-  AUC<-ROC$auc
+  AUC<-(Se+Sp)/2
+  if(plot==TRUE){
+    plot(1-Sp,Se,xlim=c(0,1),ylim=c(0,1))
+    segments(0,0,1-Sp,Se,col="red")
+    segments(1-Sp,Se,1,1,col="red")
+    grid()
+  }
+  #if(plot==FALSE)
+  #  {ROC<-roc.from.table(tab, graph = FALSE)}
   # gives same results as AUC<-(Se+Sp)/2
   Youden<-Se+Sp-1
   Youden.inf.cl<-Youden-qnorm(CL/2)*sqrt(((Se * (1 - Se))/(TP+FN) +
            ((Sp * (1 - Sp))/(TN+FP))))
   Youden.sup.cl<-Youden+qnorm(CL/2)*sqrt(((Se * (1 - Se))/(TP+FN) +
            ((Sp * (1 - Sp))/(FP+TN))))
-  rm(ROC)
+#  rm(ROC)
   rm(tab)
   # results evaluations
   reteval <- list(tabmarg=tabmarg,n=n,p=p,Se=Se,Se.cl=Se.cl,Sp=Sp,Sp.cl=Sp.cl,PLR=PLR,
