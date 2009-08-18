@@ -31,38 +31,35 @@ ROC<-function(gold,
   }
 
   if (is.numeric(gold)==TRUE){
-  # Making test summary, overall, disease only, without disease only
-  test.summary<-round(c(summary(test),sd(test)),digits=5)
-  test.summary<-rbind(test.summary,round(c(summary(test[gold==0]),sd(test[gold==0])),digits=5))
-  test.summary<-rbind(test.summary,round(c(summary(test[gold==1]),sd(test[gold==1])),digits=5))
-  colnames(test.summary)<-c("Min.","1st Qu.","Median","Mean","3rd Qu.","Max.","SD")
-  rownames(test.summary)<-c("Overall summary","Without disease", "With disease")
-  # Estimating the AUC and confidence limits, inspired in auc{PresenceAbsence}
-  # m length(test[gold == 0])
-  # n length(test[gold == 1])
+  X<-sort(test[gold==0]) 
+  Y<-sort(test[gold==1]) 
+  #X<-test[gold==0] 
+  #Y<-test[gold==1] 
   AUC <- ((as.double(length(test[gold == 0]))) * (as.double(length(test[gold ==1]))) + ((as.double(length(test[gold == 0]))) * ((as.double(length(test[gold == 0]))) + 1))/2 - sum(rank(test,ties.method = "average")[gold == 0]))/((as.double(length(test[gold == 0]))) * (as.double(length(test[gold == 1]))))
   AUC[AUC < 0.5] <- 1 - AUC
-  X<-test[gold==0] # pag 209
-  Y<-test[gold==1] # pag 209
   }
 
   if (is.factor(gold)==TRUE){
-  # The same tests summary but with different reference standard codes
+  #X<-test[gold=="negative"] 
+  #Y<-test[gold=="positive"]
+  X<-sort(test[gold=="negative"]) 
+  Y<-sort(test[gold=="positive"]) 
+  AUC <- ((as.double(length(test[gold == "negative"]))) * (as.double(length(test[gold == "positive"]))) + ((as.double(length(test[gold == "negative"]))) * ((as.double(length(test[gold == "negative"]))) + 1))/2 - sum(rank(test,ties.method = "average")[gold == "negative"]))/((as.double(length(test[gold == "negative"]))) * (as.double(length(test[gold == "positive"]))))
+  AUC[AUC < 0.5] <- 1 - AUC
+  }
+  m<-as.double(length(X)) 
+  n<-as.double(length(Y))
+   
   test.summary<-round(c(summary(test),sd(test)),digits=5)
-  test.summary<-rbind(test.summary,round(c(summary(test[gold=="negative"]),sd(test[gold=="negative"])),digits=5))
-  test.summary<-rbind(test.summary,round(c(summary(test[gold=="positive"]),sd(test[gold=="positive"])),digits=5))
+  test.summary<-rbind(test.summary,round(c(summary(X),sd(X)),digits=5))
+  test.summary<-rbind(test.summary,round(c(summary(Y),sd(Y)),digits=5))
   colnames(test.summary)<-c("Min.","1st Qu.","Median","Mean","3rd Qu.","Max.","SD")
   rownames(test.summary)<-c("Overall summary","Without disease", "With disease")
-  AUC <- ((as.double(length(test[gold =="negative"]))) * (as.double(length(test[gold =="positive"]))) + ((as.double(length(test[gold =="negative"]))) * ((as.double(length(test[gold =="negative"]))) + 1))/2 - sum(rank(test,ties.method = "average")[gold =="negative"]))/((as.double(length(test[gold =="negative"]))) * (as.double(length(test[gold == "positive"]))))
-  AUC[AUC < 0.5] <- 1 - AUC
-  X<-test[gold=="negative"] 
-  Y<-test[gold=="positive"] 
-  }
-
-  m<-length(X) 
-  n<-length(Y) 
-  D10X<-function(Xi){(1/n)*sum(Y>=Xi)} 
-  D01Y<-function(Yi){(1/m)*sum(Yi>=X)} 
+    
+  #D10X<-function(Xi){(1/n)*sum(Y>=Xi)} 
+  #D01Y<-function(Yi){(1/m)*sum(Yi>=X)} 
+  D10X <- function(Xi) {(1/n) * sum(Y >= Xi[1])}
+  D01Y <- function(Yi) {(1/m) * sum(Yi[1] >= X)}
   VAR.AUC<-sum((tapply(X,X,"D10X")-AUC)^2)/(m*(m-1))+sum((tapply(Y,Y,"D01Y")-AUC)^2)/(n*(n-1))
   SD.AUC<-sqrt(VAR.AUC)
   alpha<-1-CL
