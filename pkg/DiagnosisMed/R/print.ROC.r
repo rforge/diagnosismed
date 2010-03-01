@@ -1,5 +1,5 @@
 print.ROC<-function(x,Full=FALSE,...){
-  if (Full==TRUE){ page(x$test.diag.table[,-c(2:5,24:34)],method="print")}
+  if (Full==TRUE){ View(x$test.diag.table[,-c(2:5,24:34)])}
   cat("          Sample size:",x$sample.size,"\n")
   cat("    Sample prevalence:",round(x$sample.prevalence,digits = 4),"\n")
   cat("Population prevalence:",round(x$pop.prevalence,digits = 4)," - same as sample prevalence if not informed\n")

@@ -14,7 +14,7 @@ plot.diag<-function(x,print=FALSE,...){
   #error.rate<-numeric(100)
   #ER<-((FN/(FN+TN))*p)+(((FP/(FP+TP))*(TN+FP))
   #error.rate<-((1-x$NPV)*pre.test)+(((1-x$PPV)*(x$n-pre.test))
-  Result<-cbind(pre.test,post.test)
+  Result<-as.data.frame(cbind(pre.test,post.test))
   if(print==TRUE)
     {print(Result)}
   plot(pre.test,post.test,xlab="Pre-test probability (prevalence)"
@@ -23,5 +23,6 @@ plot.diag<-function(x,print=FALSE,...){
   #  lines(error.rate,lty=2,col=2)
   grid()
   axis(3)
-  legend("bottomright",legend=paste("Positive likelihood ratio: ",formatC(x$PLR, digits=4)))
+  legend("bottomright",legend=paste("Positive likelihood ratio: ",formatC(x$PLR, digits=4)),bty='n')
+  invisible(Result)
 }

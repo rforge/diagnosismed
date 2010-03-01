@@ -1,23 +1,70 @@
-diagnosis <- function(gold,test,CL=0.95,print=TRUE,plot=FALSE){
+diagnosis <- function(a,b=NULL,c=NULL,d=NULL,CL=0.95,print=TRUE,plot=FALSE){
   #require(epitools)
-  #require(epicalc)
-  # to do ...
-  # by option (multicenter)
-  # test with 3 categories (indeterminate results)
-  #   testef <- as.factor(teste)
-  #   if(nlevels(teste)  2)
-  #                  {
-                     # analysis this way
-  #                   }
-  tab<-table(test,gold,dnn=c(deparse(substitute(test)),deparse(substitute(gold))))
-  dimnames(tab) <- list(test = c("negative" , "positive"), gold.standard = c("negative","positive"))
-  tabmarg<-addmargins(tab)
+  if(is.numeric(a)){
+       if(all(length(a)==1 & length(b)==1 & length(c)==1 & length(d)==1 & !is.matrix(a))){
+         reference.name <- 'Not informed'
+         index.name <- 'Not informed'
+         tab<-as.table(cbind(rbind(d,c),rbind(b,a)))
+         dimnames(tab)<-list(index.test=c("negative","positive"),reference.standard=c("negative","positive"))
+         TN<-d
+         FN<-b
+         FP<-c
+         TP<-a         
+       }
+       if(all(length(a) > 1 & length(b) > 1 & is.null(c) & is.null(d) & !is.matrix(a))){
+          if(any(is.na(a),is.na(b))){stop('There are NAs either in index test or reference standard. Consider removing or inputing!')}
+          if(nlevels(as.factor(a))!=2 | nlevels(as.factor(b))!=2){
+             stop('It seems there are more levels then 0 and 1.')
+          }
+          if(!all(levels(as.factor(a))==c(0,1) & levels(as.factor(b))==c(0,1))){
+             stop('Either the index test or the reference test is not correctly coded. 0 and 1 were expected!')
+          }
+          else{reference.name <- deparse(substitute(a))
+               index.name <- deparse(substitute(b))
+               tab<-table(b,a,dnn=c(deparse(substitute(b)),deparse(substitute(a))))
+               TN<-tab[1,1]
+               FN<-tab[1,2]
+               FP<-tab[2,1]
+               TP<-tab[2,2]
+          }
+       }
+       if(any(is.table(a) | is.matrix(a))){
+          if(!all(dim(a)==c(2,2))){
+             stop('It seems the inputed table is not 2x2. Check your table output.')
+          }   
+          else{tab<-a
+            reference.name <- names(dimnames(tab)[2])
+            index.name <- names(dimnames(tab)[1])
+            TN<-tab[1,1]
+            FN<-tab[1,2]
+            FP<-tab[2,1]
+            TP<-tab[2,2]
+          }
+       }
+  }  
+  if(all(any(is.factor(a) | is.character(a)) & any(is.factor(b) | is.character(b)) & !is.matrix(a))){
+     if(any(is.na(a) | is.na(b))){
+        stop('There seem to be NAs either in the reference standard or index test. Consider removing or inputing!')  
+     }
+     if(nlevels(as.factor(a))!=2 | nlevels(as.factor(b))!=2){
+        stop('It seems there are more levels then negative/absence and positive/presence.')
+     }          
+     if(!all(levels(as.factor(a))==c("negative","positive") & levels(as.factor(b))==c("negative","positive")) &
+        !all(levels(as.factor(a))==c("absence","presence") & levels(as.factor(b))==c("absence","presence"))){
+          stop('It seems categories are not correctly coded in either the reference or index test.')
+     }
+     else{reference.name <- deparse(substitute(a))
+          index.name <- deparse(substitute(b))
+          tab<-table(b,a,dnn=c(deparse(substitute(b)),deparse(substitute(a))))
+          TN<-tab[1,1]
+          FN<-tab[1,2]
+          FP<-tab[2,1]
+          TP<-tab[2,2]
+     }
+  }       
+
+  tabmarg<-addmargins(tab)        
   Conf.limit<-CL
-  #dnn is option of table command - specifies the names of row and column
-  TN<-tab[1,1]
-  FN<-tab[1,2]
-  FP<-tab[2,1]
-  TP<-tab[2,2]
   # sample size
   n<-sum(tab)
   # prevalence
@@ -73,11 +120,9 @@ diagnosis <- function(gold,test,CL=0.95,print=TRUE,plot=FALSE){
   #  {ROC<-roc.from.table(tab, graph = FALSE)}
   # gives same results as AUC<-(Se+Sp)/2
   Youden<-Se+Sp-1
-  Youden.inf.cl<-Youden-qnorm(CL/2)*sqrt(((Se * (1 - Se))/(TP+FN) +
-           ((Sp * (1 - Sp))/(TN+FP))))
-  Youden.sup.cl<-Youden+qnorm(CL/2)*sqrt(((Se * (1 - Se))/(TP+FN) +
-           ((Sp * (1 - Sp))/(FP+TN))))
-  #rm(ROC)
+  Youden.inf.cl<-Youden-qnorm(CL/2)*sqrt(((Se * (1 - Se))/(TP+FN) + ((Sp * (1 - Sp))/(TN+FP))))
+  Youden.sup.cl<-Youden+qnorm(CL/2)*sqrt(((Se * (1 - Se))/(TP+FN) + ((Sp * (1 - Sp))/(FP+TN))))
+#  rm(ROC)
   rm(tab)
   # results evaluations
   reteval <- list(tabmarg=tabmarg,n=n,p=p,Se=Se,Se.cl=Se.cl,Sp=Sp,Sp.cl=Sp.cl,PLR=PLR,
@@ -85,7 +130,7 @@ diagnosis <- function(gold,test,CL=0.95,print=TRUE,plot=FALSE){
     NLR.sup.cl=NLR.sup.cl,accu=accu,accu.cl=accu.cl,PPV=PPV,PPV.cl=PPV.cl,NPV=NPV,NPV.cl=NPV.cl,
     DOR=DOR,DOR.inf.cl=DOR.inf.cl,DOR.sup.cl=DOR.sup.cl,ET=ET,ER=ER,ER.cl=ER.cl,
     Youden=Youden,Youden.inf.cl=Youden.inf.cl,Youden.sup.cl=Youden.sup.cl,AUC=AUC,
-    Conf.limit=Conf.limit)
+    Conf.limit=Conf.limit,reference.name=reference.name,index.name=index.name)
   class(reteval) <- "diag"
   if(print==TRUE)  {print(reteval)}
   invisible(reteval)

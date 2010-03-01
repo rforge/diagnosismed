@@ -72,8 +72,8 @@ TGROC(gold,
         "Max.Efficiency" - the cut-off which maximize the efficiency;
 
         "Min.MCT" - the cut-off which minimizes the misclassification cost term.}
-  \item{cex}{See \link[base]{par}. A numerical value giving the amount by which plotting text and symbols should be magnified relative to the default.}
-  \item{cex.sub}{See \link[base]{par}. Controls the font size in the subtitle. If Plot is FALSE than cex.sub is not considered.}
+  \item{cex}{See \link[graphics]{par}. A numerical value giving the amount by which plotting text and symbols should be magnified relative to the default.}
+  \item{cex.sub}{See \link[graphics]{par}. Controls the font size in the subtitle. If Plot is FALSE than cex.sub is not considered.}
   \item{Print}{If FALSE, statistics estimated by TGROC will not be displayed in the output window. Default is TRUE.}
   \item{x}{For the plot function, x is an object created TGROC function.}  
   \item{...}{Other plot parameters form \link[graphics]{plot.default}}

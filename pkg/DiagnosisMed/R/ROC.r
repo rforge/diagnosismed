@@ -5,14 +5,14 @@ ROC<-function(gold,
               Prevalence=0,
               Plot=TRUE,
               Plot.point="Min.ROC.Dist",
-              cex.sub=.85,
-              cex=1,
-              lwd=1,
               p.cex=1,
-              Print.full=FALSE,
+              Full=FALSE,
               Print=TRUE
               ){
   # A simple warning ...
+  if(any(is.na(test) | is.na(gold))){
+     stop('It seems there are NAs either in the index test or in the reference test. Consider imputing or removing NAs!')
+  }
   test.table<-table(test,gold)
   if (dim(test.table)[2] != 2){
       stop("It seems that your gold standard has more than 2 categories")
@@ -147,12 +147,12 @@ ROC<-function(gold,
   
   class(reteval)<-"ROC"
   if(Print==TRUE){
-     if(Print.full==TRUE){ print(reteval,Full=TRUE) }
+     if(Full==TRUE){ print(reteval,Full=TRUE) }
      else{ print(reteval) }
   }
   # the plot commands
   if(Plot==TRUE){
-  plot(reteval,Plot.point=Plot.point,cex.sub=cex.sub,cex=cex,lwd=lwd,p.cex=p.cex)
+  plot(reteval,Plot.point=Plot.point,p.cex=p.cex)
   }
   invisible(reteval)
 }
