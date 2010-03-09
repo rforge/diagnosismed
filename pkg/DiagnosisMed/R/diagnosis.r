@@ -33,12 +33,19 @@ diagnosis <- function(a,b=NULL,c=NULL,d=NULL,CL=0.95,print=TRUE,plot=FALSE){
              stop('It seems the inputed table is not 2x2. Check your table output.')
           }   
           else{tab<-a
-            reference.name <- names(dimnames(tab)[2])
-            index.name <- names(dimnames(tab)[1])
-            TN<-tab[1,1]
-            FN<-tab[1,2]
-            FP<-tab[2,1]
-            TP<-tab[2,2]
+              if(is.null(dimnames(tab))){
+                 reference.name <- 'Not informed'
+                 index.name <- 'Not informed'
+                 dimnames(tab) <- list(index.test = c('negative','positive'),reference.standard = c('negative','positive'))
+              }
+              else{
+                 reference.name <- names(dimnames(tab)[2])
+                 index.name <- names(dimnames(tab)[1])
+              }
+              TN<-tab[1,1]
+              FN<-tab[1,2]
+              FP<-tab[2,1]
+              TP<-tab[2,2]
           }
        }
   }  
@@ -96,12 +103,11 @@ diagnosis <- function(a,b=NULL,c=NULL,d=NULL,CL=0.95,print=TRUE,plot=FALSE){
   NPV<-TN/(TN+FN)
   NPV.cl<-as.numeric(binom.wilson(TN, TN+FN, conf.level = CL)[4:5])
   # diagnostic odds ratio and confidence limits
-  OR<-oddsratio(tab,conf.level = CL)
-  DOR<-OR$measure[2,1]
+  OR<-fisher.test(tab,conf.level=CL)
+  DOR<-unname(OR$estimate)
   #DOR<-(TP*TN)/(FP*FN)
-  DOR.inf.cl<-OR$measure[2,2]
-  DOR.sup.cl<-OR$measure[2,3]
-  rm(OR)
+  DOR.inf.cl<-OR$conf.int[1]
+  DOR.sup.cl<-OR$conf.int[2]
   # error rate and error trade
   #ER<-((FN/(FN+TN))*p)+(((FP/(FP+TP))*(TN+FP))
   ER<-(FN+FP)/n
