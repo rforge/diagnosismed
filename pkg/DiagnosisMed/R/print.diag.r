@@ -1,3 +1,4 @@
+#' @export
 print.diag <- function(x,...){
   cat("Reference standard:",x$reference.name,"\n")
   cat("Index test        :",x$index.name,"\n")  

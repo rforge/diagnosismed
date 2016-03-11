@@ -1,4 +1,6 @@
+#' @export
 print.ROC<-function(x,Full=FALSE,...){
+  ## View cannot be used in examples !!!
   if (Full==TRUE){ View(x$test.diag.table[,-c(2:5,24:34)])}
   cat("          Sample size:",x$sample.size,"\n")
   cat("    Sample prevalence:",round(x$sample.prevalence,digits = 4),"\n")

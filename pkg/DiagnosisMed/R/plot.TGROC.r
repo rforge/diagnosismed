@@ -1,3 +1,4 @@
+#' @export
 plot.TGROC<-function(x,...,
                 Plot="Both",
                 Plot.inc.range=TRUE,

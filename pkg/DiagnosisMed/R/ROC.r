@@ -1,3 +1,4 @@
+#' @export
 ROC<-function(gold,
               test,
               CL=0.95,

@@ -1,4 +1,5 @@
-  # the plot commands
+#' @export
+# the plot commands
 plot.ROC<-function(x,Plot.point="Min.ROC.Dist",cex.sub=.85,p.cex=1,...){
 
     if(Plot.point!="None" & Plot.point!="Min.ROC.Dist" & Plot.point!="Max.Accuracy" &

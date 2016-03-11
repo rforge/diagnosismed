@@ -1,3 +1,4 @@
+#' @export
 plot.diag<-function(x,print=FALSE,...){
   #to do - include an error rate curve
   #consider ohter graphic parameters

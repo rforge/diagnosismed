@@ -70,8 +70,8 @@ Simel D, Samsa G, Matchar D (1991). Likelihood ratios with confidence: Sample si
 \author{Pedro Brasil - \email{diagnosismed-list@lists.r-forge.r-project.org}}
 \note{Bug reports, malfunctioning, or suggestions for further improvements or contributions can be sent, preferentially, through the DiagnosisMed email list, or R-Forge website \url{https://r-forge.r-project.org/projects/diagnosismed/}.
 }
-\seealso{\code{\link{LRgraph}}, \code{\link{ROC}},\code{\link{LRgraph}},\link[epitools]{binom.conf.int},
- \link[epibasix]{sensSpec},\link[epiR]{epi.tests},\link[Design]{nomogram},\link[epiR]{epi.nomogram}}
+\seealso{\code{ LRgraph}, \code{ ROC},\code{ epitools::binom.conf.int},
+ \code{ epibasix::sensSpec},\code{ epiR::epi.tests},\code{ Design::nomogram},\code{ epiR::epi.nomogram}} 
 \examples{
 # Simulating a dataset
 mydata <- as.data.frame(rbind(

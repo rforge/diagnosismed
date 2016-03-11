@@ -1,3 +1,5 @@
+#' @export
+#' @import epitools
 diagnosis <- function(a,b=NULL,c=NULL,d=NULL,CL=0.95,print=TRUE,plot=FALSE){
   #require(epitools)
   if(is.numeric(a)){

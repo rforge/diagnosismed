@@ -59,10 +59,10 @@ ROC(gold,
   \item{Print}{If FALSE, no results (detailed below in values section) will be displayed on the output window. Default is TRUE}
   \item{Full}{If TRUE, a table with sensitivity, specificity, predictive values and likelihood ratios (and respective confidence limits) for each decision threshold will be displayed. Default is FALSE.}
   \item{x}{For the \command{plot} and \command{print} functions, x is an object storing \command{ROC} function output.}    
-  \item{...}{Other plot or print parameters form \link[graphics]{plot.default}}  
+  \item{...}{Other plot or print parameters from \link[graphics]{plot.default}}  
 }
 \details{
-   Tests results matching the cut-off values will be considered a positive test. \command{ROC} assumes that subjects with higher values of the test are with the target condition and those with lower values are without the target condition. Tests that behave like glucose (middle values are supposed to be normal and extreme values are supposed to be abnormal) and immunefluorescence (lower values - higher dilutions - are suppose to be abnormal) will not be correctly analyzed. In the latter, multiplying the test results by -1 or other transformation before analysis could make it work. The AUC (area under the ROC curve) is estimated by the trapezoidal method (also known as Mann-Whitney statistic), its confidence interval is estimated by DeLong method. The AUC confidence limits should be used only to compare the AUC with the null value for AUC which is 0.5 and not to compare the AUC from different tests. The validity measures such as Sensitivity, Specificity and Likelihood ratios and its confidence limits are estimated as in \code{\link{diagnosis}} function. If \command{ROC} output is assign to an object (see example), tests results could be easily exported to a spreadsheet and other graphics that might be of interest could be easily done.
+   Tests results matching the cut-off values will be considered a positive test. \command{ROC} assumes that subjects with higher values of the test are with the target condition and those with lower values are without the target condition. Tests that behave like glucose (middle values are supposed to be normal and extreme values are supposed to be abnormal) and immunefluorescence (lower values - higher dilutions - are suppose to be abnormal) will not be correctly analyzed. In the latter, multiplying the test results by -1 or other transformation before analysis could make it work. The AUC (area under the ROC curve) is estimated by the trapezoidal method (also known as Mann-Whitney statistic), its confidence interval is estimated by DeLong method. The AUC confidence limits should be used only to compare the AUC with the null value for AUC which is 0.5 and not to compare the AUC from different tests. The validity measures such as Sensitivity, Specificity and Likelihood ratios and its confidence limits are estimated as in \command{diagnosis} function. If \command{ROC} output is assign to an object (see example), tests results could be easily exported to a spreadsheet and other graphics that might be of interest could be easily done.
    
    Diagnostic odds ratio: \eqn{DOR = (TP*TN)/(FN*FP); the same as: DOR = PLR/NLR}
 
@@ -103,50 +103,70 @@ Gengsheng Qin, Lejla Hotilovac. Comparison of non-parametric confidence interval
 \author{Pedro Brasil; Beranrdo Rangel Tura - \email{diagnosismed-list@lists.r-forge.r-project.org}}
 \note{Bug reports, malfunctioning, or suggestions for further improvements or contributions can be sent, preferentially, through the DiagnosisMed email list, or R-Forge website \url{https://r-forge.r-project.org/projects/diagnosismed/}.
 }
-\seealso{\link[epitools]{binom.conf.int},\code{\link{diagnosis}},\code{\link{interact.ROC}},\code{\link{TGROC}},\link[ROCR]{performance},\link[nonbinROC]{contROC}}
+\seealso{\code{epitools::binom.conf.int}, \code{\link{diagnosis}}, \code{\link{interact.ROC}}, \code{\link{TGROC}}, \code{ROCR::performance}, \code{nonbinROC::performance} }
 \examples{
 # loading a dataset
 data(rocdata)
+
 # Attaching the data set.
 attach(rocdata)
+
 # A little description of the data set to check if it is ok!
 str(rocdata)
-# Running ROC analysis with the full table option 
-# and storing ROC objects into 'x' from which there are tables to draw the graphs below.
-x<-DiagnosisMed::ROC(Gold,test2,Full=TRUE) 
-# There is no need to stick the package name before the function if it is loaded as first in search path!
+
+# Running ROC analysis with the full table option and storing ROC objects into 
+# 'x' from which there are tables to draw the graphs below.
+\dontrun{
+x<-DiagnosisMed::ROC(Gold,test2,Full=TRUE) }
+x<-DiagnosisMed::ROC(Gold,test2,Full=FALSE) 
+# There is no need to stick the package name before the function if it is loaded  
+# first in search path!
+
 # Adding a title to the graph.
 title(main="ROC graph")
+
 # Some graphs that may be of interest. Validity measures at each test value. 
 # Setting the plot window to get nine graphs
-# Some graphs showing some validity measures and some indexes variations used to choose good cut-offs
+# Some graphs showing some validity measures and some indexes variations used 
+# to choose good cut-offs
 par(mfrow=c(3,3))
-plot(x$test.diag.table$test.values,x$test.diag.table$DOR,type="l",ylab="DOR",xlab="Test values")
+plot(x$test.diag.table$test.values,x$test.diag.table$DOR,type="l",ylab="DOR",
+      xlab="Test values")
 title(main="Test values x DOR")
-plot(x$test.diag.table$test.values,x$test.diag.table$MCT,type="l",ylab="MCT",xlab="Test values")
+plot(x$test.diag.table$test.values,x$test.diag.table$MCT,type="l",ylab="MCT",
+      xlab="Test values")
 title(main="Test values x MCT")
-plot(x$test.diag.table$test.values,x$test.diag.table$Efficiency,type="l",ylab="Efficiency",xlab="Test values")
+plot(x$test.diag.table$test.values,x$test.diag.table$Efficiency,type="l",
+      ylab="Efficiency",xlab="Test values")
 title(main="Test values x Efficiency")
-plot(x$test.diag.table$test.values,x$test.diag.table$Youden,type="l",ylab="Youden index",xlab="Test values")
+plot(x$test.diag.table$test.values,x$test.diag.table$Youden,type="l",
+      ylab="Youden index",xlab="Test values")
 title(main="Test values x Youden index")
-plot(x$test.diag.table$test.values,x$test.diag.table$PLR,type="l",ylim=c(0,49),ylab="Likelihood ratios",xlab="Test values")
+plot(x$test.diag.table$test.values,x$test.diag.table$PLR,type="l",ylim=c(0,49),
+      ylab="Likelihood ratios",xlab="Test values")
 lines(x$test.diag.table$test.values,x$test.diag.table$NLR,type="l",lty=2)
 legend("right",lty=c(1,2),legend=c("PLR","NLR"),bty = 'n')
 title(main="Test values x Likelihood ratios")
-plot(x$test.diag.table$test.values,x$test.diag.table$PPV,type="l",ylab="Predictive values",xlab="Test values")
+plot(x$test.diag.table$test.values,x$test.diag.table$PPV,type="l",
+      ylab="Predictive values",xlab="Test values")
 lines(x$test.diag.table$test.values,x$test.diag.table$NPV,type="l",lty=2)
 legend("bottomright",lty=c(1,2),legend=c("PPV","NPV"),bty = 'n')
 title(main="Test values x Predictive values")
-plot(x$test.diag.table$test.values,x$test.diag.table$Accuracy.area,type="l",,ylab="Accuracy area",xlab="Test values")
+plot(x$test.diag.table$test.values,x$test.diag.table$Accuracy.area,type="l",
+      ylab="Accuracy area",xlab="Test values")
 title(main="Test values x Accuracy area")
-plot(x$test.diag.table$test.values,x$test.diag.table$MinRocDist,type="l",,ylab="ROC distance",xlab="Test values")
+plot(x$test.diag.table$test.values,x$test.diag.table$MinRocDist,type="l",
+      ylab="ROC distance",xlab="Test values")
 title(main="Test values x ROC distance")
-plot(x$test.diag.table$test.values,x$test.diag.table$Accuracy,type="l",ylab="Error rate & Accuracy",xlab="Test values",ylim=c(0,1))
-lines(x$test.diag.table$test.values,x$test.diag.table$Error.rate,type="l",lty=2)#,xlim=c(0,2.5))
+plot(x$test.diag.table$test.values,x$test.diag.table$Accuracy,type="l",
+      ylab="Error rate & Accuracy",xlab="Test values",ylim=c(0,1))
+lines(x$test.diag.table$test.values,x$test.diag.table$Error.rate,type="l",lty=2)
+#,xlim=c(0,2.5))
 legend("bottomright",lty=c(1,2),legend=c("Accuracy","Error rate"),bty = 'n')
 par(mfrow=c(1,1))
 
-# Also, results from ROC analysis could easily exported to a spreadsheet file or to a odt file by OdfWeave.
+# Also, results from ROC analysis could easily exported to a spreadsheet file 
+# or to a odt file by OdfWeave.
 # Exporting the full table:
 # write.csv(x$test.diag.table[,-c(2:5,24:34)],'MytestFulltable.csv')
 # Exporting AUC summary:
@@ -154,7 +174,7 @@ par(mfrow=c(1,1))
 # Exporting Test summary:
 # write.csv(x$test.summary,'MytestSummary.csv')
 # Exporting Test best-cut-offs table:
-# write.csv(x$test.best.cutoff,'MytestBestcutof.csv')                                                
+# write.csv(x$test.best.cutoff,'MytestBestcutof.csv')
 rm(rocdata,x)
 }
 \keyword{iplot}

@@ -1,3 +1,7 @@
+#' @export
+#' @import epitools
+#' @import AMORE
+
 TGROC<-function(gold,
                 test,
                 Cost=1,

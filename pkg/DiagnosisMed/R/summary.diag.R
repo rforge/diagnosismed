@@ -1,3 +1,4 @@
+#' @export
 summary.diag <- function(object,...){
   diag.tab <- matrix(
         c(object$n,NA,paste(formatC(object$p*100,digits=2,format="f")),NA,

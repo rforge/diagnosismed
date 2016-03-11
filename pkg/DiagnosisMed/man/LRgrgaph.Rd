@@ -35,11 +35,13 @@ mytest5<-diagnosis(80,20,20,80,print=FALSE)
 mytest1<-diagnosis(90,10,10,90,print=FALSE)
 
 # mytest2 has lower sensitivity but higher specificity.
-# mytest2 is better to identify the presence of the target condition compared to mytest5.
+# mytest2 is better to identify the presence of the target condition compared to 
+# mytest5.
 mytest2<-diagnosis(72,28,3,97,print=FALSE)
 
 # mytest3 has higher sensitivity but lower specificity.
-# mytest3 is better to identify the absence of the target condition compared to mytest5.
+# mytest3 is better to identify the absence of the target condition compared to 
+# mytest5.
 mytest3<-diagnosis(92,8,37,63,print=FALSE)
 
 # mytest41 has lower sensitivity and specificity.

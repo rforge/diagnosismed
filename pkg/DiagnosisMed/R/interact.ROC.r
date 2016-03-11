@@ -1,3 +1,7 @@
+#' @export
+#' @import TeachingDemos 
+#' @import tcltk
+
 interact.ROC<-function(gold,test){
   # require(TeachingDemos)
   # require(tcltk)

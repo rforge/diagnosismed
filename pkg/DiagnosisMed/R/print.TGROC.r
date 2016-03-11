@@ -1,3 +1,4 @@
+#' @export
 print.TGROC<-function(x,...){
   cat("                Sample size:",x$sample.size,"\n")
   cat("          Sample prevalence:",round(x$sample.prevalence,digits = 4),"\n")

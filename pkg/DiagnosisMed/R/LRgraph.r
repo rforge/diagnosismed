@@ -1,3 +1,4 @@
+#' @export
 LRgraph <- function (tests, lwd = 2, lty = 1, cex = 1, leg.cex = 1.5, pt.cex = 2, ...){
     plot(1 - tests[[6, 1]], tests[[4, 1]], xlim = c(0, 1), ylim = c(0,1), xlab = "False positive rate", ylab = "True positive rate",
         col = 1, cex = cex, lwd = lwd, lty = lty)
