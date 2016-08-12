@@ -32,8 +32,9 @@ SS <- function(ref, test, reverse = "auto", CL = 0.95){
       
   D <- length(test[which(ref == 1)])
   ND <- length(test[which(ref == 0)])
-  sample.prevalence <- D / (ND+D)
-  sample.size <- D + ND
+  sample.size <- ND + D
+  sample.prevalence <- D / sample.size
+  
   
   # Taking the rownames of the test.table to be results first column
   test.values <- as.numeric(rownames(test.table))
@@ -180,10 +181,10 @@ BN.SS <- function(ref, test, CL = 0.95, t.max = NULL, t.min = NULL, precision = 
   }
   
   # first get an estimate of the normal curves
-  m0  <- mean(test[which(ref == 0]))
-  sd0 <- sd(test[which(ref == 0]))
-  m1 <- mean(test[which(ref == 1]))
-  sd1 <- sd(test[which(ref == 1]))
+  m0  <- mean(test[which(ref == 0)])
+  sd0 <- sd(test[which(ref == 0)])
+  m1 <- mean(test[which(ref == 1)])
+  sd1 <- sd(test[which(ref == 1)])
   
   if(m0 > m1 || median(test[which(ref == 0)]) > median(test[which(ref == 1)])){
     warning("The mean test values of subjects with the condition is lower then from those without the condition.")
@@ -191,8 +192,8 @@ BN.SS <- function(ref, test, CL = 0.95, t.max = NULL, t.min = NULL, precision = 
   
   D <- length(test[which(ref == 1)])
   ND <- length(test[which(ref == 0)])
-  sample.prevalence <- D / (ND + D)
   sample.size <- D + ND
+  sample.prevalence <- D / sample.size
 
   # Defining the values where the NN will be simulated
   if(is.null(t.max)){

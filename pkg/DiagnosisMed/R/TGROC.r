@@ -2,7 +2,7 @@
 #' @import epitools
 #' @import AMORE
 
-TGROC<-function(ref,
+TGROC <- function(ref,
                 test,
                 Cost = 1,
                 CL = 0.95,
@@ -10,8 +10,8 @@ TGROC<-function(ref,
                 Prevalence = 0,
                 t.max = NULL,
                 t.min = NULL,
-                precision = .05,  
-                n.neurons = c(1,5,1),
+                precision = 0.05,  
+                n.neurons = c(1, 5, 1),
                 learning.rate.global = 1e-2,
                 momentum.global = 0.3,
                 error.criterium = "LMS",
@@ -22,49 +22,50 @@ TGROC<-function(ref,
                 report = FALSE,
                 show.step = 5000,
                 n.shows = 1,
-                Plot = c("Non-parametric","NN-parametric"),
+                Plot.type = "TGROC",
+                Plot = c("Binormal","Non-parametric"),
                 Plot.inc.area = TRUE,
                 Plot.Cl = FALSE,
                 Plot.threshold = "None",
                 cex = 0.5,
                 cex.sub = 0.85,
                 reverse = "auto"){
-  
-  # Preventing wrong inputs and warnings -----------------------------------------------
-  if(any(levels(as.factor(ref)) != c(0,1))){
+
+  # Preventing wrong inputs and warnings ---------------------------------------
+  if (any(levels(as.factor(ref)) != c(0, 1))){
     stop("Your reference standard must be coded as 0 (absence) and 1 (presence). Check reference categories!")
   }
-  if(is.null(precision)||!is.numeric(precision)){
+  if (is.null(precision) || !is.numeric(precision)) {
       stop("Precision must be set to a numeric value!")
   }
   if (Prevalence > 0){
     (pop.prevalence <- Prevalence)
   }
-  
-  # Making the non-parametric trade-off for Se and Sp (ROC analysis) -----------------------------------
-  SeSp <- SS(ref,test, reverse = reverse, CL = CL)  
-  
+
+  # Making the non-parametric trade-off for Se and Sp (ROC analysis) -----------
+  SeSp <- SS(ref, test, reverse = reverse, CL = CL)
+
   # Setting requeired additional objects
   sample.prevalence <- SeSp$sample.prevalence
   sample.size <- SeSp$sample.size
   names(sample.prevalence) <- c("Condition prevalence in the sample")
   names(sample.size) <- c("Sample size")
-  if (Prevalence == 0){ pop.prevalence <- sample.prevalence }
+  if (Prevalence == 0) { pop.prevalence <- sample.prevalence }
   names(pop.prevalence)<-c("Informed disease prevalence in the population.")
   cost <- Cost
   names(cost) <- c("Informed costs(FN)/costs(FP).")
   conf.limit <- CL
   inc <- Inconclusive
   names(inc) <- "Inconclusive tolerance level."
-  
-  # Overall test summary --------------------------------------------------------
-  test.summary <- rbind(c(summary(test),sd(test)),
-                        c(summary(test[which(ref == 1)]),sd(test[which(ref == 1)])),
-                        c(summary(test[which(ref == 0)]),sd(test[which(ref == 0)])))
-  colnames(test.summary) <- c("Min.","1st Qu.","Median","Mean","3rd Qu.","Max.","SD")
-  rownames(test.summary) <- c("Overall","With the condition","Without the condition")
-  
-  #Setting the decision Thresholds --------------------------------------------------  
+
+  # Overall test summary -------------------------------------------------------
+  test.summary <- rbind(c(summary(test), sd(test)),
+                        c(summary(test[which(ref == 1)]), sd(test[which(ref == 1)])),
+                        c(summary(test[which(ref == 0)]), sd(test[which(ref == 0)])))
+  colnames(test.summary) <- c("Min.", "1st Qu.", "Median", "Mean", "3rd Qu.", "Max.", "SD")
+  rownames(test.summary) <- c("Overall", "With the condition", "Without the condition")
+
+  #Setting the decision Thresholds ---------------------------------------------
   np.best.threshold <- thresholds(SeSp, pop.prevalence = pop.prevalence, Cost = Cost)
 
   # Extracting the inconclusive ranges 
@@ -136,7 +137,7 @@ TGROC<-function(ref,
                 )
   class(output) <- "TGROC"
   
-  if(any(Plot != "None")){
+  if (any(Plot.type != "None")) {
   plot(output,
        Plot = Plot,
        Plot.inc.area = Plot.inc.area,
