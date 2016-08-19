@@ -4,9 +4,9 @@ plot.TGROC <- function(x,...,
                 Plot = c("Binormal","Non-parametric","NN-parametric"),
                 Plot.inc.area = TRUE,
                 Plot.Cl = FALSE,
-                Plot.trheshold = "None",
+                Plot.threshold = "None",
                 threshold.arg = list(col = gray(.5), lty = 6),
-                cex.sub = 0.85,
+                title.arg = list(cex.sub = 0.65, line = 5),
                 ylab = "Sensitivity & Specificity",
                 xlab = "Test scale",
                 ylim = c(0,1),
@@ -34,8 +34,8 @@ plot.TGROC <- function(x,...,
   if(any(!(Plot %in% c("Non-parametric","NN-parametric","Binormal","None")))){
       stop("The allowed values for Plot argument are: 'None','Non-parametric', or 'NN-parametric'!")
   }
-  if(any(!(Plot.trheshold %in% c("Min MCT", "Se = Sp", "Max Efficiency", "Min ROC distance", "Min Error rate", "Max DOR", "Max Accuracy area", "Max Accuracy", "Max Youden", "None")))){
-      stop("Plot.trheshold argument does not have a valid input. Check documentation.")
+  if(any(!(Plot.threshold %in% c("Min MCT", "Se = Sp", "Max Efficiency", "Min ROC distance", "Min Error rate", "Max DOR", "Max Accuracy area", "Max Accuracy", "Max Youden", "None")))){
+      stop("Plot.threshold argument does not have a valid input. Check documentation.")
   }
   if(!is.logical(Plot.inc.area)){
     stop("Plot.inc.area argument must be logical.")
@@ -69,7 +69,7 @@ plot.TGROC <- function(x,...,
     # Opening a blank device
     plot(0,0, type="n", ..., xlab = xlab, ylab = ylab, ylim = ylim, xlim = xlim)
     # plot(0,0,type="n", xlab = xlab, ylab = ylab, ylim = ylim, xlim = xlim)
-    
+    subtitle <- NULL
     # Ploting the inconclusive shade area ----------------------------------------
     if(Plot.inc.area){
     if(Plot[1] == "Non-parametric"){
@@ -82,13 +82,13 @@ plot.TGROC <- function(x,...,
       shade.args$x <- c(rep(x$NN.inconclusive["Lower inconclusive","test.values"],2),rep(x$NN.inconclusive["Upper inconclusive","test.values"],2))
       shade.args$y <- c(0,x$inc,x$inc,0)
       do.call(polygon,shade.args)
-      subtitle <- paste0("Parametric (neural network) inconclusive limits at",formatC(x$inc)," level: ",formatC(x$NN.inconclusive[1,1]),"-",formatC(x$NN.inconclusive[2,1]),".")
+      subtitle <- paste0("Parametric (neural network) inconclusive limits at ",formatC(x$inc)," level: ",formatC(x$NN.inconclusive[1,1]),"-",formatC(x$NN.inconclusive[2,1]),".")
     }
     if(Plot[1] == "Binormal"){
       shade.args$x <- c(rep(x$BN.inconclusive["Lower inconclusive","test.values"],2),rep(x$BN.inconclusive["Upper inconclusive","test.values"],2))
       shade.args$y <- c(0,x$inc,x$inc,0)
       do.call(polygon,shade.args)
-      subtitle <- paste0("Parametric (Binormal) inconclusive limits at",formatC(x$inc)," level: ",formatC(x$BN.inconclusive[1,1]),"-",formatC(x$BN.inconclusive[2,1]),".")
+      subtitle <- paste0("Parametric (Binormal) inconclusive limits at ",formatC(x$inc)," level: ",formatC(x$BN.inconclusive[1,1]),"-",formatC(x$BN.inconclusive[2,1]),".")
     }
   }
 
@@ -120,7 +120,7 @@ plot.TGROC <- function(x,...,
       BN.Sp.args$y <- x$BN.SS$Specificity
       do.call(lines, BN.Sp.args)
     }
-    
+
     # Ploting the confidence bands -------------------------------------
     if(Plot.Cl){
       if(Plot[1] == "Non-parametric"){
@@ -167,21 +167,21 @@ plot.TGROC <- function(x,...,
     }
 
     # Ploting the best threshold vertical line ----------------------------
-    if(Plot.trheshold != "None"){
+    if(Plot.threshold != "None"){
       if(Plot[1] == "Non-parametric"){
-        threshold.arg$v <- x$np.best.threshold[Plot.trheshold, 1]
+        threshold.arg$v <- x$np.best.threshold[Plot.threshold, 1]
         do.call(abline, threshold.arg)
-        subtitle <- paste(subtitle,paste("Threshold estimated by non-parametric", Plot.threshold,":",formatC(x$np.best.threshold[1,1])))
+        subtitle <- paste(subtitle,paste("\n Threshold estimated by non-parametric ", Plot.threshold,": ",formatC(x$np.best.threshold[1,1])))
       }
       if(Plot[1] == "Binormal"){
-        threshold.arg$v <- x$BN.best.threshold[Plot.trheshold, 1]
+        threshold.arg$v <- x$BN.best.threshold[Plot.threshold, 1]
         do.call(abline, threshold.arg)
-        subtitle <- paste(subtitle,paste("Threshold estimated by parametric (Binormal)", Plot.threshold,":",formatC(x$BN.best.threshold[Plot.trheshold,1])))
+        subtitle <- paste(subtitle,paste("\n Threshold estimated by parametric (Binormal) ", Plot.threshold,": ",formatC(x$BN.best.threshold[Plot.threshold,1])))
       }
       if(Plot[1] == "NN-parametric"){
-        threshold.arg$v <- x$NN.best.threshold[Plot.trheshold, 1]
+        threshold.arg$v <- x$NN.best.threshold[Plot.threshold, 1]
         do.call(abline, threshold.arg)
-        subtitle <- paste(subtitle,paste("Threshold estimated by parametric (neural network)", Plot.threshold,":",formatC(x$NN.best.threshold[Plot.threshold,1])))
+        subtitle <- paste(subtitle,paste("\n Threshold estimated by parametric (neural network) ", Plot.threshold,": ",formatC(x$NN.best.threshold[Plot.threshold,1])))
       }
     }
 
@@ -189,7 +189,7 @@ plot.TGROC <- function(x,...,
     if (auto.legend) {
 
       legend.args$legend <- c("Se", "Sp")
-      legend.args$fill <- c(NA, NA)
+      legend.args$fill <- c(par()$bg, par()$bg)
       legend.args$density <- c(NA, NA)
       legend.args$col <- c(BN.Se.args$col, BN.Sp.args$col)
       legend.args$lty <- c(BN.Se.args$lty, BN.Sp.args$lty)
@@ -197,7 +197,7 @@ plot.TGROC <- function(x,...,
 
       if (Plot.Cl) {
         legend.args$legend <- c(legend.args$legend, "Se conf band", "Sp conf band") 
-        legend.args$fill <- c(legend.args$fill, NA, NA)
+        legend.args$fill <- c(legend.args$fill, par()$bg, par()$bg)
         legend.args$density <- c(legend.args$density, NA, NA)
         legend.args$col <- c(legend.args$col, BN.Se.ci.args$col, BN.Sp.ci.args$col)
         legend.args$lty <- c(legend.args$lty, BN.Se.ci.args$lty, BN.Sp.ci.args$lty)
@@ -211,7 +211,7 @@ plot.TGROC <- function(x,...,
         legend.args$lty <- c(legend.args$lty, NA) 
       }
       
-      if (Plot.trheshold != "None") {
+      if (Plot.threshold != "None") {
         list(col = gray(.5), lty = 6)
         threshold.arg
         legend.args$legend <- c(legend.args$legend, "Best threshold") 
@@ -223,8 +223,11 @@ plot.TGROC <- function(x,...,
       }
       
     do.call(legend,legend.args)
-  }  
-    title(sub = subtitle, cex.sub = cex.sub)         
+  }
+
+    # Calling the subtitle
+    title.arg$sub <- subtitle
+    do.call(title,title.arg)
   }
   if(Plot.type[1] == "ROC"){
     

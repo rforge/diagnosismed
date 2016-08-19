@@ -84,10 +84,10 @@ TGROC <- function(ref,
   BN.SeSp <- BN.SS(ref = ref, test = test, CL = CL, t.max = t.max, t.min = t.min, precision = precision)
   
   #Setting the decision Thresholds --------------------------------------------------  
-  BN.best.threshold <- thresholds(SeSp, pop.prevalence = pop.prevalence, Cost = Cost)
+  BN.best.threshold <- thresholds(BN.SeSp, pop.prevalence = pop.prevalence, Cost = Cost)
   
   # Extracting the inconclusive ranges 
-  BN.inconclusive <- inc.limits(SeSp, Inconclusive = Inconclusive)
+  BN.inconclusive <- inc.limits(BN.SeSp, Inconclusive = Inconclusive)
   
   # Warnings Regarding the thresholds out of the inconclusive range
   if(np.inconclusive[1,1] > np.inconclusive[2,1]){
