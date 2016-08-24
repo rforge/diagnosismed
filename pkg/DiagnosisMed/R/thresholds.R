@@ -1,6 +1,6 @@
 # Colection of functions to estimate trhesholds
 
-# Se=Sp threshold where x is a SS object--------------------------------------------
+# Se=Sp threshold where x is a SS object----------------------------------------
 Se.equals.Sp <- function(x){
   x$table$Se.equals.Sp <- abs(x$table$Specificity - x$table$Sensitivity)
   condition <- which(x$table$Se.equals.Sp == min(x$table$Se.equals.Sp))
@@ -14,7 +14,7 @@ Se.equals.Sp <- function(x){
 }
 # Se.equals.Sp(mytest) ; Se.equals.Sp(NN.SeSp)
 
-# Maximizing the accuracy threshold where x is a SS object--------------------------------------------
+# Maximizing the accuracy threshold where x is a SS object----------------------
 max.Accuracy <- function(x){
   x$table$Accuracy <- (x$table$TN + x$table$TP) / x$sample.size
   condition <- which(x$table$Accuracy == max(x$table$Accuracy))
@@ -28,7 +28,7 @@ max.Accuracy <- function(x){
 }
 # max.Accuracy(mytest) ; max.Accuracy(NN.SeSp)
 
-# Maximizing Diagnostic Odds Ratio threshold where x is a SS object--------------------------------------------
+# Maximizing Diagnostic Odds Ratio threshold where x is a SS object------------
 max.DOR <- function(x){
   x$table$DOR <- ((x$table$TN)*(x$table$TP))/((x$table$FP)*(x$table$FN))
   x$table$DOR <- ifelse(x$table$DOR == Inf, NA, x$table$DOR)
@@ -43,7 +43,7 @@ max.DOR <- function(x){
 }
 # max.DOR(mytest)
 
-# Minimizing error rate threshold where x is a SS object--------------------------------------------
+# Minimizing error rate threshold where x is a SS object------------------------
 min.Error <- function(x){
   x$table$Error.rate <- ((x$table$FP)+(x$table$FN)) / x$sample.size
   condition <- which(x$table$Error.rate == min(x$table$Error.rate))
@@ -57,7 +57,7 @@ min.Error <- function(x){
 }
 # min.Error(mytest)
 
-# Maximizing the accuracy area threshold where x is a SS object--------------------------------------------
+# Maximizing the accuracy area threshold where x is a SS object------------------
 max.Accuracy.area <- function(x){
   # D and ND are constants will not make any difference in the final result
   # removing them will make it easier for smoothed SS objects
@@ -75,7 +75,7 @@ max.Accuracy.area <- function(x){
 }
 # max.Accuracy.area(mytest); max.Accuracy.area(NN.SeSp)
 
-# Maximizing the Youden J index threshold where x is a SS object--------------------------------------------
+# Maximizing the Youden J index threshold where x is a SS object----------------
 max.Youden <- function(x){
   x$table$Youden <- x$table$Sensitivity + x$table$Specificity - 1
   condition <- which(x$table$Youden == max(x$table$Youden))
@@ -91,9 +91,9 @@ max.Youden <- function(x){
 
 # Minimizing The ROC 0 1 distance threshold where x is a SS object-------------
  min.ROCdist <- function(x){
-  x$table$MinRocDist <- (x$table$Specificity - 1)^2 + (1 - x$table$Sensitivity)^2
+  x$table$MinRocDist <- (x$table$Specificity - 1) ^ 2 + (1 - x$table$Sensitivity) ^ 2
   condition <- which(x$table$MinRocDist == min(x$table$MinRocDist))
-  if(length(condition) > 1){
+  if (length(condition) > 1){
     warn <- x$table$test.values[condition]
     warning(paste0("Minimum ROC distance reaches its minimum at the following test values: ",toString(warn),". First one was chosen!"))
   }
@@ -103,7 +103,7 @@ max.Youden <- function(x){
 }
 # min.ROCdist(mytest) 
 
-# maximizing Efficiency threshold where x is a SS object--------------------------------------------
+# maximizing Efficiency threshold where x is a SS object------------------------
 max.Efficiency <- function(x, pop.prevalence = NULL){
   if(is.null(pop.prevalence)){
     pop.prevalence <- x$sample.prevalence
@@ -120,7 +120,7 @@ max.Efficiency <- function(x, pop.prevalence = NULL){
 }
 # max.Efficiency(mytest) 
 
-# Minimizing MissClassificatio Cost Term threshold where x is a SS object--------------------------------------------
+# Minimizing MissClassificatio Cost Term threshold where x is a SS object-------
 min.MCT <- function(x, pop.prevalence = NULL, Cost = 1){
   if(is.null(pop.prevalence)){
     pop.prevalence <- x$sample.prevalence
@@ -137,7 +137,7 @@ min.MCT <- function(x, pop.prevalence = NULL, Cost = 1){
 }
 # min.MCT(mytest)
 
-# Wraping all threshold functions where x is a SS object--------------------------------------------
+# Wraping all threshold functions where x is a SS object------------------------
 thresholds <- function(x, pop.prevalence = NULL, Cost = 1){
   output <- rbind(max.Youden(x),
                   max.Accuracy(x),
@@ -153,7 +153,7 @@ thresholds <- function(x, pop.prevalence = NULL, Cost = 1){
 }
 # thresholds(mytest, Cost = .5) ; thresholds(NN.SeSp)
 
-# Inconclusive thresholds (threechotomization) --------------------------------------------------
+# Inconclusive thresholds (threechotomization) ---------------------------------
 inc.limits <- function(x, Inconclusive = .95){
   # Checking the Se values
   condition <- which(x$table$Sensitivity == Inconclusive)

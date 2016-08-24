@@ -44,7 +44,8 @@ TGROC <- function(ref,
 
   # Making the non-parametric trade-off for Se and Sp (ROC analysis) -----------
   SeSp <- SS(ref, test, reverse = reverse, CL = CL)
-
+  AUC <- np.auROCc(ref, test, reverse = reverse, CL = CL)
+  
   # Setting requeired additional objects
   sample.prevalence <- SeSp$sample.prevalence
   sample.size <- SeSp$sample.size
@@ -91,33 +92,33 @@ TGROC <- function(ref,
   
   # Warnings Regarding the thresholds out of the inconclusive range
   if(np.inconclusive[1,1] > np.inconclusive[2,1]){
-     warning("Non-parametric lower inconclusive limit is higher than upper inconclusive limit. \n Either ROC analysis should be reversed or Inconclusive argument should had higher value.")
+     warning("Non-parametric lower inconclusive limit is higher than upper inconclusive limit. \n Either ROC analysis should be reversed or Inconclusive argument should have higher value.")
   }
   if(NN.inconclusive[1,1] > NN.inconclusive[2,1]){
-     warning("NN-parametric lower inconclusive limit is higher than upper inconclusive limit. \n Either ROC analysis should be reversed or Inconclusive argument should had higher value.")
+     warning("NN-parametric lower inconclusive limit is higher than upper inconclusive limit. \n Either ROC analysis should be reversed or Inconclusive argument should have higher value.")
   }
   if(BN.inconclusive[1,1] > BN.inconclusive[2,1]){
-    warning("Binormal lower inconclusive limit is higher than upper inconclusive limit. \n Inconclusive argument should had higher value.")
+    warning("Binormal lower inconclusive limit is higher than upper inconclusive limit. \n Inconclusive argument should have higher value.")
   }
   
-  if(any(np.best.threshold[,1] > np.inconclusive[2,1])){
-     warning("At least one of the non-parametric threshold is higher then upper inconclusive limit.")
-  }        
-  if(any(np.best.threshold[,1] < np.inconclusive[1,1])){
-     warning("At least one of the non-parametric threshold is lower then lower inconclusive limit.")
-  }
-  if(any(NN.best.threshold[,1] > NN.inconclusive[2,1])){
-     warning("At least one of the NN-parametric best threshold is higher then upper inconclusive limit.")
-  }        
-  if(any(NN.best.threshold[,1] < NN.inconclusive[1,1])){
-     warning("At least one of the NN-parametric best threshold is lower then lower inconclusive limit.")
-  }
-  if(any(BN.best.threshold[,1] > BN.inconclusive[2,1])){
-    warning("At least one of the Binormal best threshold is higher then upper inconclusive limit.")
-  }        
-  if(any(BN.best.threshold[,1] < BN.inconclusive[1,1])){
-    warning("At least one of the Binormal best threshold is lower then lower inconclusive limit.")
-  }
+  # if(any(np.best.threshold[,1] > np.inconclusive[2,1])){
+  #    warning("At least one of the non-parametric threshold is higher then upper inconclusive limit.")
+  # }        
+  # if(any(np.best.threshold[,1] < np.inconclusive[1,1])){
+  #    warning("At least one of the non-parametric threshold is lower then lower inconclusive limit.")
+  # }
+  # if(any(NN.best.threshold[,1] > NN.inconclusive[2,1])){
+  #    warning("At least one of the NN-parametric best threshold is higher then upper inconclusive limit.")
+  # }        
+  # if(any(NN.best.threshold[,1] < NN.inconclusive[1,1])){
+  #    warning("At least one of the NN-parametric best threshold is lower then lower inconclusive limit.")
+  # }
+  # if(any(BN.best.threshold[,1] > BN.inconclusive[2,1])){
+  #   warning("At least one of the Binormal best threshold is higher then upper inconclusive limit.")
+  # }        
+  # if(any(BN.best.threshold[,1] < BN.inconclusive[1,1])){
+  #   warning("At least one of the Binormal best threshold is lower then lower inconclusive limit.")
+  # }
   output <- list(sample.size = sample.size,
                 sample.prevalence = sample.prevalence,
                 pop.prevalence = pop.prevalence,
@@ -125,6 +126,7 @@ TGROC <- function(ref,
                 test.summary = test.summary,
                 inc = inc,
                 conf.limit = conf.limit,
+                AUC = AUC,
                 SS = SeSp$table,
                 np.inconclusive = np.inconclusive,
                 np.best.threshold = np.best.threshold,
