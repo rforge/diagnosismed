@@ -1,4 +1,4 @@
-
+#' @export
 SS <- function(ref, test, reverse = "auto", CL = 0.95, binom.conf = "wilson"){
   # Warning section ...
   if (any(is.na(test) | is.na(ref))) {

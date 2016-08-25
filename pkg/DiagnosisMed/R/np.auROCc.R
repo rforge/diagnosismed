@@ -1,3 +1,4 @@
+#' @export
 np.auROCc <- function(ref, test, CL = 0.95, reverse = "auto") {
   # Warning section ...
   if (any(is.na(test) | is.na(ref))) {
@@ -19,7 +20,7 @@ np.auROCc <- function(ref, test, CL = 0.95, reverse = "auto") {
   m <- length(X) 
   n <- length(Y)
   AUC <- (m * n + (m * (m + 1)) / 2 - sum(rank(test, ties.method = "average")[which(ref == 0)])) / (m * n)
-  
+
   # Reversing the AUC
   if (reverse == "auto") {
     if (AUC < .5) {
@@ -28,7 +29,7 @@ np.auROCc <- function(ref, test, CL = 0.95, reverse = "auto") {
       reverse <- FALSE
     }
   }
-  if(reverse){
+  if (reverse) {
     AUC <- 1 - AUC
     warning("The area under the ROC curve was reversed!")
   }

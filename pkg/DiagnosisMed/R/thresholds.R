@@ -1,4 +1,5 @@
-# Colection of functions to estimate trhesholds
+#' Colection of functions to estimate decision trhesholds
+#' @export
 
 # Se=Sp threshold where x is a SS object----------------------------------------
 Se.equals.Sp <- function(x){
