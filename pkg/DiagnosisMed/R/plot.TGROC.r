@@ -3,7 +3,7 @@ plot.TGROC <- function(x,...,
                 Plot.type = c("TGROC","ROC","None"),
                 Plot = c("Binormal","Non-parametric","NN-parametric"),
                 Plot.inc.area = TRUE,
-                Plot.Cl = FALSE,
+                Plot.CL = FALSE,
                 Plot.threshold = "None",
                 threshold.arg = list(col = gray(.5), lty = 6),
                 title.arg = list(cex.sub = 0.65, line = 4),
@@ -49,8 +49,8 @@ plot.TGROC <- function(x,...,
   if (!is.logical(Plot.inc.area)) {
     stop("Plot.inc.area argument must be logical.")
   }
-  if (!is.logical(Plot.Cl)) {
-    stop("Plot.Cl argument must be logical.")
+  if (!is.logical(Plot.CL)) {
+    stop("Plot.CL argument must be logical.")
   }
   if (!is.logical(auto.legend)) {
     stop("legend argument must be logical.")
@@ -131,7 +131,7 @@ plot.TGROC <- function(x,...,
     }
 
     # Ploting the confidence bands -------------------------------------------
-    if (Plot.Cl) {
+    if (Plot.CL) {
       if(Plot[1] == "Non-parametric"){
         np.Se.ci.args$x <- x$SS$test.values
         np.Se.ci.args$y <- x$SS$Se.inf.cl
@@ -203,7 +203,7 @@ plot.TGROC <- function(x,...,
       legend.args$lty <- c(BN.Se.args$lty, BN.Sp.args$lty)
       legend.args$density <- c(NA, NA)
 
-      if (Plot.Cl) {
+      if (Plot.CL) {
         legend.args$legend <- c(legend.args$legend, "Se conf band", "Sp conf band") 
         legend.args$fill <- c(legend.args$fill, par()$bg, par()$bg)
         legend.args$density <- c(legend.args$density, NA, NA)

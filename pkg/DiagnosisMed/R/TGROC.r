@@ -1,5 +1,4 @@
 #' @export
-#' @import epitools
 #' @import AMORE
 
 TGROC <- function(ref,
