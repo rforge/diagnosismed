@@ -1,3 +1,37 @@
+#' Confidence intervals for binomial counts or proportions
+#'
+#' @description Calculates confidence intervals for binomial counts or proportions
+#'
+#' @param x Number of successes in n trials, can be a vector.
+#' @param n Number of Bernoulli trials, can be a vector.
+#' @param conf.level Confidence level (default = 0.95), can be a vector.
+#' @param type Possible values are "wilson", "exact" and "approximate". See datails.
+#'
+#' @details \code{binom.CI} with type "exact", calculates exact confidence intervals for binomial counts or proportions. This function uses R's binom.test function; however, the arguments to this function can be numeric vectors of any length.
+#' \code{binom.CI} with type "wilson", calculates confidence intervals for binomial counts or proportions using Wilson's formula which approximate the exact method. The arguments to this function can be numeric vectors of any length.
+#' \code{binom.CI} with type "approximate" calculates confidence intervals for binomial counts or proportions using a normal approximation to the binomial distribution. The arguments to this function can be numeric vectors of any length.
+#' This function is a clone from epitools binomial confidence intervals functions, but with a wrapper to include the method as an option instead of separate functions.
+#'
+#' @return This function returns a n x 6 matrix with the following colnames:
+#' x number of successes in n trials
+#' n number of Bernoulli trials
+#' prop proportion = x / n
+#' lower lower confidence interval limit
+#' upper upper confidence interval limit
+#' conf.level confidence level
+#'
+#' @references
+#' Tomas Aragon, et al. Applied Epidemiology Using R.
+#' Kenneth Rothman (2002), Epidemiology: An Introduction, Oxford University Press, 1st Edition.
+#'
+#' @seealso pois.exact, binom.test
+
+# Examples
+#
+# binom.exact(1:10, seq(10, 100, 10))
+# binom.wilson(1:10, seq(10, 100, 10))
+# binom.approx(1:10, seq(10, 100, 10))
+
 binom.CI <- function(x, n, conf.level = 0.95, type = c("wilson","exact","approximate")) {
 # warning section
   if (conf.level > 1 || conf.level < 0) {
