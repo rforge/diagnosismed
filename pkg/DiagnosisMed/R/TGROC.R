@@ -48,7 +48,7 @@
 #'
 #' @param Plot  Valid options are "Binormal", "Non-parametric", and "NN-parametric" (for neural network). In the TGROC plot, this will define which sensitivity and specificity lines will be plotted. It may one, two or all of them (although it become a poluted graph). The order they appear matters as some options, e.g. Inconclusive argument, will pick the first to show in the plot.
 #'
-#' @param Plot.inc.area Acceptable options are TRUE (default) or FALSE. If TRUE and Plot.type = "TGROC", it will display a gray shade in the plot (using the \code{\link[graphics]{polygon}) representing the inconclusive area defined by the first method in the Plot argument (e.g. "Binormal").
+#' @param Plot.inc.area Acceptable options are TRUE (default) or FALSE. If TRUE and Plot.type = "TGROC", it will display a gray shade in the plot (using the \code{\link[graphics]{polygon}} representing the inconclusive area defined by the first method in the Plot argument (e.g. "Binormal").
 #'
 #' @param Plot.CL Acceptable options are TRUE or FALSE (default). If TRUE and Plot.type = "TGROC", it will pick the first method in the Plot argument (e.g. "Binormal"), and display lines in the plot representing a confidence band for this method.
 #'
