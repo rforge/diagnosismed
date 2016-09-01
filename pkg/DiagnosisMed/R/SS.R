@@ -3,7 +3,7 @@
 #'
 #' @description \code{SS} collection is intended to be intermediate functions, not be use by the end user. One may wish to use \code{\link{TGROC}} instead, as it calls \code{SS}, \code{BN.SS} and \code{NN.SS} and other functions at once for a more complete analysis including a flexible plot function.
 #'
-#'  \code{SS}, \code{BN.SS} and \code{NN.SS} compute validity measures for each decision threshold of a continuous scale diagnostic test with their respective confidence intervals. It shows the trade-off of the Sensitivity and Specificity values with progressive changes of the threshold. \code{SS} does it non-parametrically and uses \code{\link{binom.CI}} to estimate the confidence intervals. \code{NN.SS} does it by fitting a feed forward neural network with the \pkg{AMORE} package. The underling idea is that this analysis is a robust way to smooth the Sensitivity and Specificity trade-off and represent the population, as neural networks may approximate any population function distribution. \code{BN.SS} does the same thing but assuming that the test values from subjects with and without the condition have Gaussian distribution (bi-normally distributed test values). Both \code{BN.SS} and \code{NN.SS} use a Gaussian confidence interval estimation.
+#'  \code{SS}, \code{BN.SS} and \code{NN.SS} compute validity measures for each decision threshold of a continuous scale diagnostic test with their respective confidence intervals. It shows the trade-off of the Sensitivity and Specificity values with progressive changes of the threshold. \code{SS} does it non-parametrically and uses \code{\link{binom.CI}} to estimate the confidence intervals. \code{NN.SS} does it by fitting a feed forward neural network with the \pkg{AMORE} package. The underling idea is that this analysis is a robust way to smooth the Sensitivity and Specificity trade-off and represent the population, as neural networks may approximate any population function distribution. One may notice that running the neural network more than once may retun slightly different values. This is expected as it depends on the fit for each run. \code{BN.SS} does the same thing but assuming that the test values from subjects with and without the condition have Gaussian distribution (bi-normally distributed test values). Both \code{BN.SS} and \code{NN.SS} use a Gaussian confidence interval estimation.
 #'
 #' @param  ref The reference standard. A column in a data frame or a vector indicating the classification by the reference test. The reference standard must be coded either as 0 (absence of the condition) or 1 (presence of the condition).
 #'
@@ -73,6 +73,7 @@
 #'
 #' # Smoothingn with bi-normal function
 #' # It will be easier to check the fit graphically with TGROC
+#' # Rejecting the assumption of normality for those without the condition.
 #' shapiro.test(rocdata$test1[which(rocdata$Gold == 1)])
 #' shapiro.test(rocdata$test1[which(rocdata$Gold == 0)])
 #' z <- BN.SS(ref = rocdata$Gold, test = rocdata$test1, t.min = 0.005, t.max = 2, precision = 0.005)

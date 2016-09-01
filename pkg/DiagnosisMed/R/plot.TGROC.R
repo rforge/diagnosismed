@@ -7,11 +7,12 @@ plot.TGROC <- function(x,...,
                 Plot.CL = FALSE,
                 Plot.threshold = "None",
                 threshold.arg = list(col = gray(.5), lty = 6),
-                title.arg = list(cex.sub = 0.65, line = 4),
                 ylab = "Sensitivity & Specificity",
                 xlab = "Test scale",
                 ylim = c(0,1),
                 xlim = "auto",
+                auto.title = TRUE,
+                title.arg = list(cex.sub = 0.65, line = 4.5),
                 shade.args = list(col = gray(.8), density = 45, border = NA),
                 np.Se.args = list(type = "o", col = "blue", lty = 1, cex  = .5),
                 np.Se.ci.args = list(lty = 5, col = "blue"),
@@ -54,7 +55,10 @@ plot.TGROC <- function(x,...,
     stop("Plot.CL argument must be logical.")
   }
   if (!is.logical(auto.legend)) {
-    stop("legend argument must be logical.")
+    stop("auto.legend argument must be logical.")
+  }
+  if (!is.logical(auto.title)) {
+    stop("auto.title argument must be logical.")
   }
 
   # Settings for TGROC plot
@@ -235,8 +239,10 @@ plot.TGROC <- function(x,...,
   }
 
     # Calling the subtitle
-    title.arg$sub <- subtitle
-    do.call(title,title.arg)
+    if (auto.title) {
+      title.arg$sub <- subtitle
+      do.call(title,title.arg)
+    }
   }
   # Making the ROC plot
   if (Plot.type[1] == "ROC") {
@@ -317,9 +323,10 @@ plot.TGROC <- function(x,...,
         }
       }
     }
-
-    subtitle <- paste0("Non-parametric (DeLong) area under the ROC curve: ",sprintf("%1.3f [%1.3f-%1.3f]", x$AUC["AUC"],x$AUC["AUC.lower.CL"],x$AUC["AUC.upper.CL"]))
-    title.arg$sub <- subtitle
-    do.call(title, title.arg)
+    if (auto.title) {
+      subtitle <- paste0("Non-parametric (DeLong) area under the ROC curve: ",sprintf("%1.3f [%1.3f-%1.3f]", x$AUC["AUC"],x$AUC["AUC.lower.CL"],x$AUC["AUC.upper.CL"]))
+      title.arg$sub <- subtitle
+      do.call(title, title.arg)
+    }
   }
 }
