@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "library(roxygen2)\nroxygenize()\n",
+    "created" : 1457776507981.000,
+    "dirty" : true,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "893544884",
+    "id" : "4AB1F585",
+    "lastKnownWriteTime" : 7011605692497750387,
+    "last_content_update" : 1472666112311,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
