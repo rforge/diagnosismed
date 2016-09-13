@@ -18,7 +18,7 @@
 #'   \item \code{inc.limits} Threechotomizes the test according to a minimum required sensitivity and specificity.
 #' }
 #'
-#' @param x is the output from any of the \code{SS}, \code{BN.SS} or \code{NN.SS} functions.
+#' @param x is the output from any of the \code{\link{SS}}, \code{\link{BN.SS}} or \code{\link{NN.SS}} functions.
 #'
 #' @param Inconclusive This is a value that ranges from 0 to 1 that will identify the test range where the performance of the test is not acceptable and thus considered inconclusive. It represents the researcher tolerance of how good the test should be. If it is set to 0.95 (which is the default value), test results that have less than 0.95 sensitivity and specificity will be in the inconclusive range. Also known as the minimum required sensitivity and specificity.
 #'

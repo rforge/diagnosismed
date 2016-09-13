@@ -47,7 +47,7 @@ TGROC(ref, test, Cost = 1, CL = 0.95, Inconclusive = 0.95,
 
 \item{test}{The index test or test under evaluation. A column in a dataset or vector indicating the test results in a continuous scale.}
 
-\item{Cost}{Represents wiegths of wrong classifications as cost(FN)/cost(FP). See \code{\link{thresholds}}.}
+\item{Cost}{Represents weights of wrong classifications as cost(FN)/cost(FP). See \code{\link{thresholds}}.}
 
 \item{CL}{Confidence limit. The limits of the confidence interval. Must be coded as number in range from 0 to 1. Default value is 0.95.}
 
@@ -87,7 +87,7 @@ TGROC(ref, test, Cost = 1, CL = 0.95, Inconclusive = 0.95,
 
 \item{Plot.type}{Valid options are "TGROC" and "ROC". This will define the type of plot to return.}
 
-\item{Plot}{Valid options are "Binormal", "Non-parametric", and "NN-parametric" (for neural network). See \code{\link{SS}}. In the TGROC plot, this will define which sensitivity and specificity lines will be plotted. It may be one, two or all of them (although it become a poluted graph). The order they are set matters, as some options, e.g. Inconclusive argument, will pick the first option to show in the plot.}
+\item{Plot}{Valid options are "Binormal", "Non-parametric", and "NN-parametric" (for neural network). See \code{\link{SS}}. In the TGROC plot, this will define which sensitivity and specificity lines will be plotted. It may be one, two or all of them (although it become a polluted graph). The order they are set matters, as some options, e.g. Inconclusive argument, will pick the first option to show in the plot.}
 
 \item{Plot.inc.area}{Acceptable options are TRUE (default) or FALSE. If TRUE and Plot.type = "TGROC", it will display a gray shade in the plot (using the \code{\link[graphics]{polygon}}) representing the inconclusive area defined by the first method in the Plot argument (e.g. "Binormal").}
 
@@ -95,13 +95,13 @@ TGROC(ref, test, Cost = 1, CL = 0.95, Inconclusive = 0.95,
 
 \item{Plot.threshold}{Method of the decision threshold to be represented as a vertical line in the plot. Acceptable values are "None" (default), "Max Youden", "Max Accuracy", "Max Accuracy area", "Max DOR", "Min Error rate", "Min ROC distance", "Se = Sp", "Min MCT", "Max Efficiency". See \code{\link{thresholds}}.}
 
-\item{threshold.arg}{If Plot.type = "TGROC" and Plot.threshold is any value different from "None", this list of aguments with graphical parameters will be passed to \code{\link[graphics]{abline}} to plot a vertical line represented the chosen trheshold. Internally, the \code{\link[graphics]{abline}} v argument will be replaced by the test value from Plot.threshold argument.}
+\item{threshold.arg}{If Plot.type = "TGROC" and Plot.threshold is any value different from "None", this list of arguments with graphical parameters will be passed to \code{\link[graphics]{abline}} to plot a vertical line represented the chosen threshold. Internally, the \code{\link[graphics]{abline}} v argument will be replaced by the test value from Plot.threshold argument.}
 
 \item{ylab, xlab, ylim, xlim, roc.xlab, roc.ylab}{Values to be passed to \code{\link[graphics]{plot.deafult}} for labels and limits of the axis. If Plot.type = "TGROC", then former will be used for axis labels, if Plot.type = "ROC", then the later will be use for axis labels. xlim also accepts the value "auto". If this is the case, the test range from the SS analysis of the first option of the Plot argument will be used as horizontal limits of the plot. In essence, it will be defined by t.min and t.max.}
 
 \item{auto.title}{Logical. If TRUE, a subtitle will be automatically be placed at the bottom with the values of the inconclusive limits of the chosen threshold.}
 
-\item{title.arg}{A list of arguments to be passed to \code{\link[graphics]{title}}. TGROC automatically generates a subtitle with values ploted. Internally the argument sub is replaced by values from other options. Sometimes tiny adjustements are required.}
+\item{title.arg}{A list of arguments to be passed to \code{\link[graphics]{title}}. TGROC automatically generates a subtitle with values plotted. Internally the argument sub is replaced by values from other options. Sometimes tiny adjustments are required.}
 
 \item{shade.args}{If Plot.type = "TGROC" and Plot.inc.area = TRUE, then this list of arguments will be passed to \code{\link[graphics]{polygon}} and plot a shade representing the inconclusive area. Internally, the coordinates will be extracted from in inconclusive limits from the first method defined ate the Plot argument.}
 
@@ -109,9 +109,9 @@ TGROC(ref, test, Cost = 1, CL = 0.95, Inconclusive = 0.95,
 
 \item{np.Se.ci.args}{If Plot.type = "TGROC" and Plot first argument is "Non-parametric" and Plot.CL = TRUE, then this list of arguments will be passed to \code{\link[graphics]{lines}} to plot the non-parametric sensitivity confidence band. Internally, the x and y arguments of this list will be replaced by the non-parametric sensitivity values.}
 
-\item{np.Sp.args}{If Plot.type = "TGROC" and Plot argument is "Non-parametric", then this list of arguments will be passed to \code{\link[graphics]{lines}} to plot the spcificity line. Internally, the x and y arguments of this list will be replaced by the non-parametric specificity values.}
+\item{np.Sp.args}{If Plot.type = "TGROC" and Plot argument is "Non-parametric", then this list of arguments will be passed to \code{\link[graphics]{lines}} to plot the specificity line. Internally, the x and y arguments of this list will be replaced by the non-parametric specificity values.}
 
-\item{np.Sp.ci.args}{If Plot.type = "TGROC" and Plot first argument is "Non-parametric" and Plot.CL = TRUE, then this list of arguments will be passed to \code{\link[graphics]{lines}} to plot the non-parametric specificty confidence band. Internally, the x and y arguments of this list will be replaced by the non-parametric specificity values.}
+\item{np.Sp.ci.args}{If Plot.type = "TGROC" and Plot first argument is "Non-parametric" and Plot.CL = TRUE, then this list of arguments will be passed to \code{\link[graphics]{lines}} to plot the non-parametric specificity confidence band. Internally, the x and y arguments of this list will be replaced by the non-parametric specificity values.}
 
 \item{NN.Se.args}{If Plot.type = "TGROC" and Plot argument is "NN-parametric", then this list of arguments will be passed to \code{\link[graphics]{lines}} to plot the sensitivity line. Internally, the x and y arguments of this list will be replaced by the NN sensitivity values.}
 
@@ -119,7 +119,7 @@ TGROC(ref, test, Cost = 1, CL = 0.95, Inconclusive = 0.95,
 
 \item{NN.Sp.args}{If Plot.type = "TGROC" and Plot argument is "NN-parametric", then this list of arguments will be passed to \code{\link[graphics]{lines}} to plot the specificity line. Internally, the x and y arguments of this list will be replaced by the NN specificity values.}
 
-\item{NN.Sp.ci.args}{If Plot.type = "TGROC" and Plot first argument is "NN-parametric" and Plot.CL = TRUE, then this list of arguments will be passed to \code{\link[graphics]{lines}} to plot the NN-parametric specificty confidence band. Internally, the x and y arguments of this list will be replaced by the NN-parametric specificity values.}
+\item{NN.Sp.ci.args}{If Plot.type = "TGROC" and Plot first argument is "NN-parametric" and Plot.CL = TRUE, then this list of arguments will be passed to \code{\link[graphics]{lines}} to plot the NN-parametric specificity confidence band. Internally, the x and y arguments of this list will be replaced by the NN-parametric specificity values.}
 
 \item{BN.Se.args}{If Plot.type = "TGROC" and Plot argument is "Binormal", then this list of arguments will be passed to \code{\link[graphics]{lines}} to plot the sensitivity line. Internally, the x and y arguments of this list will be replaced by the binormal sensitivity values.}
 
@@ -127,7 +127,7 @@ TGROC(ref, test, Cost = 1, CL = 0.95, Inconclusive = 0.95,
 
 \item{BN.Sp.args}{If Plot.type = "TGROC" and Plot argument is "Binormal", then this list of arguments will be passed to \code{\link[graphics]{lines}} to plot the specificity line. Internally, the x and y arguments of this list will be replaced by the binormal specificity values.}
 
-\item{BN.Sp.ci.args}{If Plot.type = "TGROC" and Plot first argument is "Binormal" and Plot.CL = TRUE, then this list of arguments will be passed to \code{\link[graphics]{lines}} to plot the binormal specificty confidence band. Internally, the x and y arguments of this list will be replaced by the binormal specificity values.}
+\item{BN.Sp.ci.args}{If Plot.type = "TGROC" and Plot first argument is "Binormal" and Plot.CL = TRUE, then this list of arguments will be passed to \code{\link[graphics]{lines}} to plot the binormal specificity confidence band. Internally, the x and y arguments of this list will be replaced by the binormal specificity values.}
 
 \item{roc.np.line.args}{If Plot.type = "ROC" and Plot argument is "Non-parametric", then this list of arguments will be passed to \code{\link[graphics]{lines}} to plot the empirical ROC curve. Internally, the x and y arguments of this list will be replaced by the empirical sensitivity and specificity.}
 
@@ -141,11 +141,11 @@ TGROC(ref, test, Cost = 1, CL = 0.95, Inconclusive = 0.95,
 
 \item{roc.BN.point.args}{If Plot.type = "ROC" and Plot argument is "Binormal" and Plot.threshold is different from "None", then this list of arguments will be passed to \code{\link[graphics]{points}} to plot a point representing the desired threshold on the binormal ROC curve. Internally, the x and y arguments of this list will be replaced by the empirical point sensitivity and point specificity of the desired threshold.}
 
-\item{grid}{If Plot.type = "ROC" and grid = TRUE, then a grid will be ploted. Set to FALSE to avoid ploting the grid.}
+\item{grid}{If Plot.type = "ROC" and grid = TRUE, then a grid will be plotted. Set to FALSE to avoid ploting the grid.}
 
 \item{auto.legend}{Logical. If TRUE, then a legend will be automatically place in the plot. If Plot.type = "ROC", then the auto.legend will work only if Plot.threshold is different from "None".}
 
-\item{legend.args}{If auto.legend = TRUE, then this list of arguments will be passed to \code{\link[graphics]{legend}}. Internnaly, several arguments from lines and shade lists of arguments will be passed to \code{\link[graphics]{legend}}. If Plot.type = "TGROC", then auto.legend will use the BN.Se.args and BN.Sp.args to extract the line type and line colors. If Plot.type = "ROC", the auto.legend is way less flexible, e.g. the positions are fixed for all methods.}
+\item{legend.args}{If auto.legend = TRUE, then this list of arguments will be passed to \code{\link[graphics]{legend}}. Internally, several arguments from lines and shade lists of arguments will be passed to \code{\link[graphics]{legend}}. If Plot.type = "TGROC", then auto.legend will use the BN.Se.args and BN.Sp.args to extract the line type and line colors. If Plot.type = "ROC", the auto.legend is way less flexible, e.g. the positions are fixed for all methods.}
 }
 \value{
 A list of class TGROC with the following:
@@ -154,9 +154,9 @@ A list of class TGROC with the following:
   \item \code{sample.prevalence} The sample prevalence.
   \item \code{pop.prevalence} The population prevalence.
   \item \code{cost} The informed cost.
-  \item \code{test.summary} A data.frame statistics such as mean and sd from the test.
+  \item \code{test.summary} A data.frame statistics such as mean and SD from the test.
   \item \code{inc} The desired inconclusive limit.
-  \item \code{conf.limit} The desired confidece limit.
+  \item \code{conf.limit} The desired confidence limit.
   \item \code{AUC} The estimated area under the ROC curve, SE and confidence limits.
   \item \code{SS} A data.frame with the empirical sensitivity and specificity trade-off (ROC) analysis.
   \item \code{np.inconclusive} A data.frame with the non-parametric inconclusive limits and their validity measures.
@@ -170,10 +170,10 @@ A list of class TGROC with the following:
 }
 }
 \description{
-\code{TGROC} is a wrapper of several functions to conduct performance analysis of concitnuous scale diagnostic tests, including good decision thresholds by a variety of methods and intermediate inconclusive range. See \code{\link{thresholds}}. The inconclusive range thresholds threechotomizes the test results into a range where the test is good to identify those with the target condition, a inconclusive range and a range where the test is good to identify those without the target condition according to a minimum required sensitivity and specificity. TGROC estimates non-parametric ROC analysis, bi-normal parametric ROC analysis, and uses the \pkg{AMORE} package to simulate a robust parametric curve values with a neural network. See \code{\link{SS}}. It draws a graph of sensitivity and specificity with the variations of a diagnostic test scale. Optioanlly, it may display a ROC plot. Automatically, the plot function will display subtitle with the values of the tresholds from the chosen methods, and optionally legend.
+\code{TGROC} is a wrapper of several functions to conduct performance analysis of continuous scale diagnostic tests, including good decision thresholds by a variety of methods and intermediate inconclusive range. See \code{\link{thresholds}}. The inconclusive range thresholds threechotomizes the test results into a range where the test is good to identify those with the target condition, a inconclusive range and a range where the test is good to identify those without the target condition according to a minimum required sensitivity and specificity. TGROC estimates non-parametric ROC analysis, bi-normal parametric ROC analysis, and uses the \pkg{AMORE} package to simulate a robust parametric curve values with a neural network. See \code{\link{SS}}. It draws a graph of sensitivity and specificity with the variations of a diagnostic test scale. Optionally, it may display a ROC plot. Automatically, the plot function will display subtitle with the values of the thresholds from the chosen methods, and optionally legend.
 }
 \details{
-There are two main advantages of TG-ROC over ROC analysis: (1) for the uninitiated is much easier to understand how sensitivity and specificity changes with different thresholds; (2) and because of the graphical display is much easier to understand and estimate reasonable inconclusive test ranges. Occasionally, thresholds may be set outside the inconclusive range. This may happens with extreme values of Cost and population prevalence, or very skewed or unsusual test values distributions. If this is the case, perhaps the inconclusive range may not be of interest or not applicable. Also, if the test is too accurate or inconclusive range tolerance is set too low, then there may be no inconclusive range at all, because sensitivity and specificity may not be below this tolerance at the same time. If this is the case, setting a higher inconclusive tolerance may work. Tests results matching the threshold values will be considered a positive test.TGROC assumes that subjects with higher values of the test are with the target condition and those with lower values are without the target condition. Tests that behave like glucose (middle values are supposed to be normal and extreme values are supposed to be abnormal) will not be correctly analyzed. If lower test values are from subjects with the condition and higher values are from subject without the condition, the analysis and its interpretation must reversed. The validity measures such as Sensitivity, Specificity and Likelihood ratios and its confidence limits are estimated as  in \code{\link{diagnosis}} function. Non-parametric confidence bands are estimated with \code{\link{binom.CI}} and parametric with normal confidence interval. The parametric curve and validity measures are estimated with a neural network strategy using the \pkg{AMORE} package. Usually neural networks, uses a subset of the data to estimate weights, a subset to calibrate/validate the weights and a third subset to simulate the function. TGROC uses only the estimate and simulate steps, therefore there is no early stopping rule for the neural network parametric estimation to prevent overfitting. The only way to check the fit of the neural network is to visually compare with the non-parametric curve. If the curve looks weird or not good enough, than progressive slight changes in the momentum, learning rate, number of layers or other parameters should work fine. The AUC (area under the ROC curve) is estimated by the trapezoidal method (also known as Mann-Whitney statistic), its confidence interval is estimated by DeLong method. See \code{\link{np.auROCc}}. The AUC confidence limits should be used only to compare the AUC with the null value for AUC which is 0.5 and not to compare the AUC from different tests.
+There are two main advantages of TG-ROC over ROC analysis: (1) for the uninitiated is much easier to understand how sensitivity and specificity changes with different thresholds; (2) and because of the graphical display is much easier to understand and estimate reasonable inconclusive test ranges. Occasionally, thresholds may be set outside the inconclusive range. This may happens with extreme values of Cost and population prevalence, or very skewed or unusual test values distributions. If this is the case, perhaps the inconclusive range may not be of interest or not applicable. Also, if the test is too accurate or inconclusive range tolerance is set too low, then there may be no inconclusive range at all, because sensitivity and specificity may not be below this tolerance at the same time. If this is the case, setting a higher inconclusive tolerance may work. Tests results matching the threshold values will be considered a positive test.TGROC assumes that subjects with higher values of the test are with the target condition and those with lower values are without the target condition. Tests that behave like glucose (middle values are supposed to be normal and extreme values are supposed to be abnormal) will not be correctly analyzed. If lower test values are from subjects with the condition and higher values are from subject without the condition, the analysis and its interpretation must reversed. The validity measures such as Sensitivity, Specificity and Likelihood ratios and its confidence limits are estimated as  in \code{\link{diagnosis}} function. Non-parametric confidence bands are estimated with \code{\link{binom.CI}} and parametric with normal confidence interval. The parametric curve and validity measures are estimated with a neural network strategy using the \pkg{AMORE} package. Usually neural networks, uses a subset of the data to estimate weights, a subset to calibrate/validate the weights and a third subset to simulate the function. TGROC uses only the estimate and simulate steps, therefore there is no early stopping rule for the neural network parametric estimation to prevent overfitting. The only way to check the fit of the neural network is to visually compare with the non-parametric curve. If the curve looks weird or not good enough, than progressive slight changes in the momentum, learning rate, number of layers or other parameters should work fine. The AUC (area under the ROC curve) is estimated by the trapezoidal method (also known as Mann-Whitney statistic), its confidence interval is estimated by DeLong method. See \code{\link{np.auROCc}}. The AUC confidence limits should be used only to compare the AUC with the null value for AUC which is 0.5 and not to compare the AUC from different tests.
 }
 \examples{
 
@@ -193,7 +193,7 @@ plot(x, Plot.type = "ROC", Plot = "NN-parametric", Plot.threshold = "Max Youden"
 # Ploting just the Binormal ROC curve
 plot(x, Plot.type = "ROC", Plot = "Binormal", Plot.threshold = "Max Youden")
 
-# Ploting overploted curves. The Binormal curve is way different from the remaining.
+# Ploting overplotted curves. The Binormal curve is way different from the remaining.
 plot(x, Plot.type = "ROC", Plot = c("Non-parametric","NN-parametric","Binormal"), Plot.threshold = "Max Youden")
 
 # Ploting the TGROC curve overploting the Non-parametric and the NN- parametric.
@@ -237,7 +237,7 @@ plot(x, Plot = c("NN-parametric","Non-parametric"), Plot.inc.area = FALSE, Plot.
 plot(x, Plot = c("NN-parametric","Non-parametric"), Plot.inc.area = FALSE, Plot.threshold = "Max DOR")
 
 # Ploting the inconclusive area and the threshold simultaneously.
-# The subtitle may get overploted, expanding the margins and adjusting the line may help.
+# The subtitle may get overplotted, expanding the margins and adjusting the line may help.
 par(mar = c(6.1, 4.1, 4.1, 2.1))
 plot(x, Plot = c("NN-parametric","Non-parametric"), Plot.threshold = "Max Efficiency",
      title.arg = list(cex.sub = 0.7, line = 5))

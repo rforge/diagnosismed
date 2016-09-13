@@ -37,7 +37,7 @@ thresholds(x, pop.prevalence = NULL, Cost = 1)
 inc.limits(x, Inconclusive = 0.95)
 }
 \arguments{
-\item{x}{is the output from any of the \code{SS}, \code{BN.SS} or \code{NN.SS} functions.}
+\item{x}{is the output from any of the \code{\link{SS}}, \code{\link{BN.SS}} or \code{\link{NN.SS}} functions.}
 
 \item{pop.prevalence}{The disease prevalence informed by the user. If not informed, it will be the same as the sample prevalence. This will be passed to \code{Max.Efficiency} and \code{Min.MCT}. Particularly interesting if the test will be applied to a population with a different condition prevalence.}
 
