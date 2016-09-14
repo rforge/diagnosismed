@@ -12,7 +12,7 @@
 #'
 #' @param Inconclusive Inconclusive is a value that ranges from 0 to 1 that will identify the test range where the performance of the test is not acceptable and thus considered inconclusive. It represents the researcher tolerance of how good the test should be. If it is set to 0.95 (which is the default value), test results that have less than 0.95 sensitivity and specificity will be in the inconclusive range.
 #'
-#' @param Prevalence, pop.prevalence Population condition prevalence. The value of pop.prevalence will be passed to \code{\link{thresholds}} and The value of Prevalence will be passed to \code{\link{SS}}.
+#' @param Prevalence,pop.prevalence Population condition prevalence. The value of pop.prevalence will be passed to \code{\link{thresholds}} and The value of Prevalence will be passed to \code{\link{SS}}.
 #'
 #' @param Cost Represents weights of wrong classifications as cost(FN)/cost(FP). See \code{\link{thresholds}}.
 #'
@@ -44,7 +44,7 @@
 #'
 #' @param x The output of \code{TGROC} function for printing and ploting.
 #'
-#' @param ylab,xlab,ylim,xlim,roc.xlab,roc.ylab Values to be passed to \code{\link[graphics]{plot.deafult}} for labels and limits of the axis. If Plot.type = "TGROC", then former will be used for axis labels, if Plot.type = "ROC", then the later will be use for axis labels. xlim also accepts the value "auto". If this is the case, the test range from the SS analysis of the first option of the Plot argument will be used as horizontal limits of the plot. In essence, it will be defined by t.min and t.max.
+#' @param ylab,xlab,ylim,xlim,roc.xlab,roc.ylab Values to be passed to \code{\link[graphics]{plot.default}} for labels and limits of the axis. If Plot.type = "TGROC", then former will be used for axis labels, if Plot.type = "ROC", then the later will be use for axis labels. xlim also accepts the value "auto". If this is the case, the test range from the SS analysis of the first option of the Plot argument will be used as horizontal limits of the plot. In essence, it will be defined by t.min and t.max.
 #'
 #' @param Plot.type Valid options are "TGROC" and "ROC". This will define the type of plot to return.
 #'
@@ -106,6 +106,10 @@
 #' @param auto.legend Logical. If TRUE, then a legend will be automatically place in the plot. If Plot.type = "ROC", then the auto.legend will work only if Plot.threshold is different from "None".
 #'
 #' @param legend.args If auto.legend = TRUE, then this list of arguments will be passed to \code{\link[graphics]{legend}}. Internally, several arguments from lines and shade lists of arguments will be passed to \code{\link[graphics]{legend}}. If Plot.type = "TGROC", then auto.legend will use the BN.Se.args and BN.Sp.args to extract the line type and line colors. If Plot.type = "ROC", the auto.legend is way less flexible, e.g. the positions are fixed for all methods.
+#'
+#' @param digits Number of digits passed to \code{\link[base]{print}}.
+#'
+#' @param print.type To print all the results (default) or just sections of the result. Options are "all", "NN-parametric", "Non-parametric", "Binormal". A combination of them is also possible.
 #'
 #' @param ... Additional arguments passed either to \code{\link[base]{print}} or \code{\link[graphics]{plot.default}}
 #'

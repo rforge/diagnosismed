@@ -53,7 +53,7 @@ TGROC(ref, test, Cost = 1, CL = 0.95, Inconclusive = 0.95,
 
 \item{Inconclusive}{Inconclusive is a value that ranges from 0 to 1 that will identify the test range where the performance of the test is not acceptable and thus considered inconclusive. It represents the researcher tolerance of how good the test should be. If it is set to 0.95 (which is the default value), test results that have less than 0.95 sensitivity and specificity will be in the inconclusive range.}
 
-\item{Prevalence, }{pop.prevalence Population condition prevalence. The value of pop.prevalence will be passed to \code{\link{thresholds}} and The value of Prevalence will be passed to \code{\link{SS}}.}
+\item{Prevalence, pop.prevalence}{Population condition prevalence. The value of pop.prevalence will be passed to \code{\link{thresholds}} and The value of Prevalence will be passed to \code{\link{SS}}.}
 
 \item{t.min, t.max, precision}{Test minimum, maximum and intervals to simulate the parametric estimation as \code{\link[base]{seq}}(t.min, t.max, precision). See \code{\link{SS}}.}
 
@@ -97,7 +97,7 @@ TGROC(ref, test, Cost = 1, CL = 0.95, Inconclusive = 0.95,
 
 \item{threshold.arg}{If Plot.type = "TGROC" and Plot.threshold is any value different from "None", this list of arguments with graphical parameters will be passed to \code{\link[graphics]{abline}} to plot a vertical line represented the chosen threshold. Internally, the \code{\link[graphics]{abline}} v argument will be replaced by the test value from Plot.threshold argument.}
 
-\item{ylab, xlab, ylim, xlim, roc.xlab, roc.ylab}{Values to be passed to \code{\link[graphics]{plot.deafult}} for labels and limits of the axis. If Plot.type = "TGROC", then former will be used for axis labels, if Plot.type = "ROC", then the later will be use for axis labels. xlim also accepts the value "auto". If this is the case, the test range from the SS analysis of the first option of the Plot argument will be used as horizontal limits of the plot. In essence, it will be defined by t.min and t.max.}
+\item{ylab, xlab, ylim, xlim, roc.xlab, roc.ylab}{Values to be passed to \code{\link[graphics]{plot.default}} for labels and limits of the axis. If Plot.type = "TGROC", then former will be used for axis labels, if Plot.type = "ROC", then the later will be use for axis labels. xlim also accepts the value "auto". If this is the case, the test range from the SS analysis of the first option of the Plot argument will be used as horizontal limits of the plot. In essence, it will be defined by t.min and t.max.}
 
 \item{auto.title}{Logical. If TRUE, a subtitle will be automatically be placed at the bottom with the values of the inconclusive limits of the chosen threshold.}
 
@@ -146,6 +146,10 @@ TGROC(ref, test, Cost = 1, CL = 0.95, Inconclusive = 0.95,
 \item{auto.legend}{Logical. If TRUE, then a legend will be automatically place in the plot. If Plot.type = "ROC", then the auto.legend will work only if Plot.threshold is different from "None".}
 
 \item{legend.args}{If auto.legend = TRUE, then this list of arguments will be passed to \code{\link[graphics]{legend}}. Internally, several arguments from lines and shade lists of arguments will be passed to \code{\link[graphics]{legend}}. If Plot.type = "TGROC", then auto.legend will use the BN.Se.args and BN.Sp.args to extract the line type and line colors. If Plot.type = "ROC", the auto.legend is way less flexible, e.g. the positions are fixed for all methods.}
+
+\item{digits}{Number of digits passed to \code{\link[base]{print}}.}
+
+\item{print.type}{To print all the results (default) or just sections of the result. Options are "all", "NN-parametric", "Non-parametric", "Binormal". A combination of them is also possible.}
 }
 \value{
 A list of class TGROC with the following:
