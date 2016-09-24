@@ -24,7 +24,7 @@ This plot function shows the two distributions and their overlap in a single gra
 \details{
 The graph shows the two distributions and their overlap. Many tests of intermediate quality have a considerable overlap. Also, the distibutions as estimated by the \code{density} function, using the gaussian kernel is shown. The intersection is indicated by a vertical line. This graph allows the visual inspection of the two distributions, as well a visual inspection of the approximation of the \code{density}, based on the gaussian kernel. When the density estimation is way off, the standard estimation of the intersection will be incorrect, and another estimation has to be supplied.
 
-The function \code{plotMD} can also be used for visual inspection of the Uncertain Area (see examples). Please note that the sensitivity and specificity values > .5 (including the default of .55) allows for some positive bias.
+The function \code{plotMD} can also be used for visual inspection of the Uncertain Interval (see examples). Please note that the sensitivity and specificity values > .5 (including the default of .55) allows for some positive bias.
 }
 \examples{
 # A test of intermediate quality
@@ -32,11 +32,11 @@ set.seed(1)
 ref=c(rep(0,500), rep(1,500))
 test=c(rnorm(500,0,1), rnorm(500,1,1.2))
 plotMD(ref, test)
-ua = uncertain.area(ref, test) # with warning message!
-# Add lines to indicate Uncertain Area
+ua = uncertain.interval(ref, test) # with warning message!
+# Add lines to indicate Uncertain Interval
 abline(v=ua[1:2])
 select=(test <= ua[2] & test >= ua[1])
-# plot the mixed densities for the Uncertain Area
+# plot the mixed densities for the Uncertain Interval
 plotMD(ref[select], test[select])
 }
 

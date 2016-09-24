@@ -11,12 +11,12 @@
 #' @examples
 #' ref=c(rep(0,500), rep(1,500))
 #' test=c(rnorm(500,0,1), rnorm(500,1,2))
-#' get.intersection(ref, test)
+#' (get.intersection(ref, test)) # two intersections! Generates warning in other functions!
 #' @export
 
 get.intersection <- function(ref, test, ...){
-  
-  # determine points of intersection 
+
+  # determine points of intersection
   x0 = test[ref == 0]
   x1 = test[ref == 1]
   lower = min(test)
@@ -28,7 +28,7 @@ get.intersection <- function(ref, test, ...){
   d.h0 = d0$y[dif]
   intersection <- d1$x[dif]
   o=order(d.h0)
-  intersection=intersection[o] # order on density; tail has highest density
+  return(intersection[o]) # order on density; tail has highest density
 }
 
 

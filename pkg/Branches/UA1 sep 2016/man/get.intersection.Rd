@@ -22,7 +22,7 @@ A vector of points of intersection, ordered on their density. The tail has the h
 \examples{
 ref=c(rep(0,500), rep(1,500))
 test=c(rnorm(500,0,1), rnorm(500,1,2))
-get.intersection(ref, test)
+(get.intersection(ref, test)) # two intersections! Generates warning in other functions!
 }
 \seealso{
 \code{\link{density}}

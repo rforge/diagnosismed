@@ -7,7 +7,7 @@ check.data <- function(ref, test){
      stop("Your reference standard must be coded as 0 (absence) and 1 (presence). Check reference categories!")
    }
    t=table(test)
-   if (length(names(t)) < 20) warning('The Uncertain Area has been developed for continuous data. Your test has less than 20 different values.')
+   if (length(names(t)) < 20) warning('The Uncertain Interval method has been developed for continuous data. Your test has less than 20 different values.')
    return(data.frame(ref=ref, test=test))
 }
 

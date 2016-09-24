@@ -1,4 +1,4 @@
-Package: UncertainArea
+Package: UncertainInterval
 Version: 0.1.0
 Date: 2016-09-04
 Title: Implementation of the Uncertain Area methods
@@ -10,7 +10,7 @@ Depends:
     R (>= 3.0.0)
 Suggests:
     MASS
-Description: Functions for the determination of an Uncertain Area, i.e., a range
+Description: Functions for the determination of an Uncertain Interval, i.e., a range
     of test scores that are inconclusive and do not allow a diagnosis, other than
     'Uncertain'.
 License: GPL (>= 2)
