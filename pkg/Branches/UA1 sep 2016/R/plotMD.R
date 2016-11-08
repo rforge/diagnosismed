@@ -3,7 +3,7 @@
 #' @description This plot function shows the two distributions and their overlap in a single graph.
 #' @param ref The reference standard. A column in a data frame or a vector indicating the classification by the reference test. The reference standard must be coded either as 0 (absence of the condition) or 1 (presence of the condition)
 #' @param test The index test or test under evaluation. A column in a dataset or vector indicating the test results in a continuous scale.
-#' @param n.breaks The number of breaks used to construct the histograms. This number has to be equal or lower than the discernable values in the test.
+#' @param breaks Breaks used to construct the histograms. Either a single integer number or a vector containing the actual breaks. In the case of a vector, the number should cover all available test values. In the case of a single integer number, this number has to be equal or lower than the discernable values in the test. For short ordinal scales a vector should be uses covering all possible test values.
 #' @param subtitle Optional subtitle
 #' @details The graph shows the two distributions and their overlap. Many tests of intermediate quality have a considerable overlap. Also, the distibutions as estimated by the \code{density} function, using the gaussian kernel is shown. The intersection is indicated by a vertical line. This graph allows the visual inspection of the two distributions, as well a visual inspection of the approximation of the \code{density}, based on the gaussian kernel. When the density estimation is way off, the standard estimation of the intersection will be incorrect, and another estimation has to be supplied.
 #'
@@ -27,13 +27,17 @@
 #' select=(test <= ua[2] & test >= ua[1])
 #' # plot the mixed densities for the Uncertain Interval
 #' plotMD(ref[select], test[select])
-plotMD<-function(ref, test, n.breaks=20, subtitle=''){
-  stopifnot(all(ref==0 | ref==1))
-  low=min(test)
-  high=max(test)
-  # p1=mean(ref) # getAnywhere(hist.default); methods(hist)
-  n.breaks=min(n.breaks, length(unique(test)))
-  breaks=seq(low,high, (high-low)/n.breaks)
+plotMD<-function(ref, test, breaks=20, subtitle=''){
+  check.data(ref, test, ordinal = length(breaks > 1))
+  if (length(breaks) == 1  & breaks[1]%%1 ==0 ) {
+    low = min(test)
+    high = max(test)
+    # p1=mean(ref) # getAnywhere(hist.default); methods(hist)
+    breaks = seq(low, high, (high - low) / min(breaks, length(unique(test))))
+  }
+  # else {
+  #   breaks = breaks
+  # }
 
   hy0=hist(test[ref==0], breaks=breaks, plot=FALSE) # str(hy0)
   hy1=hist(test[ref==1], breaks=breaks, plot=FALSE)

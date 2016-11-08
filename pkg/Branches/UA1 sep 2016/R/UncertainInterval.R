@@ -4,6 +4,8 @@
 #'
 #' @seealso \code{\link{uncertain.interval}},  \code{\link{plotMD}},  \code{\link{get.intersection}},  \code{\link{quality.threshold}},  \code{\link{quality.threshold.uncertain}}
 #' @name UncertainInterval
+#' @aliases Uncertain.Interval
+#' @details See Index
 NULL
 #> NULL
 ## "_PACKAGE"

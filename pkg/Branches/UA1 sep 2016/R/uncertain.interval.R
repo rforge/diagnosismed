@@ -1,7 +1,7 @@
-#' Function for the determination of inconclusive test scores
+#' Function for the determination of an inconclusive interval for continuous test scores
 #'
 #' @name uncertain.interval
-#'
+#' @aliases UI.continuous
 #' @description This function determines an interval around the intersection of the two distributions of individuals without (0) and with (1) the targeted condition. The interval is restricted both by a maximum sensitivity of the test scores within the uncertain interval (max.sens) and by a maximum specificity of the test scores within the uncertain interval (max.spec).
 #' @param ref The reference standard. A column in a data frame or a vector indicating the classification by the reference test. The reference standard must be coded either as 0 (absence of the condition) or 1 (presence of the condition)
 #' @param test The index test or test under evaluation. A column in a dataset or vector indicating the test results in a continuous scale.
@@ -10,6 +10,7 @@
 #' @param intersection (default = NULL) When NULL, the intersection is calculated with \code{get.intersection}, which uses the kernel density method to obtain the intersection. When another value is assigned to this parameter, this value is used instead.
 #' @param return.first (default = TRUE) Return only the widest possible interval, given the restrictions. When FALSE all calculated intervals with their sensitivity and specificity are returned. NOTE: This function does not always find a suitable interval and can return a vector of NULL values.
 #' @details{
+#' This function can be used for test with continuous scores or for test with about twenty or more ordened test scores.
 #' The Uncertain interval is defined as an interval below and above the intersection, with a sensitivity and specificity below a desired value (default .55).
 #'
 #' In its core, the \code{uncertain.interval} function is non-parametric, but it uses the gaussian kernel for estimating the intersection between the two distributions. Always check whether your results are within reason. If the results are unsatisfactoy, first check on the intersection. The \code{density} function allows for other approximations. Another estimate can be obtained by using a more suitable kernel in the \code{density} function. The parameter \code{intersection} can be used to assign the new estimate to the \code{uncertain.interval} method.
