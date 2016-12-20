@@ -25,6 +25,7 @@
 #' x <- AC1(table3, print = FALSE)
 #' x
 #'
+#' @import stats
 #' @export
 AC1 <- function(tab, conflev = 0.95, N = Inf, print = TRUE){
   if(nrow(tab) != ncol(tab)){

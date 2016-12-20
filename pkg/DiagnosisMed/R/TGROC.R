@@ -114,7 +114,7 @@
 #' @param ... Additional arguments passed either to \code{\link[base]{print}} or \code{\link[graphics]{plot.default}}
 #'
 #' @details
-#' There are two main advantages of TG-ROC over ROC analysis: (1) for the uninitiated is much easier to understand how sensitivity and specificity changes with different thresholds; (2) and because of the graphical display is much easier to understand and estimate reasonable inconclusive test ranges. Occasionally, thresholds may be set outside the inconclusive range. This may happens with extreme values of Cost and population prevalence, or very skewed or unusual test values distributions. If this is the case, perhaps the inconclusive range may not be of interest or not applicable. Also, if the test is too accurate or inconclusive range tolerance is set too low, then there may be no inconclusive range at all, because sensitivity and specificity may not be below this tolerance at the same time. If this is the case, setting a higher inconclusive tolerance may work. Tests results matching the threshold values will be considered a positive test.TGROC assumes that subjects with higher values of the test are with the target condition and those with lower values are without the target condition. Tests that behave like glucose (middle values are supposed to be normal and extreme values are supposed to be abnormal) will not be correctly analyzed. If lower test values are from subjects with the condition and higher values are from subject without the condition, the analysis and its interpretation must reversed. The validity measures such as Sensitivity, Specificity and Likelihood ratios and its confidence limits are estimated as  in \code{\link{diagnosis}} function. Non-parametric confidence bands are estimated with \code{\link{binom.CI}} and parametric with normal confidence interval. The parametric curve and validity measures are estimated with a neural network strategy using the \pkg{AMORE} package. Usually neural networks, uses a subset of the data to estimate weights, a subset to calibrate/validate the weights and a third subset to simulate the function. TGROC uses only the estimate and simulate steps, therefore there is no early stopping rule for the neural network parametric estimation to prevent overfitting. The only way to check the fit of the neural network is to visually compare with the non-parametric curve. If the curve looks weird or not good enough, than progressive slight changes in the momentum, learning rate, number of layers or other parameters should work fine. The AUC (area under the ROC curve) is estimated by the trapezoidal method (also known as Mann-Whitney statistic), its confidence interval is estimated by DeLong method. See \code{\link{np.auROCc}}. The AUC confidence limits should be used only to compare the AUC with the null value for AUC which is 0.5 and not to compare the AUC from different tests.
+#' There are two main advantages of TG-ROC over ROC analysis: (1) for the uninitiated is much easier to understand how sensitivity and specificity changes with different thresholds; (2) and because of the graphical display is much easier to understand and estimate reasonable inconclusive test ranges. Occasionally, thresholds may be set outside the inconclusive range. This may happens with extreme values of Cost and population prevalence, or very skewed or unusual test values distributions. If this is the case, perhaps the inconclusive range may not be of interest or not applicable. Also, if the test is too accurate or inconclusive range tolerance is set too low, then there may be no inconclusive range at all, because sensitivity and specificity may not be below this tolerance at the same time. If this is the case, setting a higher inconclusive tolerance may work. Tests results matching the threshold values will be considered a positive test. \code{TGROC} assumes that subjects with higher values of the test are with the target condition and those with lower values are without the target condition. Tests that behave like glucose (middle values are supposed to be normal and extreme values are supposed to be abnormal) will not be correctly analyzed. If lower test values are from subjects with the condition and higher values are from subject without the condition, the analysis and its interpretation must reversed. The validity measures such as Sensitivity, Specificity and Likelihood ratios and its confidence limits are estimated as  in \code{\link{diagnosis}} function. Non-parametric confidence bands are estimated with \code{\link{binom.CI}} and parametric with normal confidence interval. The parametric curve and validity measures are estimated with a neural network strategy using the \pkg{AMORE} package. Usually neural networks, uses a subset of the data to estimate weights, a subset to calibrate/validate the weights and a third subset to simulate the function. TGROC uses only the estimate and simulate steps, therefore there is no early stopping rule for the neural network parametric estimation to prevent overfitting. The only way to check the fit of the neural network is to visually compare with the non-parametric curve. If the curve looks weird or not good enough, than progressive slight changes in the momentum, learning rate, number of layers or other parameters should work fine. The AUC (area under the ROC curve) is estimated by the trapezoidal method (also known as Mann-Whitney statistic), its confidence interval is estimated by DeLong method. See \code{\link{np.auROCc}}. The AUC confidence limits should be used only to compare the AUC with the null value for AUC which is 0.5 and not to compare the AUC from different tests.
 #'
 #' @return A list of class TGROC with the following:
 #' \itemize{
@@ -165,7 +165,9 @@
 #' plot(x, Plot.type = "ROC", Plot = "Binormal", Plot.threshold = "Max Youden")
 #'
 #' # Ploting overplotted curves. The Binormal curve is way different from the remaining.
-#' plot(x, Plot.type = "ROC", Plot = c("Non-parametric","NN-parametric","Binormal"), Plot.threshold = "Max Youden")
+#' plot(x, Plot.type = "ROC",
+#'      Plot = c("Non-parametric","NN-parametric","Binormal"),
+#'      Plot.threshold = "Max Youden")
 #'
 #' # Ploting the TGROC curve overploting the Non-parametric and the NN- parametric.
 #' plot(x, Plot = c("Non-parametric","NN-parametric"))
@@ -193,7 +195,8 @@
 #' plot(x, Plot = c("Non-parametric"))
 #'
 #' # Increasing the inconclusive solves the issue.
-#' x <- TGROC(ref = ifelse(tutorial$Gold == "pos", 1, 0), test = tutorial$Test_A, precision = .005, Inconclusive = .99)
+#' x <- TGROC(ref = ifelse(tutorial$Gold == "pos", 1, 0),
+#'      test = tutorial$Test_A, precision = .005, Inconclusive = .99)
 #'
 #' # All lower inconclusive limits are higher than the upper inconclusive limit
 #' # Nevertheless, check how the inconclisve area chages as method Changes.
@@ -202,10 +205,14 @@
 #' plot(x, Plot = c("Non-parametric"))
 #'
 #' # Ploting with different thrensholds without the inconclusive area.
-#' x <- TGROC(ref = ifelse(tutorial$Gold == "pos", 1, 0), test = tutorial$Test_B, precision = .005, Inconclusive = .90)
-#' plot(x, Plot = c("NN-parametric","Non-parametric"), Plot.inc.area = FALSE, Plot.threshold = "Se = Sp")
-#' plot(x, Plot = c("NN-parametric","Non-parametric"), Plot.inc.area = FALSE, Plot.threshold = "Min ROC distance")
-#' plot(x, Plot = c("NN-parametric","Non-parametric"), Plot.inc.area = FALSE, Plot.threshold = "Max DOR")
+#' x <- TGROC(ref = ifelse(tutorial$Gold == "pos", 1, 0), test = tutorial$Test_B,
+#'      precision = .005, Inconclusive = .90)
+#' plot(x, Plot = c("NN-parametric","Non-parametric"), Plot.inc.area = FALSE,
+#'      Plot.threshold = "Se = Sp")
+#' plot(x, Plot = c("NN-parametric","Non-parametric"), Plot.inc.area = FALSE,
+#'      Plot.threshold = "Min ROC distance")
+#' plot(x, Plot = c("NN-parametric","Non-parametric"), Plot.inc.area = FALSE,
+#'      Plot.threshold = "Max DOR")
 #'
 #' # Ploting the inconclusive area and the threshold simultaneously.
 #' # The subtitle may get overplotted, expanding the margins and adjusting the line may help.

@@ -1,4 +1,5 @@
 #' @rdname SS
+#' @import AMORE
 #' @export
 # Making a smoothed SS object with a Neural Network modeling-------------------
 NN.SS <- function(x, t.max = NULL, t.min = NULL, precision = .01, CL = .95,

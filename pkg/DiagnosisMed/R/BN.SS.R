@@ -1,4 +1,5 @@
 #' @rdname SS
+#' @import stats
 #' @export
 # Binormal SS object ----------------------------------------------------------
 BN.SS <- function(ref, test, CL = 0.95, t.max = NULL, t.min = NULL,

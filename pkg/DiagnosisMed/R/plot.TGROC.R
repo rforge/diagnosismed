@@ -1,4 +1,6 @@
 #' @rdname TGROC
+#' @import grDevices
+#' @import graphics
 #' @export
 plot.TGROC <- function(x,...,
                 Plot.type = c("TGROC","ROC","None"),
