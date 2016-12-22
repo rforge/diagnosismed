@@ -1,7 +1,7 @@
 #' @rdname TGROC
 #' @export
 print.TGROC <- function(x, ..., digits = 3, print.type = "all"){
-  if(print.type != "all" && print.type != "NN-parametric" && print.type != "Non-parametric" && type != "Binormal"){
+  if(print.type != "all" && print.type != "NN-parametric" && print.type != "Non-parametric" && print.type != "Binormal"){
     stop("print.type argument in print.TGROC is not valid.")
   }
   cat("                Sample size:",x$sample.size,"\n")

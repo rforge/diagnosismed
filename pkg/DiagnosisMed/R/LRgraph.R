@@ -5,9 +5,9 @@
 #'
 #' @param tests A list of \code{\link{diagnosis}} objects composed by two or more tests. This object should be created listing two \code{\link{diagnosis}} objects as \code{list(mytest1, mytest2)}. One may insert as many tests as one wishes. See example.
 #'
-#' @param xlab,ylab Characters indicating the labels of the horizantal and vertical axis. These will be passed to \code{\link[graphics]{plot.deafult}}.
+#' @param xlab,ylab Characters indicating the labels of the horizantal and vertical axis. These will be passed to \code{\link[graphics]{plot.default}}.
 #'
-#' @param xlim,ylim Vectors indicating the limits of the horizantal and vertical axis. These will be passed to \code{\link[graphics]{plot.deafult}}
+#' @param xlim,ylim Vectors indicating the limits of the horizantal and vertical axis. These will be passed to \code{\link[graphics]{plot.default}}
 #'
 #' @param point.arg A \code{\link[base]{list}} of arguments to be passed to \code{\link[graphics]{points}}. Internally the arguments \code{x} and \code{y} are replaced by the values in the \code{tests} argument. These argumentes will be used recurssively to plot points, so the arguments in list should not have a length bigger than \code{tests}.
 #'
@@ -82,7 +82,7 @@ LRgraph <- function(tests, ..., xlab = "1 - Specificity", ylab = "Sensitivity",
                     auto.legend = TRUE,
                     leg.arg = list(x = "top", inset = -.2, xpd = NA, ncol = 2, cex = .9, bty = "n"),
                     SeSp.lines = TRUE,
-                    SeSP.lines.arg = list(lty = 2, col = gray(.4)),
+                    SeSp.lines.arg = list(lty = 2, col = gray(.4)),
                     grid = FALSE){
   if ( length(tests) < 2 ) {
     stop("'tests' should have at least two 2 diagnostic tests results.")
@@ -130,8 +130,8 @@ LRgraph <- function(tests, ..., xlab = "1 - Specificity", ylab = "Sensitivity",
     do.call(legend, leg.arg)
   }
   if (SeSp.lines) {
-    SeSP.lines.arg$v <- 1 - tests[[1]]$Sp
-    SeSP.lines.arg$h <- tests[[1]]$Se
-    do.call(abline, SeSP.lines.arg)
+    SeSp.lines.arg$v <- 1 - tests[[1]]$Sp
+    SeSp.lines.arg$h <- tests[[1]]$Se
+    do.call(abline, SeSp.lines.arg)
   }
 }

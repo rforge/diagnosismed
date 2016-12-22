@@ -16,11 +16,13 @@
 #'
 #' @param CL.type Type of confidence limit. Accepted values are "wilson", "exact", approximate". See \code{\link{binom.CI}}
 #'
+#' @param reference.name,index.name The names of the index and reference tests. If one have labels in the dataset, one may pass the labels to these arguments (see exaple). If one defines \code{dimnames} of table or matrix, the names of the dimension will override these arguments. (see example) These arguments may be important as other functions that uses \code{diagnosis} output require these names.
+#'
 #' @param x For \code{plot} and \code{print} functions, \code{x} is an object assigned with diagnosis output.
 #'
 #' @param type For \code{plot}, type assigns what plot will be returned. "nomogram" or "roc" are possble values. If \code{type = "roc"}, don't forget to set the correct \code{xlab} and \code{ylab} arguments.
 #'
-#' @param xlab,ylab Characters indicating the labels of the horizantal and vertical axis. These will be passed to \code{\link[graphics]{plot.deafult}}. The default values are \code{xlab = "Pre-test probability"} and \code{ylab = "Post-test proabbility"}. But these make sense only if \code{type = "nomogram"}. If \code{type = "roc"} one must set by hand \code{xlab = "1 - Specificity"} and \code{ylab = "Sensitivity"}
+#' @param xlab,ylab Characters indicating the labels of the horizantal and vertical axis. These will be passed to \code{\link[graphics]{plot.default}}. The default values are \code{xlab = "Pre-test probability"} and \code{ylab = "Post-test proabbility"}. But these make sense only if \code{type = "nomogram"}. If \code{type = "roc"} one must set by hand \code{xlab = "1 - Specificity"} and \code{ylab = "Sensitivity"}
 #'
 #' @param lines.arg A \code{\link[base]{list}} of arguments to be passed to \code{\link[graphics]{lines}}.
 #'
@@ -91,11 +93,19 @@
 #' ))
 #' colnames(mydata) <- c('culture','serology')
 #'
+#' # Setting labels to the dataset
+#' attr(mydata, "var.labels") <- c("Automatic culture","ELISA test")
+#'
 #' # A little description of the data set to check if it is ok!
 #' str(mydata)
 #'
 #' # Running the diagnosis analysis
 #' diagnosis(ref = mydata$culture, test = mydata$serology)
+#'
+#' # Same thing passing the labels
+#' diagnosis(ref = mydata$culture, test = mydata$serology,
+#' reference.name = attr(mydata, "var.labels")[1],
+#' index.name = attr(mydata, "var.labels")[2])
 #'
 #' #Simulating a table
 #' mytable <- matrix(c(149,18,25,72), nrow = 2, ncol = 2, byrow = TRUE,
