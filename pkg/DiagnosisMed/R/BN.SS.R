@@ -51,8 +51,8 @@ BN.SS <- function(ref, test, CL = 0.95, t.max = NULL, t.min = NULL,
   #   warning("The number of tests values to simulate the binormal ROC analysis is unecessarily high, above 2000. \n Perhaps changing t.max, t.min or precision will solve.")
   # }
   # obtain b and a to obtain the scores as bi-normal curves
-  b <- sd0 / sd1
-  a <- (m1 - m0) / sd1
+  # b <- sd0 / sd1
+  # a <- (m1 - m0) / sd1
 
   # Obtaining the Se and Sp
   Sp <- 1 - pnorm((m0 - test.values) / sd0)

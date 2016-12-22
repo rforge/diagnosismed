@@ -1,6 +1,6 @@
 #' @rdname diagnosis
 #' @export
-print.diag <- function(x, digits = 3, ...){
+print.diagnosis <- function(x, digits = 3, ...){
   cat("Reference standard:",x$reference.name,"\n")
   cat("Index test        :",x$index.name,"\n")
   cat("---------------------------------------------------------------\n")

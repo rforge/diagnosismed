@@ -16,9 +16,9 @@ This data set gives results of two serological tests - continuous scale - and it
 }
 \details{
 \itemize{
-  \item Gold The reference standard as 0 and 1.
-  \item test1 Results for test 1 - numeric.
-  \item test2 Results for test 2 - numeric.
+  \item \code{Gold} The reference standard as 0 and 1.
+  \item \code{test1} Results for test 1 - numeric.
+  \item \code{test2} Results for test 2 - numeric.
 }
 }
 \keyword{datasets}

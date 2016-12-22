@@ -16,11 +16,11 @@ This data set gives results of trhee serological tests - continuous scale - and 
 }
 \details{
 \itemize{
-  \item Gold The reference standard as "pos" and "neg".
-  \item Age Categories of age.
-  \item Test_A Results for test A - numeric.
-  \item Test_B Results for test B - numeric.
-  \item Test_C Results for test C - numeric.
+  \item \code{Gold} The reference standard as "pos" and "neg".
+  \item \code{Age} Categories of age.
+  \item \code{Test_A} Results for test A - numeric.
+  \item \code{Test_B} Results for test B - numeric.
+  \item \code{Test_C} Results for test C - numeric.
 }
 }
 \keyword{datasets}

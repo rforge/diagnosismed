@@ -1,11 +1,12 @@
 Package: DiagnosisMed
-Version: 0.2.5
-Date: 2016-09-14
+Version: 0.2.6
+Date: 2016-12-22
 Author: Pedro Brasil <pedro.brasil@ini.fiocruz.br>
 Maintainer: Pedro Brasil <pedro.brasil@ini.fiocruz.br>
 Depends:
-    R (>= 2.7.2), AMORE
-Title: Diagnostic test accuracy evaluation for health professionals.
+    R (>= 2.7.2),
+    AMORE
+Title: Diagnostic test accuracy evaluation for health professionals
 Description: DiagnosisMed is a package to analyze data from diagnostic test
     accuracy evaluating health conditions. Partners are most welcome.
 License: GPL (>= 2)
