@@ -6,6 +6,7 @@
 #' @param test The index test or test under evaluation. A column in a dataset or vector indicating the test results on a continuous scale.
 #' @param ... passing arguments to the kernel density function, other than kernel='gaussian' (default).
 #' @return A vector of points of intersection, ordered on their density. The tail has the highest density.
+#' @references Landsheer, J. A. (2016). Interval of Uncertainty: An Alternative Approach for the Determination of Decision Thresholds, with an Illustrative Application for the Prediction of Prostate Cancer. PloS One, 11(11), e0166007.
 #' @seealso \code{\link{density}}
 #'
 #' @examples

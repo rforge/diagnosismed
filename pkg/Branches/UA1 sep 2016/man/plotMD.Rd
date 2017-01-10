@@ -4,16 +4,21 @@
 \alias{plotMD}
 \title{Function to plot the mixed densities of distributions of individuals with (1) and without (0) the targeted condition.}
 \usage{
-plotMD(ref, test, n.breaks = 20, subtitle = "")
+plotMD(ref, test, breaks = 20, subtitle = "",
+  position.legend = "topright", ...)
 }
 \arguments{
 \item{ref}{The reference standard. A column in a data frame or a vector indicating the classification by the reference test. The reference standard must be coded either as 0 (absence of the condition) or 1 (presence of the condition)}
 
 \item{test}{The index test or test under evaluation. A column in a dataset or vector indicating the test results in a continuous scale.}
 
-\item{n.breaks}{The number of breaks used to construct the histograms. This number has to be equal or lower than the discernable values in the test.}
+\item{breaks}{Breaks used to construct the histograms. Either a single integer number or a vector containing the actual breaks. In the case of a vector, the number should cover all available test values. In the case of a single integer number, this number has to be equal or lower than the discernable values in the test. For short ordinal scales a vector should be uses covering all possible test values.}
 
 \item{subtitle}{Optional subtitle}
+
+\item{position.legend}{The location can be specified by a single keyword from the list "topright", "topleft", "top", "right", "bottomright", "bottom", "bottomleft", "left" and "center". Default is "top.right".}
+
+\item{...}{passing arguments to the kernel density function, other than kernel='gaussian' (default).}
 }
 \value{
 No Value returned.
@@ -22,7 +27,7 @@ No Value returned.
 This plot function shows the two distributions and their overlap in a single graph.
 }
 \details{
-The graph shows the two distributions and their overlap. Many tests of intermediate quality have a considerable overlap. Also, the distibutions as estimated by the \code{density} function, using the gaussian kernel is shown. The intersection is indicated by a vertical line. This graph allows the visual inspection of the two distributions, as well a visual inspection of the approximation of the \code{density}, based on the gaussian kernel. When the density estimation is way off, the standard estimation of the intersection will be incorrect, and another estimation has to be supplied.
+The graph shows the two distributions and their overlap. Many tests of intermediate quality have a considerable overlap. Also, the distributions as estimated by the \code{density} function, using the gaussian kernel is shown. The intersection is indicated by a vertical line. This graph allows the visual inspection of the two distributions, as well a visual inspection of the approximation of the \code{density}, based on the gaussian kernel. When the density estimation is way off, the standard estimation of the intersection will be incorrect, and another estimation has to be supplied.
 
 The function \code{plotMD} can also be used for visual inspection of the Uncertain Interval (see examples). Please note that the sensitivity and specificity values > .5 (including the default of .55) allows for some positive bias.
 }
@@ -38,5 +43,16 @@ abline(v=ua[1:2])
 select=(test <= ua[2] & test >= ua[1])
 # plot the mixed densities for the Uncertain Interval
 plotMD(ref[select], test[select])
+
+# An ordinal test
+norm     = rep(1:5, times=c(33,6,6,11,2))
+abnorm   = rep(1:5, times=c(3,2,2,11,33))
+testres  = c(abnorm,norm)
+truestat = c(rep(1,length(abnorm)), rep(0,length(norm)))
+breaks=c(min(testres)-.5, seq(min(testres), max(testres), by=1)+.5)
+plotMD(ref=truestat, test=testres, breaks=breaks, adjust=2)
+}
+\references{
+Landsheer, J. A. (2016). Interval of Uncertainty: An Alternative Approach for the Determination of Decision Thresholds, with an Illustrative Application for the Prediction of Prostate Cancer. PloS One, 11(11), e0166007.
 }
 

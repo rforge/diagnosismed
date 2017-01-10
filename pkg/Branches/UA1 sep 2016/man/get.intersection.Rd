@@ -24,6 +24,9 @@ ref=c(rep(0,500), rep(1,500))
 test=c(rnorm(500,0,1), rnorm(500,1,2))
 (get.intersection(ref, test)) # two intersections! Generates warning in other functions!
 }
+\references{
+Landsheer, J. A. (2016). Interval of Uncertainty: An Alternative Approach for the Determination of Decision Thresholds, with an Illustrative Application for the Prediction of Prostate Cancer. PloS One, 11(11), e0166007.
+}
 \seealso{
 \code{\link{density}}
 }

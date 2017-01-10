@@ -21,7 +21,8 @@ No Value returned.
 This plot function shows the frequencies of the two groups and their overlap in a single graph. This function is intended to be used for tests with 20 or less different test values
 }
 \details{
-The graph shows the overlapping barplots of the frequencies of the test results of two groups and their overlap. Many tests of intermediate quality have a considerable overlap. This graph allows for the visual inspection of the frequencies and their overlap. The zero scores (0) represent the norm group, 1 represent the targeted group (abnorm).
+The graph shows the overlapping barplots of the frequencies of the observed test results of two groups and their overlap. Many tests of intermediate quality have a considerable overlap. This graph allows for the visual inspection of the frequencies and their overlap. The zero scores (0) represent the norm group, 1 represent the targeted group (abnorm).
+For studying the overlap, the mixed density plot is recommended: \code{plotMD}.
 }
 \examples{
 # A short test with 5 ordinal values
@@ -30,7 +31,7 @@ test1   = rep(1:5, times=c(3,2,2,11,33))
 ref = c(rep(0, length(test0)), rep(1, length(test1)))
 test = c(test0, test1)
 mixed.barplot(ref, test, position.legend='top')
-# please not that test score 4 has complete overlapping frequencies.
+# please note that test score 4 has complete overlapping frequencies.
 }
 \seealso{
 \code{\link{UI.ordinal}} for calculating possible Uncertain Intervals for short, ordened tests, \code{\link{plotMD}} for plotting mixed densities.

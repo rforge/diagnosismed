@@ -1,16 +1,16 @@
-#' Function for the description of te qualities of one or two decision thresholds or threshold.
+#' Function for the description of the qualities of one or two decision thresholds or threshold.
 #'
 #' @name quality.threshold
 #'
-#' @description This function can be used for both dichotomization (single threshold or cut-point) methods and for trichomization (two thresholds or cut-points) methods. In the case of the Uncertain Interval trichotomization method, it provides descriptive statitistics for the test scores outside the Uncertain Interval. For the TG-ROC trichomization method it provides te descriptive statistics for TG-ROC's Valid Range.
+#' @description This function can be used for both dichotomization (single threshold or cut-point) methods and for trichotomization (two thresholds or cut-points) methods. In the case of the Uncertain Interval trichotomization method, it provides descriptive statistics for the test scores outside the Uncertain Interval. For the TG-ROC trichotomization method it provides the descriptive statistics for TG-ROC's Valid Range.
 #' @param ref The reference standard. A column in a data frame or a vector indicating the classification by the reference test. The reference standard must be coded either as 0 (absence of the condition) or 1 (presence of the condition)
 #' @param test The index test or test under evaluation. A column in a dataset or vector indicating the test results in a continuous scale.
 #' @param threshold The decision threshold of a dichotomization method, or the lower decision threshold of a trichotomization method.
-#' @param threshold.upper (default = NULL). The upper decision threshold of a trichotomization method. When NULL, the test cores are dicotomized.
+#' @param threshold.upper (default = NULL). The upper decision threshold of a trichotomization method. When NULL, the test scores are dichotomized.
 #'
 #' @return{ A list of}
 #' \describe{
-#'   \item{table}{The confusion table of {diag x ref}, where diag is the diagnosis based on the test, when applying the threshold(s). The reference standard (ref) has categoires 0 and 1, while the diagnosis based on the test scores (diag) has categories 0 and 1 in the case of applying a single threshold (dischotomization), and the categories 0, NA and 1 in the case of trichomization. In the case of the Uncertain Interval trichomization method, the row NA shows the count of test scores within the Uncertain Interval. When applying the trichimization method TG-ROC, the row NA shows the count of the test scores within the Intermediate Range. Table cell {0, 0} shows the True Negatives (TN), cell {0, 1} shows the False Negatives (FN), cell {1, 0} shows the False Positives (FP), and cell {1, 1} shows the True Positives (TP).}
+#'   \item{table}{The confusion table of {diag x ref}, where diag is the diagnosis based on the test, when applying the threshold(s). The reference standard (ref) has categories 0 and 1, while the diagnosis based on the test scores (diag) has categories 0 and 1 in the case of applying a single threshold (dichotomization), and the categories 0, NA and 1 in the case of trichotomization. In the case of the Uncertain Interval trichotomization method, the row NA shows the count of test scores within the Uncertain Interval. When applying the trichotomization method TG-ROC, the row NA shows the count of the test scores within the Intermediate Range. Table cell {0, 0} shows the True Negatives (TN), cell {0, 1} shows the False Negatives (FN), cell {1, 0} shows the False Positives (FP), and cell {1, 1} shows the True Positives (TP).}
 #'   \item{cut}{The values of the threshold(s).}
 #'   \item{indices}{A named vector, with the following statistics for the test-scores with diagnosis 0 or 1:
 #'     \itemize{

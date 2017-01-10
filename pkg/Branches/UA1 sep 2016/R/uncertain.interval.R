@@ -1,29 +1,30 @@
 #' Function for the determination of an inconclusive interval for continuous test scores
 #'
 #' @name uncertain.interval
-#' @aliases UI.continuous
-#' @description This function determines an interval around the intersection of the two distributions of individuals without (0) and with (1) the targeted condition. The interval is restricted both by a maximum sensitivity of the test scores within the uncertain interval (max.sens) and by a maximum specificity of the test scores within the uncertain interval (max.spec).
+#' @description This function determines an interval around the intersection of the two distributions of individuals without (0) and with (1) the targeted condition. The interval is restricted both by a maximum sensitivity of the test scores within the uncertain interval (sens.ui) and by a maximum specificity of the test scores within the uncertain interval (spec.ui).
 #' @param ref The reference standard. A column in a data frame or a vector indicating the classification by the reference test. The reference standard must be coded either as 0 (absence of the condition) or 1 (presence of the condition)
 #' @param test The index test or test under evaluation. A column in a dataset or vector indicating the test results in a continuous scale.
-#' @param max.sens (default = .55). Maximum sensitivy of the test scores within the uncertain interval. A value below .5 is not allowed, while a value larger than .6 is not recommended.
-#' @param max.spec (default = .55). Maximum specificity of the test scores within the uncertain interval. A value below .5 is not allowed, while a value larger than .6 is not recommended.
+#' @param sens.ui (default = .55). The sensitivity of the test scores within the uncertain interval is either limited to this value or is the nearest to this value. A value below .5 or larger than .6 is not recommended.
+#' @param spec.ui (default = .55). The specificity of the test scores within the uncertain interval is either limited to this value or is the nearest to this value. A value below .5 or larger than .6 is not recommended.
 #' @param intersection (default = NULL) When NULL, the intersection is calculated with \code{get.intersection}, which uses the kernel density method to obtain the intersection. When another value is assigned to this parameter, this value is used instead.
 #' @param return.first (default = TRUE) Return only the widest possible interval, given the restrictions. When FALSE all calculated intervals with their sensitivity and specificity are returned. NOTE: This function does not always find a suitable interval and can return a vector of NULL values.
+#' @param select (default = 'nearest') If 'nearest', sensitivity and specificity of the uncertain interval are nearest sens.ui and spec.ui respectively. When 'limited' the solutions have an uncertain interval with a sensitivity and specificity limited by sens.ui and spec.ui respectively.
 #' @details{
+#' This essentially non-parametric function finds the best possible solution for the sample.
 #' This function can be used for test with continuous scores or for test with about twenty or more ordened test scores.
-#' The Uncertain interval is defined as an interval below and above the intersection, with a sensitivity and specificity below a desired value (default .55).
+#' The Uncertain interval is defined as an interval below and above the intersection, with a sensitivity and specificity nearby or below a desired value (default .55).
 #'
-#' In its core, the \code{uncertain.interval} function is non-parametric, but it uses the gaussian kernel for estimating the intersection between the two distributions. Always check whether your results are within reason. If the results are unsatisfactoy, first check on the intersection. The \code{density} function allows for other approximations. Another estimate can be obtained by using a more suitable kernel in the \code{density} function. The parameter \code{intersection} can be used to assign the new estimate to the \code{uncertain.interval} method.
+#' In its core, the \code{uncertain.interval} function is non-parametric, but it uses the gaussian kernel for estimating the intersection between the two distributions. Always check whether your results are within reason. If the results are unsatisfactory, first check on the intersection. The \code{density} function allows for other approximations. Another estimate can be obtained by using a more suitable kernel in the \code{density} function. The parameter \code{intersection} can be used to assign the new estimate to the \code{uncertain.interval} method.
 #'
-#' Furthermore, only a single intersection is assumed (or an second intersection where the overlap is negligible). If another intersection exists and the overlap around this intersection is considerable, a second uncertain interval may be determined by using the parameter \code{intersection}. It should be noted that in most cases, a test with more than one interection with non-neglible overlap is problematic and difficult to apply.
+#' Furthermore, only a single intersection is assumed (or an second intersection where the overlap is negligible). If another intersection exists and the overlap around this intersection is considerable, a second uncertain interval may be determined by using the parameter \code{intersection}. It should be noted that in most cases, a test with more than one intersection with non-negligible overlap is problematic and difficult to apply.
 #'
 #' The Uncertain interval method is developed for continuous distributions, although it can be applied to tests with distinguishable categorical distributions. When a test is used with less than 20 discernible values, a warning is issued. The method may work satisfactorily, but results should always be checked carefully.
 #'
 #' In general, when estimating decision thresholds, a sample of sufficient size should be used. It is recommended to use at least a sample of 100 patients with the targeted condition, and a 'healthy' sample (without the targeted condition) of the same size or larger.
 #'
-#' The Uncertain interval method is not always capable to delevir results. Clearly, when there is no overlap between the two distributions, there cannot be an uncertain interval. A very small interval of overlap can also li9mit the pssoibilities to find a solution. When there is no solution found, a vector of NULL values is returned.
+#' The Uncertain interval method is not always capable to deliver results, especially when select == 'limited'. Clearly, when there is no overlap between the two distributions, there cannot be an uncertain interval. A very small interval of overlap can also limit the possibilities to find a solution. When there is no solution found, a vector of NA values is returned.
 #'
-#' Lastly, it should be noted that the Uncertain interval method has been developed recently, and future reserach may provide more satisfactory answers.
+#' Lastly, it should be noted that the Uncertain interval method has been developed recently, and future research may provide more satisfactory answers.
 #' }
 #' @return {A \code{data.frame} of
 #'  \describe{
@@ -34,30 +35,43 @@
 #'  \item{TN}{ Count of true negatives within the Uncertain interval.}
 #'  \item{FP}{ Count of false positives within the Uncertain interval.}
 #'  \item{sensitivity}{ Sensitivity of the test scores within the Uncertain interval.}
-#'  \item{specitivity}{ Specitivity of the test scores within the Uncertain interval.}
+#'  \item{specificity}{ Specificity of the test scores within the Uncertain interval.}
 #' }
 #' Only a single row is returned when parameter \code{return.first} = TRUE (default).}
 #' @export
 #' @importFrom reshape2 melt
+#' @references Landsheer, J. A. (2016). Interval of Uncertainty: An Alternative Approach for the Determination of Decision Thresholds, with an Illustrative Application for the Prediction of Prostate Cancer. PloS One, 11(11), e0166007.
 #'
 #' @examples
 #' # A simple test model
+#' set.seed(1)
 #' ref=c(rep(0,500), rep(1,500))
 #' test=c(rnorm(500,0,1), rnorm(500,1,1))
+#' uncertain.interval(ref, test, select='limited')
+#'
+#' ref = c(rep(0,20), rep(1,20))
+#' test= c(rnorm(20), rnorm(20, mean=1))
 #' uncertain.interval(ref, test)
 uncertain.interval <-
   function(ref,
            test,
-           max.sens = .55,
-           max.spec = .55,
+           sens.ui = .55,
+           spec.ui = .55,
            intersection = NULL,
-           return.first = T) {
+           return.first = T,
+           select = c('nearest', 'limited')) {
 
+    find.closest <- function(M, crit){
+      mindiff=min(abs(M-crit))
+      which((M == crit+mindiff) | (M == crit-mindiff), arr.ind=T)
+    }
+
+    select = match.arg(select)
     df = check.data(ref, test)
-    if (max.sens < .5) stop('Value < .5 invalid for max.sens')
-    if (max.spec < .5) stop('Value < .5 invalid for max.spec')
-    if (max.sens > .6) warning('Value > .6 not recommended for max.sens')
-    if (max.spec > .6) warning('Value > .6 not recommended for max.spec')
+    if (sens.ui < .5) stop('Value < .5 invalid for sens.ui')
+    if (spec.ui < .5) stop('Value < .5 invalid for spec.ui')
+    if (sens.ui > .6) warning('Value > .6 not recommended for sens.ui')
+    if (spec.ui > .6) warning('Value > .6 not recommended for spec.ui')
 
     # only one relevant intersection assumed!
     # linear tests are used for determination of point of intersection
@@ -95,11 +109,18 @@ uncertain.interval <-
     o1[, 'TP'] = temp
     o1[, 'FP'] = cumsum(tt[wi1, 1])  #head(o1)
 
-    # find rows where TN/(TN+FP) <= max.sens
-    res0 = (lapply(o0[, "TN"], function(r) {
-      a = which(r <= o1[, "FP"] * max.sens / (1 - max.sens))
-      ifelse(length(a) == 0, return(NA), return(a))
-    }))
+    # find rows where TN/(TN+FP) <= sens.ui
+    value = sens.ui / (1 - sens.ui)
+    # r = o0[2, "TN"]
+    if (select == 'limited') {
+      res0 = lapply(o0[, "TN"], function(r) {
+        a = which(r <= o1[, "FP"] * value)
+        ifelse(length(a) == 0, return(NA), return(a) )})
+      } else {
+      res0 = lapply(o0[, "TN"], function(r) {
+        a = find.closest(o1[, "FP"] * value, r)
+        ifelse(length(a) == 0, return(NA), return(a) )} )
+      }
 
     # create matrix from list
     m = t(sapply(res0, '[', 1:max(sapply(res0, length)))) # dim(m)
@@ -114,7 +135,7 @@ uncertain.interval <-
     df.l = melt(df, id = 'cp.l')
     df.l = stats::na.omit(df.l)
     if (ncol(df.l) != 3)
-      oo1 =
+      { oo1 =
       data.frame(
         'cp.l' = NA,
         'cp.h' = NA,
@@ -122,8 +143,7 @@ uncertain.interval <-
         'TP' = NA,
         'TN' = NA,
         'FP' = NA
-      )
-    else {
+      ) } else {
       colnames(df.l) <- c('cp.l', 'variable', 'cp.h')
       df.l = df.l[order(df.l$cp.l), c('cp.l', 'cp.h')]
 
@@ -139,16 +159,26 @@ uncertain.interval <-
       )
       oo1$sensitivity = oo1$TP / (oo1$TP + oo1$FN)
       oo1$specificity = oo1$TN / (oo1$FP + oo1$TN) # head(oo1)
-      oo1 = oo1[oo1$specificity <= max.spec &
-                  oo1$sensitivity <= max.sens & stats::complete.cases(oo1),]
+      if (select == 'limited') {
+        oo1 = oo1[oo1$specificity <= spec.ui &
+                    oo1$sensitivity <= sens.ui &
+                    stats::complete.cases(oo1), ]
+      } else {
+        oo1 = oo1[stats::complete.cases(oo1), ]
+      }
       oo1 = oo1[!duplicated(oo1[, c('FN', 'TP', 'TN', 'FP')]), ] # nrow(o1)
     }
 
-    # find rows where TP/(TP+FN) <= max.spec
-    res1 = (lapply(o1[, "TP"], function(r) {
-      a = which(r <= o0[, "FN"] * max.spec / (1 - max.spec))
-      ifelse(length(a) == 0, return(NA), return(a))
-    }))
+    # find rows where TP/(TP+FN) <= spec.ui
+    if (select == 'limited') {
+      res1 = lapply(o1[, "TP"], function(r) {
+        a = which(r <= o0[, "FN"] * spec.ui / (1 - spec.ui))
+        ifelse(length(a) == 0, return(NA), return(a)) })
+    } else {
+      res1 = lapply(o1[, "TP"], function(r) {
+        a = find.closest(o0[, "FN"] * value, r)
+        ifelse(length(a) == 0, return(NA), return(a)) })
+      }
 
     # create matrix from list
     m = t(sapply(res1, '[', 1:max(sapply(res1, length))))
@@ -160,7 +190,7 @@ uncertain.interval <-
     df = data.frame(cbind(cp.l, cp.h))
     df.h = melt(df, id = 'cp.h')
     df.h = stats::na.omit(df.h)
-    if (ncol(df.h) != 3)
+    if (ncol(df.h) != 3) {
       oo2 =
       data.frame(
         'cp.l' = NA,
@@ -170,7 +200,7 @@ uncertain.interval <-
         'TN' = NA,
         'FP' = NA
       )
-    else {
+    } else {
       colnames(df.h) <-
         c('cp.h', 'variable', 'cp.l') # error! Error in `colnames<-`(`*tmp*`, value = c("cp.h", "variable", "cp.l")) :
       # 'names' attribute [3] must be the same length as the vector [1]
@@ -192,18 +222,26 @@ uncertain.interval <-
                                     oo2$FN)
       oo2$specificity = oo2$TN / (oo2$FP +
                                     oo2$TN) # head(oo2)
-      oo2 = oo2[oo2$specificity <= max.spec &
-                  oo2$sensitivity <= max.sens & stats::complete.cases(oo2),]
-      oo2 = oo2[!duplicated(oo2[, c('FN', 'TP', 'TN', 'FP')]), ] # nrow(o2)
+      if (select == 'limited') {
+        oo2 = oo2[oo2$specificity <= spec.ui &
+                    oo2$sensitivity <= sens.ui & stats::complete.cases(oo2),]
+      } else {
+        oo2 = oo2[stats::complete.cases(oo2),]
+      }
+      oo2 = oo2[!duplicated(oo2[, c('FN', 'TP', 'TN', 'FP')]),] # nrow(o2)
     }
     o3 = rbind(oo1, oo2) # nrow(o3) # oo1=data.frame()
     o3 = o3[stats::complete.cases(o3), ]
     o3 = o3[order(-o3$cp.h, o3$cp.l),]
     o3 = o3[!duplicated(o3[, c('cp.l', 'cp.h')]), ]
     o3 = o3[!duplicated(o3[, c('FN', 'TP', 'TN', 'FP')]), ] # head(o3,10) # o=t(do.call(rbind, o3))
+    if (select == 'nearest') {
+      o3 = o3[find.closest(abs(o3[, 'sensitivity'] - sens.ui) +
+                           abs(o3[, 'specificity'] - spec.ui), 0),]
+    }
     if (return.first |
         nrow(o3) == 0)
-      return(unlist(o3[1, ]))
+      return(c(unlist(o3[1, ]), intersection=intersection))
     else
       return(t(do.call(rbind, o3)))
   }

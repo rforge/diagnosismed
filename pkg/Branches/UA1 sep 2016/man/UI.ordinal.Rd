@@ -2,17 +2,18 @@
 % Please edit documentation in R/UI.ordinal.R
 \name{UI.ordinal}
 \alias{UI.ordinal}
-\alias{Uncertain.Interval.ordinal}
-\alias{UncertainIntervalOrdinal}
-\alias{uncertain.interval.ordinal}
-\title{Function to calculate all possible uncertain intervals of ordinal test results of individuals with (1) and without (0) the targeted condition.}
+\title{Experimental! Function to calculate all possible uncertain intervals of ordinal test results of individuals with (1) and without (0) the targeted condition.}
 \usage{
-UI.ordinal(ref, test)
+UI.ordinal(ref, test, adjust = 2, ...)
 }
 \arguments{
 \item{ref}{The reference standard. A column in a data frame or a vector indicating the classification by the reference test. The reference standard must be coded either as 0 (absence of the condition) or 1 (presence of the condition)}
 
 \item{test}{The index test or test under evaluation. A column in a dataset or vector indicating the test results in a continuous scale.}
+
+\item{adjust}{The adjust factor that is transferred to the density function. Default value is 2.}
+
+\item{...}{Further parameters that are transferred to the density function.}
 }
 \value{
 List of values:
@@ -29,7 +30,7 @@ List of values:
      \itemize{
       \item{test: }{The test scores.}
       \item{d0: }{The frequencies of the test scores of the norm group.}
-      \item{d1: }{The frequencies of the test scores of the group with the targeted condotion.}
+      \item{d1: }{The frequencies of the test scores of the group with the targeted condition.}
       \item{tot: }{The total frequency of each test scores.}
      \item{TP: }{The number of True Positives when this test score is used as threshold.}
      \item{FP: }{The number of False Positives when this test score is used as threshold.}
@@ -37,54 +38,56 @@ List of values:
      \item{tpr: }{The true positive rate when this test score is used as threshold.}
      \item{Y: }{The Youden Index (= tpr - fpr) when this test score is used as threshold.}
      }
-  \item{intersection}{The point of intersection for the distributions of the two groups. Often, this equals the Maximized Youden threshold (see Schisterman 2005).}
+  \item{intersection}{The (rounded) intersection for the distributions of the two groups. Most often these distributions have no true point of intersection and the rounded intersection is an approximation. Often, this equals the Maximized Youden threshold (see Schisterman 2005). }
   \item{Uncertain.Interval}{Data frame with the statistics of all possible bounds of the uncertain interval. The columns are the following: }
     \itemize{
       \item{lowerbound: }{Lower bound of the possible uncertain interval.}
       \item{upperbound: }{Upper bound of the possible uncertain interval.}
-      \item{UI.Sp: }{Specifity of the test scores between and including the lower and upper boundary.}
-      \item{UI.Se: }{Sensitivity of the test scores between and including the lower and upper boundary.}
+      \item{UI.Sp: }{Specificity of the test scores between and including the lower and upper boundary. Closer to .5 is 'better', that is, more uncertain.}
+      \item{UI.Se: }{Sensitivity of the test scores between and including the lower and upper boundary. Closer to .5 is 'better', that is, more uncertain.}
+      \item{UI.ratio: }{The ratio between the number of patients in the uncertain area with and without the condition. Closer to one is better; (.45/.55) < UI.ratio < (.55/.45) or 0.82 < UI.ratio < 1.22 as a rule of fist.}
       \item{UI.n: }{Number of patients with test scores between and including the lower and upper boundary.}
-      \item{MCI.Sp: }{Specifity of the more certain interval, i.e., the test scores lower than the lower boundary and higher than the upper boundary.}
+      \item{MCI.Sp: }{Specificity of the more certain interval, i.e., the test scores lower than the lower boundary and higher than the upper boundary.}
       \item{MCI.Se: }{Sensitivity of the test scores lower than the lower boundary and higher than the upper boundary.}
       \item{MCI.Acc: }{Accuracy of the test scores lower than the lower boundary and higher than the upper boundary.}
       \item{MCI.n: }{Number of patients with test scores lower than the lower boundary and higher than the upper boundary.}
-      \item{Total.Loss: }{Loss of the test scores lower than the lower boundary and higher than the upper boundary. The total loss is the sum of the loss of the three areas:
-      lower MCI: number of false positives, divided by the total number of persons.
-      upper MCI: Number of False Negatives, divided by the total number of persons.
+      \item{Loss: }{Loss of the test scores lower than the lower boundary and higher than the upper boundary. The total loss is the sum of the loss of the three areas:
+      lower MCI: the summed number of false positives for each test score, divided by the number of persons that have received that test score.
+      upper MCI: the summed number of false negatives, divided by the number of persons that have received that test score.
       uncertain interval: the sum of the absolute differences in the number of people out of the norm group d0 and the number of persons in the group with the targeted condition (d1) per test score, divided by the total number of persons.}
       }
-  \item{candidates: }{Candidates with the lowest loss which might be considered for the Uncertain Interval }
+  \item{candidates: }{Candidates with a loss lower than the Youden loss which might be considered for the Uncertain Interval }
   }
   @references{ Schisterman, E. F., Perkins, N. J., Liu, A., & Bondell, H. (2005). Optimal cut-point and its corresponding Youden Index to discriminate individuals using pooled blood samples. Epidemiology, 73-81.
 
-  Landsheer, J. A. (In Press). Interval of Uncertainty: An alternative approach for the determination of decision thresholds, with an illustrative application for the prediction of prostate cancer. PLOS One.
+  Landsheer, J. A. (2016). Interval of Uncertainty: An alternative approach for the determination of decision thresholds, with an illustrative application for the prediction of prostate cancer. PLOS One.
   }
 }
 \description{
-This function calculates of the test results of the two groups. This function is intended to be used for tests with 20 or less ordened test values
+This function calculates the uncertain interval of the test results of the two groups. This function is intended to be used for tests with 20 or less ordened test values
 }
 \details{
-The graph shows the overlapping barplots of the frequencies of the test results of two groups and their overlap. Many tests of intermediate quality have a considerable overlap. This graph allows for the visual inspection of the frequencies and their overlap. The zero scores (0) represent the norm group, 1 represent the targeted group (abnorm).
+Warning: This function has not been sufficiently tested or studied.
 
-Due to the limited possiblities of short scales, it is more difficult to determine a suitable uncertain interval. For any threshold determination, one needs a representative sample of sufficient size (200 or larger).
+Due to the limited possibilities of short scales, it is more difficult to determine a suitable uncertain interval. For any threshold determination, one needs a representative sample of sufficient size (200 or larger). If there are no test scores below the intersection in the candidate uncertain area, Sp of the Uncertain Interval (UI.Sp) is not available, while UI.Se equals 1.
+The essential question is always whether the patients with the test scores inside the uncertain interval can be sufficiently distinguished.
 Discussion of the first example (please run the code first): Visual inspection of the Mixed Barplot shows that distinguishing patients with and without the targeted condition is almost impossible for test scores 2, 3 and 4.
-Sensitivity and Specificity of the uncertain interval should be not too far from .5. In the first example, the first interval (3:3) has no lower scores than the intersection (3), and therefore Ui.Sp is not available. UI.Se has a value of .45, which indiactes that the number of patients with and without the condition are slightly unequal in this interval. For these 29 patients, a diagnosis of uncertainty is probably the best for these patients.
-The second interval (3:4) has an UI.Sp of .56, which is a slight deviation from .5. In this slighly larger interval, the patients with a score 2 have therefore a somewhat larger probability to belong to the group without the condition. UI.Se is the same as that of the previous interval, as the number of patients with a score >= 3 within this interval is the same.
-he third interval (1:3) has an UI.Sp of .87, which indicates that this is not a suitable choice for the uncertain interval.
-The fourth interval (2:4) has an UI.Sp of .56 and an UI.Se of .49 and is probably the best choice for the uncertain interval.
-The other intervals show either Se or Sp that decaite strongly from .5, which makes them unsuitable choices.
+Sensitivity and Specificity of the uncertain interval should be not too far from .5. In the first example, the first interval (3:3) has no lower scores than the intersection (3), and therefore Ui.Sp is not available and UI.Se = 1. The UI.ratio indicates that the number of patients with and without the condition are equal in this interval. For these 110 patients, a diagnosis of uncertainty is probably the best choice.
+The second interval (3:4) has an UI.Sp of .22, which is a large deviation from .5. In this slightly larger interval, the patients with a test score of 3 have a slightly larger probability to belong to the group without the condition. UI.Se is .8. UI.ratio is close to 1, which makes it a feasible candidate.
+The third interval (2:4) has an UI.Sp of .35 and an UI.Se of .70 and an UI.ratio still close to one.
+The other intervals show either Se or Sp that deviate strongly from .5, which makes them unsuitable choices.
 Probably the easiest way to determine the uncertain interval is the interval with minimum loss. This is interval (2:4).
-The Loss formula is:
+The Loss formula is (created by https://www.codecogs.com/latex/eqneditor.php):
 \deqn{L =\frac{ \left (\sum_{i=l}^{u} \left |d0_{i}-d1_{i}  \right | + \sum_{i=u+1}^{h} d1_{i}+ \sum_{i=1}^{l-1}d0_{i}\right )}{N}}{ L = 1/N * (sum(abs(d0[u:l] - d1[u:l])) + sum(d1[1:(l-1)]) + sum(d0[(u+1):h]))}
-where \emph{d0} represents the test scores of the norm group, \emph{d1} represents the test scores of the targeted patient group, \emph{l} is the lower limit of the uncertain interval, \emph{u} the upper limit, the first test score is enumerated 1 and the last test score is enumarated \emph{h}. \emph{N} is the total number of all persons with test scores.
+where \emph{d0} represents the test scores of the norm group, \emph{d1} represents the test scores of the targeted patient group, \emph{l} is the lower limit of the uncertain interval, \emph{u} the upper limit, the first test score is enumerated 1 and the last test score is enumerated \emph{h}. \emph{N} is the total number of all persons with test scores.
  \itemize{
  \item{\eqn{\sum_{i=l}^{u} \left |d0_{i}-d1_{i}  \right |}{sum(abs(d0[u:l] - d1[u:l])}}{ is the loss in the uncertain interval, that is, the total deviation from equality.}
  \item{\eqn{\sum_{i=u+1}^{h} d1_{i}}{sum(d1[1:(l-1)])}}{ is the loss in the lower More Certain Interval, that is, the total of False Negatives, the number of patients with the targeted condition with a test score lower than \emph{l}, and}
  \item{\eqn{\sum_{i=u+1}^{h} d0_{i}}{sum(d0[(u+1):h])}}{ is the loss in the lower More Certain Interval, that is, the total of False Positives, the number of patients without the targeted condition with a test score higher than \emph{u}.}
 
-The Loss is higher when the deviation from equality is higher in the uncertain area, higher when the number of False Negatives is higher, and higher when the number of False Positives is higher.
-In this example, the minimum Loss is found with interval (2:4). As this agrees with suitable values for UI.Se and UI.Sp, this is the most suitable choice.
+The Loss is higher when the deviation from equality is higher in the uncertain area, higher when the number of False Negatives is higher, and higher when the number of False Positives is higher. The loss of a single threshold method equals 1 - its Accuracy.
+In this example, the minimum Loss is found with interval (2:4). As this agrees with acceptable values for UI.Se, UI.Sp and UI.ratio, this seems the most suitable choice. In this case, the number of patients with test scores 2 to 4 are almost as likely to come from either population.
+The remaining cases outside the uncertain interval (2:4) show high Accuracy, Specificity and Sensitivity.
 
 }
 }
@@ -94,10 +97,13 @@ test0     = rep(1:5, times=c(165,14,16,55, 10)) # test results norm group
 test1     = rep(1:5, times=c( 15,11,13,55,164)) # test results of patients
 ref = c(rep(0, length(test0)), rep(1, length(test1)))
 test = c(test0, test1)
-mixed.barplot(ref, test, position.legend='top') # visual inspection
+table(ref, test)
+plotMD(ref, test, breaks=c(min(test)-.5, seq(min(test), max(test), by=1)+.5),
+  adjust=2) # visual inspection
 UI.ordinal(ref, test) # determination of the uncertain interval
 }
 \seealso{
-{ \code{\link{UI.ordinal}} for calculating possible Uncertain Intervals for short, ordened tests, \code{\link{plotMD}} for plotting mixed densities.}
+{  \code{\link{plotMD}} for plotting the mixed densities of the test values.
+            \code{link{stats::density}} for the parameters of the density function. }
 }
 

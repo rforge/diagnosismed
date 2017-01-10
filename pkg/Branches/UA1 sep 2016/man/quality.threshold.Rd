@@ -2,7 +2,7 @@
 % Please edit documentation in R/quality.threshold.R
 \name{quality.threshold}
 \alias{quality.threshold}
-\title{Function for the description of te qualities of one or two decision thresholds or threshold.}
+\title{Function for the description of the qualities of one or two decision thresholds or threshold.}
 \usage{
 quality.threshold(ref, test, threshold, threshold.upper = NULL)
 }
@@ -13,12 +13,12 @@ quality.threshold(ref, test, threshold, threshold.upper = NULL)
 
 \item{threshold}{The decision threshold of a dichotomization method, or the lower decision threshold of a trichotomization method.}
 
-\item{threshold.upper}{(default = NULL). The upper decision threshold of a trichotomization method. When NULL, the test cores are dicotomized.}
+\item{threshold.upper}{(default = NULL). The upper decision threshold of a trichotomization method. When NULL, the test scores are dichotomized.}
 }
 \value{
 { A list of}
 \describe{
-  \item{table}{The confusion table of {diag x ref}, where diag is the diagnosis based on the test, when applying the threshold(s). The reference standard (ref) has categoires 0 and 1, while the diagnosis based on the test scores (diag) has categories 0 and 1 in the case of applying a single threshold (dischotomization), and the categories 0, NA and 1 in the case of trichomization. In the case of the Uncertain Interval trichomization method, the row NA shows the count of test scores within the Uncertain Interval. When applying the trichimization method TG-ROC, the row NA shows the count of the test scores within the Intermediate Range. Table cell {0, 0} shows the True Negatives (TN), cell {0, 1} shows the False Negatives (FN), cell {1, 0} shows the False Positives (FP), and cell {1, 1} shows the True Positives (TP).}
+  \item{table}{The confusion table of {diag x ref}, where diag is the diagnosis based on the test, when applying the threshold(s). The reference standard (ref) has categories 0 and 1, while the diagnosis based on the test scores (diag) has categories 0 and 1 in the case of applying a single threshold (dichotomization), and the categories 0, NA and 1 in the case of trichotomization. In the case of the Uncertain Interval trichotomization method, the row NA shows the count of test scores within the Uncertain Interval. When applying the trichotomization method TG-ROC, the row NA shows the count of the test scores within the Intermediate Range. Table cell {0, 0} shows the True Negatives (TN), cell {0, 1} shows the False Negatives (FN), cell {1, 0} shows the False Positives (FP), and cell {1, 1} shows the True Positives (TP).}
   \item{cut}{The values of the threshold(s).}
   \item{indices}{A named vector, with the following statistics for the test-scores with diagnosis 0 or 1:
     \itemize{
@@ -37,7 +37,7 @@ quality.threshold(ref, test, threshold, threshold.upper = NULL)
 }
 }
 \description{
-This function can be used for both dichotomization (single threshold or cut-point) methods and for trichomization (two thresholds or cut-points) methods. In the case of the Uncertain Interval trichotomization method, it provides descriptive statitistics for the test scores outside the Uncertain Interval. For the TG-ROC trichomization method it provides te descriptive statistics for TG-ROC's Valid Range.
+This function can be used for both dichotomization (single threshold or cut-point) methods and for trichotomization (two thresholds or cut-points) methods. In the case of the Uncertain Interval trichotomization method, it provides descriptive statistics for the test scores outside the Uncertain Interval. For the TG-ROC trichotomization method it provides the descriptive statistics for TG-ROC's Valid Range.
 }
 \examples{
 # A simple test

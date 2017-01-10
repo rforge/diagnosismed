@@ -14,15 +14,15 @@ quality.threshold.uncertain(ref, test, threshold, threshold.upper,
 
 \item{threshold}{The lower decision threshold of a trichotomization method.}
 
-\item{threshold.upper}{The upper decision threshold of a trichotomization method. When NULL, the test cores are dicotomized.}
+\item{threshold.upper}{The upper decision threshold of a trichotomization method. When NULL, the test scores are dichotomized.}
 
 \item{intersection}{(default = NULL). When NULL, the intersection is calculated with \code{get.intersection}, which uses the kernel density method to obtain the intersection. When another value is assigned to this parameter, this value is used instead.}
 }
 \value{
 { A list of}
 \describe{
-  \item{intersection}{The value used as estimate of the intersection. NOTE: The trichomization method TG-ROC has no defined position for its Intermediate Range, but usage of the point where Sensitivity=Specificity seems a reasonable choice.}
-  \item{table}{The confusion table of {diag x ref} for the Uncertain Interval where the scores are expected to be inconclusive, where diag is the diagnosis based on the test, when applying the thresholds. Both the reference standard (ref) and the diagnosis based on the test scores (diag) have categories 0 and 1. In the case of the Uncertain Interval trichomization method, the row NA shows the count of test scores within the Uncertain Interval. When applying the trichimization method TG-ROC, the row NA shows the count of the test scores within the Intermediate Range. Table cell {0, 0} shows the True Negatives (TN), cell {0, 1} shows the False Negatives (FN), cell {1, 0} shows the False Positives (FP), and cell {1, 1} shows the True Positives (TP).}
+  \item{intersection}{The value used as estimate of the intersection. NOTE: The trichotomization method TG-ROC has no defined position for its Intermediate Range, but usage of the point where Sensitivity=Specificity seems a reasonable choice.}
+  \item{table}{The confusion table of {diag x ref} for the Uncertain Interval where the scores are expected to be inconclusive, where diag is the diagnosis based on the test, when applying the thresholds. Both the reference standard (ref) and the diagnosis based on the test scores (diag) have categories 0 and 1. In the case of the Uncertain Interval trichotomization method, the row NA shows the count of test scores within the Uncertain Interval. When applying the trichotomization method TG-ROC, the row NA shows the count of the test scores within the Intermediate Range. Table cell {0, 0} shows the True Negatives (TN), cell {0, 1} shows the False Negatives (FN), cell {1, 0} shows the False Positives (FP), and cell {1, 1} shows the True Positives (TP).}
   \item{cut}{The values of the thresholds.}
   \item{X2}{Table with the outcomes of three Chi-square tests of the confusion table:}
     \itemize{
@@ -46,7 +46,7 @@ quality.threshold.uncertain(ref, test, threshold, threshold.upper,
   }
 }
 \description{
-This function can be used only for trichomization (double thresholds or cut-points) methods. In the case of the Uncertain Interval trichotomization method, it provides descriptive statitistics for the test scores within the Uncertain Interval. For the TG-ROC trichomization method it provides the descriptive statistics for TG-ROC's Intermediate Range.
+This function can be used only for trichotomization (double thresholds or cut-points) methods. In the case of the Uncertain Interval trichotomization method, it provides descriptive statistics for the test scores within the Uncertain Interval. For the TG-ROC trichotomization method it provides the descriptive statistics for TG-ROC's Intermediate Range.
 }
 \details{
 The Uncertain Interval is defined as an interval below and above the intersection, with a sensitivity and specificity below a desired value (default .55). As a result, it is expected that Chi-square tests are not significant, provided that the count of individuals within the Uncertain Interval is not too large. Most often, the t-test is also non-significant, but as the power of the t-test is considerably larger than the power of the Chi-square test, this is less often the case. It is recommended to look at the difference of the means of the two sub-samples and to visually inspect the inter-mixedness of the test scores.

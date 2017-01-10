@@ -1,5 +1,5 @@
 Package: UncertainInterval
-Version: 0.1.0
+Version: 0.2.0
 Date: 2016-09-04
 Title: Implementation of the Uncertain Area methods
 Authors@R: c(person("Hans", "Landsheer", role = c("aut", "cre"),
@@ -17,4 +17,4 @@ License: GPL (>= 2)
 URL: http://r-forge.r-project.org/scm/?group_id=258
 BugReports: http://r-forge.r-project.org/tracker/?group_id=258
 RoxygenNote: 5.0.1
-Imports: stats, utils, reshape2
+Imports: stats, utils, reshape2, rootSolve, nloptr

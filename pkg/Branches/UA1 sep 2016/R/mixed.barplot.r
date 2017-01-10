@@ -4,8 +4,8 @@
 #' @param ref The reference standard. A column in a data frame or a vector indicating the classification by the reference test. The reference standard must be coded either as 0 (absence of the condition) or 1 (presence of the condition)
 #' @param test The index test or test under evaluation. A column in a dataset or vector indicating the test results in a continuous scale.
 #' @param position.legend the position of the legend. Default"'topright'. See also \code{\link{legend}}.
-#' @details The graph shows the overlapping barplots of the frequencies of the test results of two groups and their overlap. Many tests of intermediate quality have a considerable overlap. This graph allows for the visual inspection of the frequencies and their overlap. The zero scores (0) represent the norm group, 1 represent the targeted group (abnorm).
-
+#' @details The graph shows the overlapping barplots of the frequencies of the observed test results of two groups and their overlap. Many tests of intermediate quality have a considerable overlap. This graph allows for the visual inspection of the frequencies and their overlap. The zero scores (0) represent the norm group, 1 represent the targeted group (abnorm).
+#' For studying the overlap, the mixed density plot is recommended: \code{plotMD}.
 #' @return No Value returned.
 #' @importFrom grDevices rgb
 #' @importFrom graphics legend plot
@@ -18,7 +18,7 @@
 #' ref = c(rep(0, length(test0)), rep(1, length(test1)))
 #' test = c(test0, test1)
 #' mixed.barplot(ref, test, position.legend='top')
-#' # please not that test score 4 has complete overlapping frequencies.
+#' # please note that test score 4 has complete overlapping frequencies.
 
 mixed.barplot <- function(ref, test, position.legend='topright') {
 
