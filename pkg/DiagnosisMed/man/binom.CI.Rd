@@ -56,4 +56,3 @@ Kenneth Rothman (2002), Epidemiology: An Introduction, Oxford University Press, 
 \seealso{
 \code{\link[stats]{binom.test}}, \code{\link{SS}}, \code{\link{diagnosis}}
 }
-

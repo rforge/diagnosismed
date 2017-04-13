@@ -26,7 +26,7 @@ diagnosis(tab = NULL, ref = NULL, test = NULL, TN = NULL, FN = NULL,
 
 \item{TP, FN, FP, TN}{A number representing True Positives, False Negatives, False Positives, and True Negatives from a 2 x 2 table.}
 
-\item{reference.name, index.name}{The names of the index and reference tests. If one have labels in the dataset, one may pass the labels to these arguments (see exaple). If one defines \code{dimnames} of table or matrix, the names of the dimension will override these arguments. (see example) These arguments may be important as other functions that uses \code{diagnosis} output require these names.}
+\item{reference.name, index.name}{The names of the index and reference tests. If one have labels in the dataset, one may pass the labels to these arguments (see example). If one defines \code{dimnames} of table or matrix, the names of the dimension will override these arguments. (see example) These arguments may be important as other functions that uses \code{diagnosis} output require these names.}
 
 \item{CL}{Confidence limits for confidence intervals. Must be a numeric value between 0 and 1. Default is 0.95.}
 
@@ -134,7 +134,7 @@ diagnosis(TP = 72, FN = 18, FP = 25, TN = 149,
 # Export results to a spreadsheet:
 #---------------------------------
 
-# Assing diagnosis to an object
+# Assigning diagnosis to an object
 mytest <- diagnosis(TP = 364, FN = 22, FP = 17, TN = 211,
 index.name = "Gram", reference.name = "Culture")
 
@@ -170,4 +170,3 @@ Simel D, Samsa G, Matchar D (1991). Likelihood ratios with confidence: Sample si
 \seealso{
 \code{\link{LRgraph}}, \code{\link{binom.CI}}
 }
-

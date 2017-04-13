@@ -89,4 +89,3 @@ Biggerstaff, B.J. Comparing diagnostic tests: a simple graphic using likelihood 
 \seealso{
 \code{\link{diagnosis}}
 }
-

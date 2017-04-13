@@ -109,4 +109,3 @@ rm(rocdata, x, y, z)
 \seealso{
 \code{\link{binom.CI}}, \code{\link{np.auROCc}}, \code{\link{thresholds}}, \code{\link{TGROC}}
 }
-

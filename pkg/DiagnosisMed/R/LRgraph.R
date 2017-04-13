@@ -104,9 +104,9 @@ LRgraph <- function(tests, ..., xlab = "1 - Specificity", ylab = "Sensitivity",
     stop("'grid' is not logical." )
   }
   # Opening the plot
-  plot(NA, NA, type = "n", xlim = xlim, ylim = ylim, xlab = xlab, ylab = ylab)
-  axis(1, at = seq(0, 1, .05), labels = FALSE, tcl = -.25)
-  axis(2, at = seq(0, 1, .05), labels = FALSE, tcl = -.25)
+  plot(NA, NA, type = "n", xlim = xlim, ylim = ylim, xlab = xlab, ylab = ylab, ...)
+  # axis(1, at = seq(0, 1, .05), labels = FALSE, tcl = -.25)
+  # axis(2, at = seq(0, 1, .05), labels = FALSE, tcl = -.25)
   if (grid) { grid() }
 
   #Drawing the segments
@@ -124,7 +124,8 @@ LRgraph <- function(tests, ..., xlab = "1 - Specificity", ylab = "Sensitivity",
   if (auto.legend) {
     point.arg$x <- NULL
     point.arg$y <- NULL
-    point.arg <- point.arg[-which(point.arg %in% leg.arg)]
+    point.arg$lwd <- NULL
+    point.arg <- point.arg[-which(names(point.arg) %in% names(leg.arg))]
     leg.arg <- append(leg.arg, point.arg)
     leg.arg$legend <- sapply(1:length(tests), function(i) tests[[i]]$index.name)
     do.call(legend, leg.arg)

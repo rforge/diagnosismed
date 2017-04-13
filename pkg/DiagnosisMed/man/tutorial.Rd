@@ -24,4 +24,3 @@ This data set gives results of trhee serological tests - continuous scale - and 
 }
 }
 \keyword{datasets}
-

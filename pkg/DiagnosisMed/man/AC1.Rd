@@ -28,13 +28,12 @@ x <- AC1(table3, print = FALSE)
 x
 
 }
-\author{
-Marcel Quintana and Pedro Brasil. Special thanks to Mr. Gwet for reviewing the code.
-}
 \references{
 Gwet. Computing inter-rater reliability and its variance in the presence of high agreement. The British Journal of Mathematical and Statistical Psychology. 61. 29-48. May 2008.
 }
 \seealso{
 package irr for many agreement statistics. epiR::epi.kappa for Kappa with confidence intervals. Also take a look at epiDisplay::kap for multi-rater multi-reader Kappa.
 }
-
+\author{
+Marcel Quintana and Pedro Brasil. Special thanks to Mr. Gwet for reviewing the code.
+}

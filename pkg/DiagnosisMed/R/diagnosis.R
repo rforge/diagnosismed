@@ -1,4 +1,4 @@
-#' Diagnostic test accuracy evaluation
+#' @title Diagnostic test accuracy evaluation
 #'
 #' @name diagnosis
 #'
@@ -16,7 +16,7 @@
 #'
 #' @param CL.type Type of confidence limit. Accepted values are "wilson", "exact", approximate". See \code{\link{binom.CI}}
 #'
-#' @param reference.name,index.name The names of the index and reference tests. If one have labels in the dataset, one may pass the labels to these arguments (see exaple). If one defines \code{dimnames} of table or matrix, the names of the dimension will override these arguments. (see example) These arguments may be important as other functions that uses \code{diagnosis} output require these names.
+#' @param reference.name,index.name The names of the index and reference tests. If one have labels in the dataset, one may pass the labels to these arguments (see example). If one defines \code{dimnames} of table or matrix, the names of the dimension will override these arguments. (see example) These arguments may be important as other functions that uses \code{diagnosis} output require these names.
 #'
 #' @param x For \code{plot} and \code{print} functions, \code{x} is an object assigned with diagnosis output.
 #'
@@ -124,7 +124,7 @@
 #' # Export results to a spreadsheet:
 #' #---------------------------------
 #'
-#' # Assing diagnosis to an object
+#' # Assigning diagnosis to an object
 #' mytest <- diagnosis(TP = 364, FN = 22, FP = 17, TN = 211,
 #' index.name = "Gram", reference.name = "Culture")
 #'
@@ -154,13 +154,11 @@
 diagnosis <- function(tab = NULL, ref = NULL, test = NULL,
                       TN = NULL, FN = NULL, FP = NULL, TP = NULL,
                       reference.name = NULL, index.name = NULL, CL = 0.95,
-                      CL.type = c("wilson", "exact", "approximate")){
-  # Verificando se todos são NULL
+                      CL.type = c("wilson", "exact", "approximate")) {
   if (all(is.null(TP), is.null(TN), is.null(FP), is.null(FN), is.null(ref), is.null(test), is.null(tab))) {
     stop("A combination of TP and FP and FN and TN, or ref and test, or a valid tab must be provided.")
   }
 
-  # Verificando se a entrada de TP + TN + FP + FN é valida e fazendo a tabela---
   if (!is.null(TP) && !is.null(TN) && !is.null(FP) && !is.null(FN)) {
     if (!is.numeric(c(TP, TN, FN, FP)) || length(FP) != 1 || length(TP) != 1 || length(FN) != 1 || length(TN) != 1) {
       stop("When TP and FP and FN and TN are provided, they all must be numeric, each of length 1.")
@@ -174,25 +172,20 @@ diagnosis <- function(tab = NULL, ref = NULL, test = NULL,
     tab <- as.table(cbind(rbind(TN, FP), rbind(FN, TP)))
     dimnames(tab) <- list(c("Negative", "Positive"), c("Negative", "Positive"))
     names(dimnames(tab)) <- c(index.name, reference.name)
-    # TN <- d
-    # FN <- b
-    # FP <- c
-    # TP <- a
   }
 
-  # Verifcando a entrada de duas variáveis e fazendo a tabela
   if (!is.null(ref) && !is.null(test)) {
     if (any(is.na(ref), is.na(test))) {
       stop('There are NAs either in index test or reference standard. Consider removing or inputing!')
     }
     if (is.factor(ref) || is.factor(test)) {
       if (nlevels(ref) != 2 || nlevels(test) != 2) {
-        stop('It seems there are more than two levels.')
+        stop('It seems there are more than two levels either in "ref" or in "test".')
       }
     }
     if (!is.factor(ref) || !is.factor(test)) {
       if (nlevels(as.factor(ref)) != 2 || nlevels(as.factor(test)) != 2) {
-        stop('It seems there are more than two levels.')
+        stop('It seems there are more than two levelseither in "ref" or in "test".')
       }
     }
     if (is.null(reference.name)) {
@@ -208,7 +201,6 @@ diagnosis <- function(tab = NULL, ref = NULL, test = NULL,
     TP <- tab[2, 2]
   }
 
-  # Verificando a entrada como tabela
   if (!is.null(tab)) {
     if (any(!is.table(tab) & !is.matrix(tab))) {
       stop("'tab' should be a table or a matrix.")
@@ -239,26 +231,20 @@ diagnosis <- function(tab = NULL, ref = NULL, test = NULL,
 
   tabmarg <- addmargins(tab)
   Conf.limit <- CL
-  # sample size
   n <- sum(tab)
-  # prevalence
   tmp <- binom.CI((TP + FN), n, conf.level = CL, type = CL.type)
   p <- tmp$proportion
   p.inf.cl <- tmp$lower
   p.sup.cl <- tmp$upper
-  # sensitivity and confidence limits
   tmp <- binom.CI(TP, TP + FN, conf.level = CL, type = CL.type)
   Se <- tmp$proportion
   Se.inf.cl <- tmp$lower
   Se.sup.cl <- tmp$upper
-  # especificity and confidence limits
   tmp <- binom.CI(TN, FP + TN, conf.level = CL, type = CL.type)
   Sp <- tmp$proportion
   Sp.inf.cl <- tmp$lower
   Sp.sup.cl <- tmp$upper
-  # positive and negative likelyhood ratios and confidence limits
   PLR <- Se / (1 - Sp)
-  # LR confidence limists inspired in epi.tests{epiR}
   PLR.term <- (qnorm(1 - ((1 - CL) / 2), mean = 0, sd = 1)) * sqrt((1 - Se) / ((TP + FN) * Sp) + (Sp) / ((FP + TN) * (1 - Sp)))
   PLR.inf.cl <- exp(log(PLR) - PLR.term)
   PLR.sup.cl <- exp(log(PLR) + PLR.term)
@@ -266,12 +252,10 @@ diagnosis <- function(tab = NULL, ref = NULL, test = NULL,
   NLR.term <- (qnorm(1 - ((1 - CL) / 2), mean = 0, sd = 1)) * sqrt((Se) / ((TP + FN) * (1 - Se)) + (1 - Sp) / ((FP + TN) * (Sp)))
   NLR.inf.cl <- exp(log(NLR) - NLR.term)
   NLR.sup.cl <- exp(log(NLR) + NLR.term)
-  #accuracy and confidence limits
   tmp <- binom.CI(TP + TN, n, conf.level = CL, type = CL.type)
   accu <- tmp$proportion
   accu.inf.cl <- tmp$lower
   accu.sup.cl <- tmp$upper
-  # positive and negative predictive values and confidence limits
   tmp <- binom.CI(TP, TP + FP, conf.level = CL, type = CL.type)
   PPV <- tmp$proportion
   PPV.inf.cl <- tmp$lower
@@ -280,27 +264,19 @@ diagnosis <- function(tab = NULL, ref = NULL, test = NULL,
   NPV <- tmp$proportion
   NPV.inf.cl <- tmp$lower
   NPV.sup.cl <- tmp$upper
-  # diagnostic odds ratio and confidence limits
   OR <- fisher.test(tab, conf.level = CL)
   DOR <- unname(OR$estimate)
-  #DOR<-(TP*TN)/(FP*FN)
   DOR.inf.cl <- OR$conf.int[1]
   DOR.sup.cl <- OR$conf.int[2]
-  # error rate and error trade
-  #ER<-((FN/(FN+TN))*p)+(((FP/(FP+TP))*(TN+FP))
   tmp <- binom.CI(FN + FP, n, conf.level = CL, type = CL.type)
   ER <- tmp$proportion
   ER.inf.cl <- tmp$lower
   ER.sup.cl <- tmp$upper
-  # ET <- (FN/FP)
-  # pre-test and pos-test odds (to do)
-  # area under ROC curve
   AUC <- (Se + Sp) / 2
-  # Younden J index
   Youden <- Se + Sp - 1
   Youden.term <- qnorm(1 - ((1 - CL) / 2)) * sqrt(((Se * (1 - Se)) / (TP + FN) + ((Sp * (1 - Sp)) / (TN + FP))))
-  Youden.inf.cl <-Youden - Youden.term
-  Youden.sup.cl <-Youden + Youden.term
+  Youden.inf.cl <- Youden - Youden.term
+  Youden.sup.cl <- Youden + Youden.term
 
   results <- data.frame(Estimate = c(n, p, Se, Sp, PPV, NPV, PLR, NLR, DOR, ER, accu, Youden, AUC),
              lower.cl = c(NA, p.inf.cl, Se.inf.cl, Sp.inf.cl, PPV.inf.cl, NPV.inf.cl, PLR.inf.cl, NLR.inf.cl, DOR.inf.cl, ER.inf.cl, accu.inf.cl, Youden.inf.cl, NA),

@@ -22,4 +22,3 @@ This data set gives results of two serological tests - continuous scale - and it
 }
 }
 \keyword{datasets}
-

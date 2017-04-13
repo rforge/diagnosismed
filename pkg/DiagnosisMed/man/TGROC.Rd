@@ -269,4 +269,3 @@ M. Greiner, D. Sohr, P. Gobel (1995) A modified ROC analysis for the selection o
 \seealso{
 \code{\link{diagnosis}}, \code{\link{binom.CI}}, \code{\link{SS}}, \code{\link{thresholds}}, \code{\link{np.auROCc}}
 }
-

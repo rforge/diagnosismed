@@ -42,4 +42,3 @@ rm(tutorial)
 \seealso{
 \code{\link{SS}}, \code{\link{TGROC}}
 }
-
