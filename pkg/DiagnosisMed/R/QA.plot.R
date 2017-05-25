@@ -1,8 +1,8 @@
 #' Quality assesment or Risk of Bias plot for systematic reviews
 #'
-#' @description This function produces a plot with the classification of the risk of bias (or quality assessment) of individual studies included in a systematic review. Originally, it was developed inspired in QUADAS-2, but it could work equally well with any risk of bias assessment tool such as MINORT, or Cochrane`s, as long the tool classifies the studies into one of three classes.
+#' @description This function produces a plot with the classification of the risk of bias (or quality assessment) of individual studies included in a systematic review. Originally, it was developed inspired in QUADAS-2, but it could work equally well with any risk of bias assessment tool such as MINORT, or Cochrane`s, as long the tool classifies the studies into one of three classes (or less).
 #'
-#' @param tab A \code{data.frame} (could also work with a table o matrix), with the studies IDs and all risk of bias assessment. The study ID must always be in the first column on the left and the remaining columns should have three levels representing the risk of bias assessment (see example).
+#' @param tab A \code{data.frame}, with the studies IDs and all risk of bias assessment. The study ID must always be in the first column on the left and the remaining columns should have three levels representing the risk of bias assessment (see example).
 #'
 #' @param class A chracter vector of length three, with the classes of the quality assessment to match the classes in the \code{tab} argument.
 #'
@@ -31,7 +31,7 @@
 #' @examples
 #' # Simulating a dataset
 #' set.seed(12345)
-#' Study = paste0(sample(c("Brasil", "Alvarenga", "Americano", "Silva"), 10, TRUE),", ", sample(LETTERS, 10, TRUE),"-", sample(1998:2015, 10, TRUE))
+#' Study = paste0(sample(c("Goodman", "White", "Fring", "Ehrmantraut"), 10, TRUE),", ", sample(LETTERS, 10, TRUE),"-", sample(1998:2015, 10, TRUE))
 #' mydata <- data.frame(StudyID = Study,
 #'                v1 = sample(c("Low risk", "Unclear risk", "High risk"), 10, TRUE),
 #'                v2 = sample(c("Low risk", "Unclear risk", "High risk"), 10, TRUE),
@@ -40,6 +40,8 @@
 #'                v5 = sample(c("Low risk", "Unclear risk", "High risk"), 10, TRUE),
 #'                v6 = sample(c("Low risk", "Unclear risk", "High risk"), 10, TRUE),
 #'                v7 = sample(c("Low risk", "Unclear risk", "High risk"), 10, TRUE))
+#'
+#' # Setting variables labels
 #' attr(mydata, "var.labels") <- c("Study unique ID", "Patient selection",
 #'                              "Index test", "Reference standard",
 #'                              "Flow and timing", "Patient selection-aplicability",
@@ -53,6 +55,7 @@
 #' tabtmp <- sapply(2:5, function(i) prop.table(table(mydata[, i])))
 #' colnames(tabtmp) <- c("Patient selection", "Index test", "Reference standard", "Flow and timing")
 #'
+#' # Warning! Resizing the window or setting different margins may be required
 #' # Setting the plot with two windows
 #' par(mar = c(5.1, 13.1, 2.1, 5.1), mfrow = c(2, 1))
 #'
@@ -74,13 +77,16 @@
 #'   cex.lab = .9, las = 1, space = 1,
 #'   col = rgb(ramp(seq(0, 1, length = 3)), max = 255))
 #'
-#' # Warning! Resizing the window or setting different margins may be required
 #' # Calling the QA.plot with default arguments
 #' par(mar = c(5, 4, 4, 2) + 0.1, mfrow = c(1, 1))
 #' QA.plot(mydata)
 #'
-#' # The same plot but with squares instead and different colors
-#' QA.plot(mydata, pch1 = rep(15, 3), col1 = c("lightgreen","darkgreen","white"))
+#' # The same plot but with squares, different colors, and fonts.
+#' # Changing the 'class' argument order to match with the bars colors.
+#' QA.plot(mydata, class = c("High risk", "Low risk", "Unclear risk"),
+#'      pch2 = c("x","+","?"), pch1 = rep(15, 3),
+#'      col1 = rgb(ramp(seq(0, 1, length = 3)), max = 255),
+#'      study.arg = list(tick = FALSE, cex = .9, las = 1, font = 3, col = "lightgray"))
 #'
 #' rm(mydata, Study, tabtmp, ramp)
 #'
@@ -94,16 +100,64 @@ QA.plot <- function(tab, class = c("Low risk", "High risk", "Unclear risk"),
                     top.lab.arg = list(labels = attr(tab, "var.labels")[2:ncol(tab)], srt = 45, adj = 0, cex = .75, xpd = NA),
                     auto.legend = TRUE,
                     legend.arg = list(x = "bottom", bty = "n", inset = -0.10, horiz = TRUE, xpd = NA)) {
+  # Conditions section
   if (!is.data.frame(tab) && !is.matrix(tab) && !is.table(tab)) {
-    stop("'tab is not a data.frame, table or matrix.")
+    stop("'tab' is not a data.frame, table or matrix.")
   }
-
-  # par(mar = c(5, 4, 4, 2) + 0.1)
+  if (length(class) != 3) {
+    stop("'class' must be of length 3.")
+  }
+  if (!is.character(class)) {
+    stop("'class' must be a character vector.")
+  }
+  if (length(class) != 3) {
+    stop("'class' must be of length 3.")
+  }
+  if (length(mar) != 4) {
+    stop("'mar' must be of length 4.")
+  }
+  if (!is.numeric(mar)) {
+    stop("'mar' is not numeric.")
+  }
+  if (length(pch1) != 3) {
+    stop("'pch1' must be of length 3.")
+  }
+  if (length(pch2) != 3) {
+    stop("'pch2' must be of length 3.")
+  }
+  if (length(col1) != 3) {
+    stop("'col1' must be of length 3.")
+  }
+  if (length(col2) != 3) {
+    stop("'col2' must be of length 3.")
+  }
+  if (length(pt.cex1) != 3) {
+    stop("'pt.cex1' must be of length 3.")
+  }
+  if (length(pt.cex1) != 3) {
+    stop("'pt.cex1' must be of length 3.")
+  }
+  if (!is.numeric(pt.cex1)) {
+    stop("'pt.cex1' must be numeric.")
+  }
+  if (!is.numeric(pt.cex2)) {
+    stop("'pt.cex2' must be numeric.")
+  }
+  if (!is.logical(auto.legend)) {
+    stop("'auto.legend' must be either TRUE or FALSE.")
+  }
+  if (any(is.null(top.lab.arg$labels))) {
+    stop("At least one of 'labels' in the 'top.lab.arg' list is NULL.")
+  }
+  # Holdingn default graphical parameter
   opar <- par(mar = par()$mar)
   on.exit(par(opar))
+
+  # Settingn an empty plot
   par(mar = mar)
   plot(x = c(1, (ncol(tab) - 1)), y = c(1, nrow(tab)), type = "n", axes = FALSE, xpd = NA, xlab = "", ylab = "")
 
+  # Making an legend
   if (auto.legend) {
     legend.arg$legend <- class
     legend.arg$pch <- pch1
@@ -111,7 +165,6 @@ QA.plot <- function(tab, class = c("Low risk", "High risk", "Unclear risk"),
     legend.arg$pt.cex <- pt.cex1
     do.call("legend", legend.arg)
 
-    legend.arg$legend <- class
     legend.arg$pch <- pch2
     legend.arg$col <- col2
     legend.arg$pt.cex <- pt.cex2
@@ -120,17 +173,19 @@ QA.plot <- function(tab, class = c("Low risk", "High risk", "Unclear risk"),
     do.call("legend", legend.arg)
   }
 
+  # Settingn a text for the columns (risk of bias dimensionsn names)
   top.lab.arg$x <- 1:(ncol(tab)-1)
   top.lab.arg$y <- nrow(tab) + 1
   do.call(text, top.lab.arg)
 
+  # Ploting the studies IDS at the left axis
   study.arg$side <- 2
   study.arg$at <- 1:nrow(tab)
   study.arg$labels <- tab[, 1]
   do.call(axis, study.arg)
+  # axis(4, 1:nrow(tab), tab[,9], F, hadj = adj.study, pos = pos.study, cex.axis = cex.study, col = col.study, font = font.study, line=study.line, las = 1)
 
-    # axis(4, 1:nrow(tab), tab[,9], F, hadj = adj.study, pos = pos.study, cex.axis = cex.study, col = col.study, font = font.study, line=study.line, las = 1)
-
+  # PLoting the symbols with the risk assessment
   for (i in 1:nrow(tab)) {
     for (j in 2:ncol(tab)) {
       if (tab[i, j] == class[1]) {
