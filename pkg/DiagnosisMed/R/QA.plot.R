@@ -1,4 +1,6 @@
-#' Quality assesment or Risk of Bias plot for systematic reviews
+#' @title Quality assesment or Risk of Bias plot for systematic reviews
+#'
+#' @name QA.plot
 #'
 #' @description This function produces a plot with the classification of the risk of bias (or quality assessment) of individual studies included in a systematic review. Originally, it was developed inspired in QUADAS-2, but it could work equally well with any risk of bias assessment tool such as MINORT, or Cochrane`s, as long the tool classifies the studies into one of three classes (or less).
 #'
@@ -31,7 +33,8 @@
 #' @examples
 #' # Simulating a dataset
 #' set.seed(12345)
-#' Study = paste0(sample(c("Goodman", "White", "Fring", "Ehrmantraut"), 10, TRUE),", ", sample(LETTERS, 10, TRUE),"-", sample(1998:2015, 10, TRUE))
+#' Study = paste0(sample(c("Goodman", "White", "Fring", "Ehrmantraut"), 10, TRUE),
+#'          ", ", sample(LETTERS, 10, TRUE),"-", sample(1998:2015, 10, TRUE))
 #' mydata <- data.frame(StudyID = Study,
 #'                v1 = sample(c("Low risk", "Unclear risk", "High risk"), 10, TRUE),
 #'                v2 = sample(c("Low risk", "Unclear risk", "High risk"), 10, TRUE),
@@ -89,7 +92,7 @@
 #'      study.arg = list(tick = FALSE, cex = .9, las = 1, font = 3, col = "lightgray"))
 #'
 #' rm(mydata, Study, tabtmp, ramp)
-#'
+#' @import graphics
 #' @export
 QA.plot <- function(tab, class = c("Low risk", "High risk", "Unclear risk"),
                     mar = c(3,10.1,7.1,8.1),

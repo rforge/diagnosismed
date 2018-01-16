@@ -1,6 +1,6 @@
 Package: DiagnosisMed
-Version: 0.2.9.1
-Date: 2017-05-25
+Version: 0.2.9.2
+Date: 2018-01-16
 Author: Pedro Brasil <pedro.brasil@ini.fiocruz.br>
 Maintainer: Pedro Brasil <pedro.brasil@ini.fiocruz.br>
 Depends:
@@ -8,7 +8,7 @@ Depends:
     AMORE
 Title: Diagnostic test accuracy evaluation for health professionals
 Description: DiagnosisMed is a package to analyze data from diagnostic test
-    accuracy evaluating health conditions. Partners are most welcome.
+    accuracy evaluating health conditions.
 License: GPL (>= 2)
 URL: http://r-forge.r-project.org/projects/diagnosismed/
 RoxygenNote: 6.0.1
