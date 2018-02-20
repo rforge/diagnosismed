@@ -12,9 +12,9 @@ ui.binormal(ref, test, Se = 0.55, Sp = 0.55, intersection = NULL,
 
 \item{test}{The index test or test under evaluation. A column in a dataset or vector indicating the test results in a continuous scale.}
 
-\item{Se}{(default = .55). Desired sensitivity of the test scores within the uncertain interval. A value below .5 is not allowed, while a value larger than .6 is not recommended.}
+\item{Se}{(default = .55). Desired sensitivity of the test scores within the uncertain interval. A value <= .5 is not allowed, while a value larger than .6 is not recommended.}
 
-\item{Sp}{(default = .55). Desired specificity of the test scores within the uncertain interval. A value below .5 is not allowed, while a value larger than .6 is not recommended.}
+\item{Sp}{(default = .55). Desired specificity of the test scores within the uncertain interval. A value <= .5 is not allowed, while a value larger than .6 is not recommended.}
 
 \item{intersection}{Default NULL. If not null, the supplied value is used as the estimate of the intersection of the two bi-normal distributions. Otherwise, it is calculated.}
 
@@ -65,4 +65,3 @@ test=c(rnorm(500,0,1), rnorm(500,1,1))
 ui.binormal(ref, test)
 
 }
-

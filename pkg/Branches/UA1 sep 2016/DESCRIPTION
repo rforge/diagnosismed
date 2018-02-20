@@ -1,20 +1,25 @@
 Package: UncertainInterval
-Version: 0.2.0
-Date: 2016-09-04
-Title: Implementation of the Uncertain Area methods
+Version: 0.4.6
+Date: 2017-2-20
+Title: Uncertain Interval Methods for Cut-Point Determination in Tests
 Authors@R: c(person("Hans", "Landsheer", role = c("aut", "cre"),
                      email = "j.a.landsheer@uu.nl"))
-Author: Hans Landsheer
+Author: Hans Landsheer [aut, cre]
 Maintainer: Hans Landsheer <j.a.landsheer@uu.nl>
 Depends:
     R (>= 3.0.0)
 Suggests:
     MASS
-Description: Functions for the determination of an Uncertain Interval, i.e., a range
-    of test scores that are inconclusive and do not allow a diagnosis, other than
-    'Uncertain'.
+Description: Functions for the determination of an Uncertain Interval, i.e., a
+    range of test scores that are inconclusive and do not allow a diagnosis, other
+    than 'Uncertain'.
 License: GPL (>= 2)
 URL: http://r-forge.r-project.org/scm/?group_id=258
 BugReports: http://r-forge.r-project.org/tracker/?group_id=258
-RoxygenNote: 5.0.1
-Imports: stats, utils, reshape2, rootSolve, nloptr
+RoxygenNote: 6.0.1
+Imports:
+    stats,
+    utils,
+    reshape2,
+    rootSolve,
+    nloptr

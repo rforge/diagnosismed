@@ -5,7 +5,7 @@
 \title{Function for the description of the qualities of the Uncertain Interval.}
 \usage{
 quality.threshold.uncertain(ref, test, threshold, threshold.upper,
-  intersection = NULL)
+  intersection = NULL, model = c("kernel", "binormal", "ordinal"))
 }
 \arguments{
 \item{ref}{The reference standard. A column in a data frame or a vector indicating the classification by the reference test. The reference standard must be coded either as 0 (absence of the condition) or 1 (presence of the condition)}
@@ -17,6 +17,8 @@ quality.threshold.uncertain(ref, test, threshold, threshold.upper,
 \item{threshold.upper}{The upper decision threshold of a trichotomization method. When NULL, the test scores are dichotomized.}
 
 \item{intersection}{(default = NULL). When NULL, the intersection is calculated with \code{get.intersection}, which uses the kernel density method to obtain the intersection. When another value is assigned to this parameter, this value is used instead.}
+
+\item{model}{(default = 'kernel'). The model used defines the intersection. Default the kernel densities are used with adjust = 1, for ordinal models adjust = 2 is used. For binormal models the binormal estimate of the intersection is used. The model defines the intersection, which defines the output of this function.}
 }
 \value{
 { A list of}
@@ -42,6 +44,7 @@ quality.threshold.uncertain(ref, test, threshold, threshold.upper,
       \item{positive.predictive.value: }{TP/(TN+FN)}
       \item{neg.likelihood.ratio: }{(1-sensitivity)/specificity}
       \item{pos.likelihood.ratio: }{sensitivity/(1-specificity)}
+      \item{concordance: }{The probability that a random chosen patient with the condition is correctly ranked higher than a randomly chosen patient without the condition. Equal to AUC, with for the uncertain interval an expected outcome < .60. (Not equal to a partial AUC.)}
   }
   }
 }
@@ -53,15 +56,12 @@ The Uncertain Interval is defined as an interval below and above the intersectio
 
 The patients that have test scores within the Uncertain Interval cannot be correctly classified on the basis of their test result. The results within the Uncertain Interval differ only slightly for patients with and without the targeted condition. Patients with slightly lower or higher test scores too often have the opposite status. They receive the diagnostic result 'Uncertain'; it is better to apply additional tests or to await further developments.
 
-TG-ROC's Intermediate Range has no defined central position, although one may use the position where sensitivity equals specificity as a replacement of the intersection.
-
-The best way to compare the results of the Uncertain Interval with the results of TG-ROC's Intermediate range is the t-test, casu quo, their mean differences.
+When applying the method to the results of a logistic regression, one should be aware of possible problems concerning the determination of the intersection. Somewhere in the middle, logistic predictions can have a range where the distributions have similar densities or have multiple intersections near to each other. Often, this problem can be approached effectively by using the linear predictions instead of the logistic predictions. The linear predictions offer often a far more clear point of intersection. The solution can then be applied to the prediction values using the inverse logit of the intersection and the two cut-points. The logistic predictions and the linear predictions have the same rank ordering.
 }
 \examples{
 # A simple test model
 ref=c(rep(0,500), rep(1,500))
 test=c(rnorm(500,0,1), rnorm(500,1,sd=1))
-ua = uncertain.interval(ref, test)
+ua = ui.nonpar(ref, test)
 quality.threshold.uncertain(ref, test, ua[1], ua[2])
 }
-

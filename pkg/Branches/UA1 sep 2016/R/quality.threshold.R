@@ -2,11 +2,12 @@
 #'
 #' @name quality.threshold
 #'
-#' @description This function can be used for both dichotomization (single threshold or cut-point) methods and for trichotomization (two thresholds or cut-points) methods. In the case of the Uncertain Interval trichotomization method, it provides descriptive statistics for the test scores outside the Uncertain Interval. For the TG-ROC trichotomization method it provides the descriptive statistics for TG-ROC's Valid Range.
+#' @description Deprecated. Replaced by quality.mci. This function can be used for both dichotomization (single threshold or cut-point) methods and for trichotomization (two thresholds or cut-points) methods. In the case of the Uncertain Interval trichotomization method, it provides descriptive statistics for the test scores outside the Uncertain Interval. For the TG-ROC trichotomization method it provides the descriptive statistics for TG-ROC's Valid Range.
 #' @param ref The reference standard. A column in a data frame or a vector indicating the classification by the reference test. The reference standard must be coded either as 0 (absence of the condition) or 1 (presence of the condition)
 #' @param test The index test or test under evaluation. A column in a dataset or vector indicating the test results in a continuous scale.
 #' @param threshold The decision threshold of a dichotomization method, or the lower decision threshold of a trichotomization method.
 #' @param threshold.upper (default = NULL). The upper decision threshold of a trichotomization method. When NULL, the test scores are dichotomized.
+#' @param model The model to use. Default = 'kernel'.
 #'
 #' @return{ A list of}
 #' \describe{
@@ -23,21 +24,25 @@
 #'       \item{positive.predictive.value: }{TP/(TN+FN)}
 #'       \item{neg.likelihood.ratio: }{(1-sensitivity)/specificity}
 #'       \item{pos.likelihood.ratio: }{sensitivity/(1-specificity)}
+#'       \item{concordance: }{The probability that a random chosen patient with the condition is correctly ranked higher than a randomly chosen patient without the condition. Equal to AUC, with for the more certain interval a higher outcome than the overall concordance.}
 #'
 #'   }
 #' }
 #' }
-#' @export
 #'
 #' @examples
 #' # A simple test
 #' ref=c(rep(0,500), rep(1,500))
 #' test=c(rnorm(500,0,1), rnorm(500,1,1))
-#' ua = uncertain.interval(ref, test)
+#' ua = ui.nonpar(ref, test)
 #' quality.threshold(ref, test, threshold=ua[1], threshold.upper=ua[2])
-quality.threshold <- function(ref, test, threshold, threshold.upper=NULL){
 
-  df=check.data(ref, test)
+#' @export
+quality.threshold <- function(ref, test, threshold, threshold.upper=NULL, model = c('kernel', 'binormal', 'ordinal')){
+  .Deprecated('quality.mci', msg = 'Deprecated. Replaced by quality.mci')
+
+  model <- match.arg(model)
+  df=check.data(ref, test, model=model)
   ref=df$ref
   test=df$test
   ia = !is.null(threshold.upper)
@@ -82,6 +87,10 @@ quality.threshold <- function(ref, test, threshold, threshold.upper=NULL){
   balance.correct.incorrect=(TP+TN)/(FP+FN)
   likelihood.ratio.pos = sensitivity /(1-specificity)
   likelihood.ratio.neg = (1-sensitivity)/specificity
+
+  o = outer(test[certain.sel & ref==1], test[certain.sel & ref==0], "-")
+  cstat=mean((o>0) + .5*(o==0))
+
   if (ia) {
     t = matrix(data=c(TN, FN, ND0, ND1, FP, TP), ncol=2, byrow=T,
                dimnames=list(diag=c('0', 'NA', '1'), ref=c('0', '1')))
@@ -108,5 +117,6 @@ quality.threshold <- function(ref, test, threshold, threshold.upper=NULL){
                         negative.predictive.value=negative.predictive.value,
                         positive.predictive.value=positive.predictive.value,
                         neg.likelihood.ratio = likelihood.ratio.neg,
-                        pos.likelihood.ratio = likelihood.ratio.pos)))
+                        pos.likelihood.ratio = likelihood.ratio.pos,
+                        concordance=cstat)))
 }

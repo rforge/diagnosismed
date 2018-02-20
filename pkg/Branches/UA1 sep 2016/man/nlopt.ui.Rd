@@ -8,9 +8,9 @@ nlopt.ui(Se = 0.55, Sp = 0.55, mu0 = 0, sd0 = 1, mu1 = 1, sd1 = 1,
   intersection = NULL, start = NULL, print.level = 0)
 }
 \arguments{
-\item{Se}{(default = .55). Desired sensitivity of the test scores within the uncertain interval. A value below .5 is not allowed, while a value larger than .6 is not recommended.}
+\item{Se}{(default = .55). Desired sensitivity of the test scores within the uncertain interval. A value <= .5 is not allowed, while a value larger than .6 is not recommended.}
 
-\item{Sp}{(default = .55). Desired specificity of the test scores within the uncertain interval. A value below .5 is not allowed, while a value larger than .6 is not recommended.}
+\item{Sp}{(default = .55). Desired specificity of the test scores within the uncertain interval. A value <= .5 is not allowed, while a value larger than .6 is not recommended.}
 
 \item{mu0}{Population value or estimate of the mean of the test scores of the persons without the targeted condition.}
 
@@ -62,4 +62,3 @@ nlopt.ui()
 # Using another bi-normal distribution:
 nlopt.ui(mu0=0, sd0=1, mu1=1.6, sd1=2)
 }
-

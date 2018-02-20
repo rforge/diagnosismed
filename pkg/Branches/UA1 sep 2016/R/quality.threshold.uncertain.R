@@ -6,6 +6,7 @@
 #' @param threshold The lower decision threshold of a trichotomization method.
 #' @param threshold.upper The upper decision threshold of a trichotomization method. When NULL, the test scores are dichotomized.
 #' @param intersection (default = NULL). When NULL, the intersection is calculated with \code{get.intersection}, which uses the kernel density method to obtain the intersection. When another value is assigned to this parameter, this value is used instead.
+#' @param model (default = 'kernel'). The model used defines the intersection. Default the kernel densities are used with adjust = 1, for ordinal models adjust = 2 is used. For binormal models the binormal estimate of the intersection is used. The model defines the intersection, which defines the output of this function.
 #' @return{ A list of}
 #' \describe{
 #'   \item{intersection}{The value used as estimate of the intersection. NOTE: The trichotomization method TG-ROC has no defined position for its Intermediate Range, but usage of the point where Sensitivity=Specificity seems a reasonable choice.}
@@ -29,27 +30,29 @@
 #'       \item{positive.predictive.value: }{TP/(TN+FN)}
 #'       \item{neg.likelihood.ratio: }{(1-sensitivity)/specificity}
 #'       \item{pos.likelihood.ratio: }{sensitivity/(1-specificity)}
+#'       \item{concordance: }{The probability that a random chosen patient with the condition is correctly ranked higher than a randomly chosen patient without the condition. Equal to AUC, with for the uncertain interval an expected outcome < .60. (Not equal to a partial AUC.)}
 #'   }
 #'   }
 #' @details The Uncertain Interval is defined as an interval below and above the intersection, with a sensitivity and specificity below a desired value (default .55). As a result, it is expected that Chi-square tests are not significant, provided that the count of individuals within the Uncertain Interval is not too large. Most often, the t-test is also non-significant, but as the power of the t-test is considerably larger than the power of the Chi-square test, this is less often the case. It is recommended to look at the difference of the means of the two sub-samples and to visually inspect the inter-mixedness of the test scores.
 #'
 #' The patients that have test scores within the Uncertain Interval cannot be correctly classified on the basis of their test result. The results within the Uncertain Interval differ only slightly for patients with and without the targeted condition. Patients with slightly lower or higher test scores too often have the opposite status. They receive the diagnostic result 'Uncertain'; it is better to apply additional tests or to await further developments.
 #'
-#' TG-ROC's Intermediate Range has no defined central position, although one may use the position where sensitivity equals specificity as a replacement of the intersection.
+#' When applying the method to the results of a logistic regression, one should be aware of possible problems concerning the determination of the intersection. Somewhere in the middle, logistic predictions can have a range where the distributions have similar densities or have multiple intersections near to each other. Often, this problem can be approached effectively by using the linear predictions instead of the logistic predictions. The linear predictions offer often a far more clear point of intersection. The solution can then be applied to the prediction values using the inverse logit of the intersection and the two cut-points. The logistic predictions and the linear predictions have the same rank ordering.
 #'
-#' The best way to compare the results of the Uncertain Interval with the results of TG-ROC's Intermediate range is the t-test, casu quo, their mean differences.
 #' @export
 #'
 #' @examples
 #' # A simple test model
 #' ref=c(rep(0,500), rep(1,500))
 #' test=c(rnorm(500,0,1), rnorm(500,1,sd=1))
-#' ua = uncertain.interval(ref, test)
+#' ua = ui.nonpar(ref, test)
 #' quality.threshold.uncertain(ref, test, ua[1], ua[2])
 quality.threshold.uncertain <- function(ref, test,
-                                       threshold, threshold.upper, intersection=NULL){
-
-  df=check.data(ref, test)
+                                       threshold, threshold.upper, intersection=NULL,
+                                       model = c('kernel', 'binormal', 'ordinal')){
+  # threshold = threshold.upper = 19; intersection=NULL
+  model <- match.arg(model)
+  df=check.data(ref, test, model=model)
   ref=df$ref
   test=df$test
   stopifnot(!is.null(threshold.upper))
@@ -86,7 +89,7 @@ quality.threshold.uncertain <- function(ref, test,
   threshold.upper=unname(unlist(threshold.upper)) # threshold.upper=NULL
 
     if (is.null(intersection)) {
-      intersection = tail(get.intersection(ref, test),1)
+      intersection = tail(get.intersection(ref, test, model=model),1)
       if (length(intersection) > 1) {
         intersection=tail(intersection, n=1)
         warning('More than one point of intersection. Highest used.')
@@ -125,14 +128,17 @@ quality.threshold.uncertain <- function(ref, test,
   FN.TP=chisq1(c(FN, TP))
   overall=chisq2(matrix(c(TN,FP,FN,TP), byrow=T, nrow=2))
 
-  if (length(test.uc[ref.uc == 0]) > 1 &
-      length(test.uc[ref.uc == 1]) > 1) {
-    res = t.test(test.uc[ref.uc == 0], test.uc[ref.uc == 1])
+  # test.uc = p0; ref.uc = d0
+  t0 = test.uc[ref.uc==0]; n0 = as.numeric(length(t0));
+  t1 = test.uc[ref.uc==1]; n1 = as.numeric(length(t1));
+
+  if (n0 > 1 & n1 > 1 & threshold!=threshold.upper) {
+    res = t.test(t0, t1)
     t = c(mean.0 = unname(res$estimate[1]),mean.1 = unname(res$estimate[2]),
           res$statistic, res$parameter, p = res$p.value)
   } else {
-    t = c(mean.0 = mean(test.uc[ref.uc == 0]),
-          mean.1 = mean(test.uc[ref.uc == 1]), t = NA, df = NA, p = NA)
+    t = c(mean.0 = mean(t0),
+          mean.1 = mean(t1), t = NA, df = NA, p = NA)
   }
 
   prevalence=(TP+FN)/(TP+FP+FN+TN)
@@ -144,6 +150,7 @@ quality.threshold.uncertain <- function(ref, test,
   balance.correct.incorrect=(TP+TN)/(FP+FN)
   likelihood.ratio.pos = sensitivity /(1-specificity)
   likelihood.ratio.neg = (1-sensitivity)/specificity
+  bww = sum(ref.uc==1)/sum(ref.uc==0) # 1/bww
   ta=addmargins(matrix(c(TN,FP,FN,TP),2,2))
   dimnames(ta)=list(diag=c('0', '1', 'Sum'), ref= c('0', '1', 'Sum'))
 
@@ -152,6 +159,12 @@ quality.threshold.uncertain <- function(ref, test,
   #                   uncertainty.certain.interval=uncertainty.certain.interval,
   #                   uncertainty.uncertain.interval=uncertainty.uncertain.interval)
   # } else{uncertainty = c(uncertain.obs=uncertain.obs)}
+  # o = outer(test.uc[ref.uc == 1], test.uc[ref.uc == 0], "-")
+  # cstat=mean((o>0) + .5*(o==0))
+
+  r = rank(c(t1,t0))
+  cstat = (sum(r[1:n1]) - n1*(n1+1)/2) / (n1*n0)
+
 
   return(list(intersection=thresholdnew,
               table=ta,
@@ -167,5 +180,7 @@ quality.threshold.uncertain <- function(ref, test,
                         negative.predictive.value=negative.predictive.value,
                         positive.predictive.value=positive.predictive.value,
                         neg.likelihood.ratio = likelihood.ratio.neg,
-                        pos.likelihood.ratio = likelihood.ratio.pos)))
+                        pos.likelihood.ratio = likelihood.ratio.pos,
+                        balance.with.without = bww,
+                        concordance=cstat)) )
 }

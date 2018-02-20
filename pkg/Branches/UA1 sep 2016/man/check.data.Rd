@@ -4,14 +4,14 @@
 \alias{check.data}
 \title{Function to check the dataset of individuals with (1) and without (0) the targeted condition.}
 \usage{
-check.data(ref, test, ordinal = FALSE)
+check.data(ref, test, model = c("kernel", "binormal", "ordinal"))
 }
 \arguments{
 \item{ref}{The reference standard. A column in a data frame or a vector indicating the classification by the reference test. The reference standard must be coded either as 0 (absence of the condition) or 1 (presence of the condition)}
 
 \item{test}{The index test or test under evaluation. A column in a dataset or vector indicating the test results in a continuous scale.}
 
-\item{ordinal}{When ordinal = FALSE, the dataset is checked whether the test has a sufficient number of different values (>= 20). When ordinal = TRUE, this check is skipped.}
+\item{model}{The model used for estimation. Default = 'kernel'. When model != ordinal, the dataset is checked whether the test has a sufficient number of different values (>= 20).}
 }
 \value{
 Either a valid dataset as data.frame with two variables ref and test or an error message.
@@ -31,6 +31,5 @@ This function is called from every function that requires data. A call is only u
 #' set.seed(1)
 ref=c(rep(0,500), rep(1,500))
 test=c(rnorm(500,0,1), rnorm(500,1,1.2))
-check.data(ref, test)
+check.data(ref, test) # model = 'kernel'
 }
-

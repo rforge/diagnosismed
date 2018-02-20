@@ -5,7 +5,8 @@
 \title{Function to plot the mixed densities of distributions of individuals with (1) and without (0) the targeted condition.}
 \usage{
 plotMD(ref, test, breaks = 20, subtitle = "",
-  position.legend = "topright", ...)
+  position.legend = "topright", colspace = c("color", "grayscale", "BW"),
+  model = c("kernel", "binormal", "ordinal"), ...)
 }
 \arguments{
 \item{ref}{The reference standard. A column in a data frame or a vector indicating the classification by the reference test. The reference standard must be coded either as 0 (absence of the condition) or 1 (presence of the condition)}
@@ -18,6 +19,10 @@ plotMD(ref, test, breaks = 20, subtitle = "",
 
 \item{position.legend}{The location can be specified by a single keyword from the list "topright", "topleft", "top", "right", "bottomright", "bottom", "bottomleft", "left" and "center". Default is "top.right".}
 
+\item{colspace}{Use colors, grayscale or only black and white as plot colors. Default = color.}
+
+\item{model}{The model used for estimation. Default = 'kernel'. Adapts also breaks and the call to the density function (parameter adjust). When the model is obviously wrong, warnings are produced.}
+
 \item{...}{passing arguments to the kernel density function, other than kernel='gaussian' (default).}
 }
 \value{
@@ -27,7 +32,7 @@ No Value returned.
 This plot function shows the two distributions and their overlap in a single graph.
 }
 \details{
-The graph shows the two distributions and their overlap. Many tests of intermediate quality have a considerable overlap. Also, the distributions as estimated by the \code{density} function, using the gaussian kernel is shown. The intersection is indicated by a vertical line. This graph allows the visual inspection of the two distributions, as well a visual inspection of the approximation of the \code{density}, based on the gaussian kernel. When the density estimation is way off, the standard estimation of the intersection will be incorrect, and another estimation has to be supplied.
+The graph shows the two distributions, their overlap and the Dicrimination Curve. Many tests of intermediate quality have a considerable overlap. Also, the distributions as estimated by the \code{density} function, using the gaussian kernel is shown. The intersection is indicated by a vertical line. This graph allows the visual inspection of the two distributions, as well a visual inspection of the approximation of the \code{density}, based on the gaussian kernel. When the density estimation is way off, the standard estimation of the intersection will be incorrect, and another estimation has to be supplied.
 
 The function \code{plotMD} can also be used for visual inspection of the Uncertain Interval (see examples). Please note that the sensitivity and specificity values > .5 (including the default of .55) allows for some positive bias.
 }
@@ -37,22 +42,44 @@ set.seed(1)
 ref=c(rep(0,500), rep(1,500))
 test=c(rnorm(500,0,1), rnorm(500,1,1.2))
 plotMD(ref, test)
-ua = uncertain.interval(ref, test) # with warning message!
+ua = ui.nonpar(ref, test) # with warning message!
 # Add lines to indicate Uncertain Interval
 abline(v=ua[1:2])
 select=(test <= ua[2] & test >= ua[1])
 # plot the mixed densities for the Uncertain Interval
 plotMD(ref[select], test[select])
+plotMD(ref[select], test[select], colspace='gray')
+plotMD(ref[select], test[select], colspace='BW')
 
 # An ordinal test
 norm     = rep(1:5, times=c(33,6,6,11,2))
 abnorm   = rep(1:5, times=c(3,2,2,11,33))
 testres  = c(abnorm,norm)
 truestat = c(rep(1,length(abnorm)), rep(0,length(norm)))
-breaks=c(min(testres)-.5, seq(min(testres), max(testres), by=1)+.5)
-plotMD(ref=truestat, test=testres, breaks=breaks, adjust=2)
+plotMD(ref=truestat, test=testres, model='ordinal')
+
+# ordinal test: weak test
+set.seed(2)
+nobs=1000
+Z0 <- rnorm(nobs, mean=0)
+b0=seq(-5, 5, length.out=31) # range sufficient to cover both z0 and z1
+f0=cut(Z0, breaks = b0, labels = c(1:30))
+x0=as.numeric(levels(f0))[f0]
+Z1 <- rnorm(nobs, mean=.5) # very weak test, not recommended for practical use
+f1=cut(Z1, breaks = b0, labels = c(1:30))
+x1=as.numeric(levels(f1))[f1]
+test=c(x0, x1)
+ref =c(rep(0, length(x0)), rep(1, length(x1)))
+(pr=prop.table(table(ref, test)))
+breaks=c(min(test)-.5, seq(min(test), max(test), by=1)+.5)
+plotMD(ref, test, model='ordinal')
+# when model = 'binormal' or 'kernel', default breaks do not work well for
+# ordinal data, and have to be set by hand
+plotMD(ref, test, breaks=c(min(test)-.5, seq(min(test), max(test), by=1)+.5),
+       model='binormal')
+plotMD(ref, test, breaks=c(min(test)-.5, seq(min(test), max(test), by=1)+.5),
+       model='kernel')
 }
 \references{
 Landsheer, J. A. (2016). Interval of Uncertainty: An Alternative Approach for the Determination of Decision Thresholds, with an Illustrative Application for the Prediction of Prostate Cancer. PloS One, 11(11), e0166007.
 }
-

@@ -1,7 +1,7 @@
 #' Function for the determination of the population thresholds an inconclusive interval for bi-normal distributed test scores.
 #'
-#' @param Se (default = .55). Desired sensitivity of the test scores within the uncertain interval. A value below .5 is not allowed, while a value larger than .6 is not recommended.
-#' @param Sp (default = .55). Desired specificity of the test scores within the uncertain interval. A value below .5 is not allowed, while a value larger than .6 is not recommended.
+#' @param Se (default = .55). Desired sensitivity of the test scores within the uncertain interval. A value <= .5 is not allowed, while a value larger than .6 is not recommended.
+#' @param Sp (default = .55). Desired specificity of the test scores within the uncertain interval. A value <= .5 is not allowed, while a value larger than .6 is not recommended.
 #' @param mu0 Population value or estimate of the mean of the test scores of the persons without the targeted condition.
 #' @param sd0 Population value or estimate of the standard deviation of the test scores of the persons without the targeted condition.
 #' @param mu1 Population value or estimate of the mean of the test scores of the persons with the targeted condition.
@@ -49,6 +49,11 @@ nlopt.ui <- function(Se = .55, Sp = .55,
                      mu1 = 1, sd1 = 1,
                      intersection = NULL,
                      start=NULL, print.level=0) {
+  if (Se <= .5) stop('Value <= .5 invalid for Se of the uncertain interval')
+  if (Sp <= .5) stop('Value <= .5 invalid for Sp of the uncertain interval')
+  if (Se > .6) warning('Value > .6 not recommended for Se of the uncertain interval')
+  if (Sp > .6) warning('Value > .6 not recommended for Sp of the uncertain interval')
+
   c01 = Sp / (1 - Sp)
   c11 = Se / (1 - Se)
   if (is.null(intersection)) {
@@ -77,7 +82,7 @@ nlopt.ui <- function(Se = .55, Sp = .55,
 
   # constraint function
   eval_g0 <- function(x) {
-    a0 = pnorm(I, mu0, sd0) - pnorm(x[1], mu0, sd0) # TN
+    a0 = pnorm(I, mu0, sd0) - pnorm(x[1], mu0, sd0) # TN within the uncertain interval
     b0 = pnorm(x[2], mu0, sd0) - pnorm(I, mu0, sd0) # FP
     a1 = pnorm(x[2], mu1, sd1) - pnorm(I, mu1, sd1) # TP
     b1 = pnorm(I, mu1, sd1) - pnorm(x[1], mu1, sd1) # FN

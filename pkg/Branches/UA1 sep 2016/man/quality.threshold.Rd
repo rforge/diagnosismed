@@ -4,7 +4,8 @@
 \alias{quality.threshold}
 \title{Function for the description of the qualities of one or two decision thresholds or threshold.}
 \usage{
-quality.threshold(ref, test, threshold, threshold.upper = NULL)
+quality.threshold(ref, test, threshold, threshold.upper = NULL,
+  model = c("kernel", "binormal", "ordinal"))
 }
 \arguments{
 \item{ref}{The reference standard. A column in a data frame or a vector indicating the classification by the reference test. The reference standard must be coded either as 0 (absence of the condition) or 1 (presence of the condition)}
@@ -14,6 +15,8 @@ quality.threshold(ref, test, threshold, threshold.upper = NULL)
 \item{threshold}{The decision threshold of a dichotomization method, or the lower decision threshold of a trichotomization method.}
 
 \item{threshold.upper}{(default = NULL). The upper decision threshold of a trichotomization method. When NULL, the test scores are dichotomized.}
+
+\item{model}{The model to use. Default = 'kernel'.}
 }
 \value{
 { A list of}
@@ -31,19 +34,19 @@ quality.threshold(ref, test, threshold, threshold.upper = NULL)
       \item{positive.predictive.value: }{TP/(TN+FN)}
       \item{neg.likelihood.ratio: }{(1-sensitivity)/specificity}
       \item{pos.likelihood.ratio: }{sensitivity/(1-specificity)}
+      \item{concordance: }{The probability that a random chosen patient with the condition is correctly ranked higher than a randomly chosen patient without the condition. Equal to AUC, with for the more certain interval a higher outcome than the overall concordance.}
 
   }
 }
 }
 }
 \description{
-This function can be used for both dichotomization (single threshold or cut-point) methods and for trichotomization (two thresholds or cut-points) methods. In the case of the Uncertain Interval trichotomization method, it provides descriptive statistics for the test scores outside the Uncertain Interval. For the TG-ROC trichotomization method it provides the descriptive statistics for TG-ROC's Valid Range.
+Deprecated. Replaced by quality.mci. This function can be used for both dichotomization (single threshold or cut-point) methods and for trichotomization (two thresholds or cut-points) methods. In the case of the Uncertain Interval trichotomization method, it provides descriptive statistics for the test scores outside the Uncertain Interval. For the TG-ROC trichotomization method it provides the descriptive statistics for TG-ROC's Valid Range.
 }
 \examples{
 # A simple test
 ref=c(rep(0,500), rep(1,500))
 test=c(rnorm(500,0,1), rnorm(500,1,1))
-ua = uncertain.interval(ref, test)
+ua = ui.nonpar(ref, test)
 quality.threshold(ref, test, threshold=ua[1], threshold.upper=ua[2])
 }
-

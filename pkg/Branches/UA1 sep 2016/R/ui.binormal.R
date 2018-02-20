@@ -2,8 +2,8 @@
 #'
 #' @param ref The reference standard. A column in a data frame or a vector indicating the classification by the reference test. The reference standard must be coded either as 0 (absence of the condition) or 1 (presence of the condition).
 #' @param test The index test or test under evaluation. A column in a dataset or vector indicating the test results in a continuous scale.
-#' @param Se (default = .55). Desired sensitivity of the test scores within the uncertain interval. A value below .5 is not allowed, while a value larger than .6 is not recommended.
-#' @param Sp (default = .55). Desired specificity of the test scores within the uncertain interval. A value below .5 is not allowed, while a value larger than .6 is not recommended.
+#' @param Se (default = .55). Desired sensitivity of the test scores within the uncertain interval. A value <= .5 is not allowed, while a value larger than .6 is not recommended.
+#' @param Sp (default = .55). Desired specificity of the test scores within the uncertain interval. A value <= .5 is not allowed, while a value larger than .6 is not recommended.
 #' @param intersection Default NULL. If not null, the supplied value is used as the estimate of the intersection of the two bi-normal distributions. Otherwise, it is calculated.
 #' @param start Default NULL. If not null, the first two values of the supplied vector are used as the starting values for the \code{nloptr} optimization function.
 #' @param print.level Default is 0. The option print_level controls how much output is shown during the optimization process. Possible values: 0 (default)	no output; 1	show iteration number and value of objective function; 2	1 + show value of (in)equalities; 3	2 + show value of controls.
@@ -47,7 +47,7 @@
 
 ui.binormal <- function(ref, test, Se = .55, Sp = .55,
                         intersection = NULL, start=NULL, print.level=0){
-  df = check.data(ref, test)
+  df = check.data(ref, test, model='binormal')
   n0 = df$test[ref==0]
   n1 = df$test[ref==1]
   m0 = mean(n0)
