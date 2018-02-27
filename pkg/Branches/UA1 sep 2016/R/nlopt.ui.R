@@ -1,7 +1,7 @@
 #' Function for the determination of the population thresholds an inconclusive interval for bi-normal distributed test scores.
 #'
-#' @param Se (default = .55). Desired sensitivity of the test scores within the uncertain interval. A value <= .5 is not allowed, while a value larger than .6 is not recommended.
-#' @param Sp (default = .55). Desired specificity of the test scores within the uncertain interval. A value <= .5 is not allowed, while a value larger than .6 is not recommended.
+#' @param Se (default = .55). Desired sensitivity of the test scores within the uncertain interval. A value <= .5 is not allowed.
+#' @param Sp (default = .55). Desired specificity of the test scores within the uncertain interval. A value <= .5 is not allowed.
 #' @param mu0 Population value or estimate of the mean of the test scores of the persons without the targeted condition.
 #' @param sd0 Population value or estimate of the standard deviation of the test scores of the persons without the targeted condition.
 #' @param mu1 Population value or estimate of the mean of the test scores of the persons with the targeted condition.
@@ -51,8 +51,8 @@ nlopt.ui <- function(Se = .55, Sp = .55,
                      start=NULL, print.level=0) {
   if (Se <= .5) stop('Value <= .5 invalid for Se of the uncertain interval')
   if (Sp <= .5) stop('Value <= .5 invalid for Sp of the uncertain interval')
-  if (Se > .6) warning('Value > .6 not recommended for Se of the uncertain interval')
-  if (Sp > .6) warning('Value > .6 not recommended for Sp of the uncertain interval')
+  # if (Se > .6) warning('Value > .6 not recommended for Se of the uncertain interval')
+  # if (Sp > .6) warning('Value > .6 not recommended for Sp of the uncertain interval')
 
   c01 = Sp / (1 - Sp)
   c11 = Se / (1 - Se)
@@ -91,7 +91,7 @@ nlopt.ui <- function(Se = .55, Sp = .55,
              a1 - c11 * b1)) # vector with two constraint values
   }
 
-  # jacobian of constraints
+  # jacobian of constraints x=par0
   eval_jac_g0 <- function(x) {
     return(rbind(c(
       -dnorm(x[1], mu0, sd0) , -c01 * dnorm(x[2], mu0, sd0)
@@ -106,12 +106,19 @@ nlopt.ui <- function(Se = .55, Sp = .55,
 
   res0 <- nloptr( x0=par0,
                   eval_f=eval_f0,
+                  eval_grad_f = eval_grad_f0,
                   lb = c(I-2*sd1, I),
                   ub = c(I, I+2*sd0),
                   eval_g_ineq = eval_g0,
-                  opts = list("algorithm"="NLOPT_LN_COBYLA",
+                  eval_jac_g_ineq = eval_jac_g0,
+                  # eval_g_eq = eval_g0,
+                  # eval_jac_g_eq = eval_jac_g0,
+                  opts = list("algorithm"="NLOPT_LD_SLSQP",
                               "xtol_rel"=1.0e-8,
-                              print_level=print.level)
+                              print_level=print.level #,
+                              # "check_derivatives" = TRUE,
+                              # "check_derivatives_print" = "all"
+                              )
   )
 
   # res0 <- nloptr(
@@ -144,11 +151,6 @@ nlopt.ui <- function(Se = .55, Sp = .55,
                   mu0=unname(mu0), sd0=unname(sd0), mu1=unname(mu1), sd1=unname(sd1))
   res$solution = c(L = res0$solution[1], U = res0$solution[2])
 
-  # TN.FP=unname((pnorm(I, mu0, sd0)-pnorm(res$solution['L'], mu0, sd0)) / # area check Sp: lower area / upper area
-  #                (pnorm(res$solution['H'], mu0, sd0)-pnorm(I, mu0, sd0)))
-  # TP.FN=unname((pnorm(res$solution['H'], mu1, sd1)-pnorm(I, mu1, sd1)) / # area check Se: upper area / lower area
-  #                (pnorm(I, mu1, sd1)-pnorm(res$solution['L'], mu1, sd1)))
-  # res$results2=c(Sp=TN.FP/(1+TN.FP), Se=TP.FN/(1+TP.FN))
   return(res)
 }
 

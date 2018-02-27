@@ -1,6 +1,6 @@
 Package: UncertainInterval
 Version: 0.4.6
-Date: 2017-2-20
+Date: 2018-2-27
 Title: Uncertain Interval Methods for Cut-Point Determination in Tests
 Authors@R: c(person("Hans", "Landsheer", role = c("aut", "cre"),
                      email = "j.a.landsheer@uu.nl"))
@@ -10,9 +10,9 @@ Depends:
     R (>= 3.0.0)
 Suggests:
     MASS
-Description: Functions for the determination of an Uncertain Interval, i.e., a
+Description: Functions for the determination of an uncertain interval, i.e., a
     range of test scores that are inconclusive and do not allow a diagnosis, other
-    than 'Uncertain'.
+    than 'Uncertain', reference J.A. Landsheer <doi:10.1371/journal.pone.0166007>.
 License: GPL (>= 2)
 URL: http://r-forge.r-project.org/scm/?group_id=258
 BugReports: http://r-forge.r-project.org/tracker/?group_id=258

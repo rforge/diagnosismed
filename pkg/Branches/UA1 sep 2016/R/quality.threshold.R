@@ -2,7 +2,7 @@
 #'
 #' @name quality.threshold
 #'
-#' @description Deprecated. Replaced by quality.mci. This function can be used for both dichotomization (single threshold or cut-point) methods and for trichotomization (two thresholds or cut-points) methods. In the case of the Uncertain Interval trichotomization method, it provides descriptive statistics for the test scores outside the Uncertain Interval. For the TG-ROC trichotomization method it provides the descriptive statistics for TG-ROC's Valid Range.
+#' @description This function can be used for both dichotomization (single threshold or cut-point) methods and for trichotomization (two thresholds or cut-points) methods. In the case of the Uncertain Interval trichotomization method, it provides descriptive statistics for the test scores outside the Uncertain Interval. For the TG-ROC trichotomization method it provides the descriptive statistics for TG-ROC's Valid Range.
 #' @param ref The reference standard. A column in a data frame or a vector indicating the classification by the reference test. The reference standard must be coded either as 0 (absence of the condition) or 1 (presence of the condition)
 #' @param test The index test or test under evaluation. A column in a dataset or vector indicating the test results in a continuous scale.
 #' @param threshold The decision threshold of a dichotomization method, or the lower decision threshold of a trichotomization method.
@@ -39,7 +39,7 @@
 
 #' @export
 quality.threshold <- function(ref, test, threshold, threshold.upper=NULL, model = c('kernel', 'binormal', 'ordinal')){
-  .Deprecated('quality.mci', msg = 'Deprecated. Replaced by quality.mci')
+  # .Deprecated('quality.treshold', msg = 'Deprecated. Replaced by quality.mci')
 
   model <- match.arg(model)
   df=check.data(ref, test, model=model)
